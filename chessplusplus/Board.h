@@ -15,7 +15,6 @@ using PieceRef = std::unique_ptr<Piece>&;
 class Board
 {
 public:
-	void MovePiece(const Point& start, const Point& end);
 	Row& operator[](int index);
 	std::unique_ptr<Piece>& operator[](Point pos);
 	const std::unique_ptr<Piece>& operator[](Point pos) const;

@@ -1,8 +1,9 @@
 #include "Pawn.h"
 #include "Board.h"
 
-std::vector<IMove> Pawn::getPossibleMoves(Board& board) const
+MoveSet Pawn::getPossibleMoves(Board& board) const
 {
+	MoveSet set{};
 	Point ahead{ position + forward() };
 	return {};
 }

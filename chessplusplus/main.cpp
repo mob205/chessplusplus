@@ -1,4 +1,6 @@
 #include <iostream>
+
+#include "Game.h"
 #include "Input.h"
 #include "Board.h"
 
@@ -14,7 +16,11 @@ int main()
 		switch (input)
 		{
 		case 'A':
-			// Start a game
+		// Start a new game
+		{
+			Game game{};
+			playGame(game);
+		}
 			break;
 		case 'B':
 			// Load a game and play it
@@ -25,3 +31,4 @@ int main()
 		}
 	}
 }
+

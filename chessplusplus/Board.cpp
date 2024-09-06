@@ -33,14 +33,14 @@ std::ostream& operator<<(std::ostream& out, Board& board)
 		out << "---";
 	}
 	out << "\n";
-	for (int i = 0; i < Settings::g_boardSize; ++i)
+	for (int rank = 0; rank < Settings::g_boardSize; ++rank)
 	{
-		out << Settings::g_boardSize - i << " |";
-		for (int j = 0; j < Settings::g_boardSize; ++j)
+		out << Settings::g_boardSize - rank << " |";
+		for (int file = 0; file < Settings::g_boardSize; ++file)
 		{
-			if (board[i][j])
+			if (board[file][rank])
 			{
-				out << *board[i][j];
+				out << *board[file][rank];
 			}
 			else
 			{

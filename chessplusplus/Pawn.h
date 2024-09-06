@@ -9,8 +9,8 @@ public:
 		: Piece{ position, team }
 	{}
 
-	std::vector<IMove> getPossibleMoves(Board& board) const override;
-	char getSymbol() const override { return 'p'; }
+	MoveSet getPossibleMoves(Board& board) const override;
+	char getSymbol() const override { return team ? 'p' : toupper('p'); }
 	bool isPassantable(int curTurn) const { turnDoubleMoved != 0 && curTurn == turnDoubleMoved + 1; }
 
 private:

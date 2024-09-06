@@ -7,17 +7,17 @@
 
 namespace Input
 {
-	void displayMainMenu()
+	inline void displayMainMenu()
 	{
 		std::cout << "A. Start new game\n"
 			<< "B. Load a saved game\n"
 			<< "C. Quit\n";
 	}
-	bool isValidMenuInput(char input)
+	inline bool isValidMenuInput(char input)
 	{
 		return input == 'A' || input == 'B' || input == 'C';
 	}
-	char getMenuInput()
+	inline char getMenuInput()
 	{
 		displayMainMenu();
 
@@ -40,7 +40,7 @@ namespace Input
 		}
 	}
 
-	InputResult getGameInput()
+	inline InputResult getGameInput()
 	{
 		while (true)
 		{
@@ -67,6 +67,5 @@ namespace Input
 			std::cout << "Invalid input.\n";
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		}
-
 	}
 }

@@ -24,3 +24,9 @@ Point operator+(const Point& p1, const Point& p2)
 {
 	return { p1.rank + p2.rank, p1.file +p2.file };
 }
+
+bool operator==(const Point& p1, const Point& p2)
+{
+	return (p1.rank == p2.rank) && (p1.file == p2.file);
+}
+
