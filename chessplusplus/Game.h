@@ -6,6 +6,7 @@
 class Game
 {
 public:
+	Game();
 	Board& getBoard() { return board; }
 
 private:

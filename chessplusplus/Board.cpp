@@ -3,15 +3,20 @@
 #include "Board.h"
 #include "Piece.h"
 
+
 Row& Board::operator[](int idx)
 {
 	assert(0 <= idx && idx < Settings::g_boardSize && "Attempted to index board by an out-of-bounds index");
 	return board[idx];
 }
-Piece* Board::operator[](Point point)
+std::unique_ptr<Piece>& Board::operator[](Point point)
+{
+	return const_cast<std::unique_ptr<Piece>&>(std::as_const(*this)[point]);
+}
+const std::unique_ptr<Piece>& Board::operator[](Point point) const
 {
 	assert(point.isInBounds() && "Attempted to index board by an out-of-bounds point.");
-	return board[point.rank][point.file];
+	return board[point.file][point.rank];
 }
 
 std::ostream& operator<<(std::ostream& out, Board& board)
@@ -52,3 +57,4 @@ std::ostream& operator<<(std::ostream& out, Board& board)
 	out << "\n";
 	return out;
 }
+

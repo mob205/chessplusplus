@@ -14,8 +14,13 @@ std::istream& operator>> (std::istream& in, Point& point)
 	return in;
 }
 
-std::ostream& operator<< (std::ostream& out, Point& point)
+std::ostream& operator<< (std::ostream& out, const Point& point)
 {
 	out << static_cast<char>(point.rank + 'a') << point.file + 1;
 	return out;
+}
+
+Point operator+(const Point& p1, const Point& p2)
+{
+	return { p1.rank + p2.rank, p1.file +p2.file };
 }

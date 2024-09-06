@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="Point.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -139,9 +140,11 @@
     <ClInclude Include="IMove.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputResult.h" />
+    <ClInclude Include="Pawn.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Settings.h" />
+    <ClInclude Include="StandardMove.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
