@@ -5,10 +5,19 @@
 
 #include "Pawn.h"
 #include "Knight.h"
+#include "Bishop.h"
+#include "Rook.h";
+#include "Queen.h"
+
+template<typename T>
+static void addPiece(Board& board, const Point& position, int team)
+{
+	board[position] = std::make_unique<T>(position, static_cast<Piece::Team>(team));
+}
 
 Game::Game()
 {
-	// Setup pawns pawns
+	// Setup pawns
 	for (int i = 0; i < Settings::g_boardSize; ++i)
 	{
 		Point blackPos{ Settings::g_boardSize - 2, i };
@@ -18,13 +27,20 @@ Game::Game()
 		board[blackPos] = std::make_unique<Pawn>(blackPos, Piece::Black, currentTurn);
 	}
 
+	// Setup pieces
 	for (int i = 0; i < Piece::MaxTeams; ++i)
 	{
 		// 0 for white, 7 for black
 		int rank = i * (Settings::g_boardSize - 1);
 
-		board[{rank, 1}] = std::make_unique<Knight>(Point{ rank, 1 }, static_cast<Piece::Team>(i));
-		board[{rank, 6}] = std::make_unique<Knight>(Point{ rank, 6 }, static_cast<Piece::Team>(i));
+		addPiece<Rook>(board, { rank, 0 }, i);
+		addPiece<Knight>(board, { rank, 1 }, i);
+		addPiece<Bishop>(board, { rank, 2 }, i);
+		addPiece<Queen>(board, { rank, 3 }, i);
+
+		addPiece<Bishop>(board, { rank, 5 }, i);
+		addPiece<Knight>(board, { rank, 6 }, i);
+		addPiece<Rook>(board, { rank, 7 }, i);
 	}
 }
 
@@ -64,7 +80,7 @@ void playGame(Game& game)
 		std::cout << "Selected a " << board[start]->getName() << '\n';
 
 
-		std::cout << "Select a tile to move to.\n";
+		std::cout << "Select a tile to move to, or type 'QUIT' to unselect the piece.\n";
 		InputResult end = Input::getTileInput();
 		
 		if (end.result == InputResult::QUIT)
