@@ -16,7 +16,7 @@ std::unique_ptr<Piece>& Board::operator[](Point point)
 const std::unique_ptr<Piece>& Board::operator[](Point point) const
 {
 	assert(point.isInBounds() && "Attempted to index board by an out-of-bounds point.");
-	return board[point.file][point.rank];
+	return board[point.rank][point.file];
 }
 
 std::ostream& operator<<(std::ostream& out, Board& board)
@@ -33,14 +33,14 @@ std::ostream& operator<<(std::ostream& out, Board& board)
 		out << "---";
 	}
 	out << "\n";
-	for (int rank = 0; rank < Settings::g_boardSize; ++rank)
+	for (int rank = Settings::g_boardSize - 1; rank >= 0; --rank)
 	{
-		out << Settings::g_boardSize - rank << " |";
+		out << rank + 1 << " |";
 		for (int file = 0; file < Settings::g_boardSize; ++file)
 		{
-			if (board[file][rank])
+			if (board[rank][file])
 			{
-				out << *board[file][rank];
+				out << *board[rank][file];
 			}
 			else
 			{

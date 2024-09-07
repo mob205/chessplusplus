@@ -1,10 +1,11 @@
 #pragma once
 #include "Move.h"
+#include "Pawn.h"
 
-class StandardMove : public Move
+class DoublePawnMove : public Move
 {
 public:
-	StandardMove(const Point& start, const Point& end)
+	DoublePawnMove(const Point& start, const Point& end)
 		: Move{ start, end }
 	{}
 

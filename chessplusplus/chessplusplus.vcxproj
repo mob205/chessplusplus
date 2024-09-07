@@ -130,16 +130,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="DoublePawnMove.cpp" />
+    <ClCompile Include="EnPassantMove.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Move.cpp" />
     <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="Point.cpp" />
+    <ClCompile Include="StandardMove.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
+    <ClInclude Include="BoardHelpers.h" />
+    <ClInclude Include="DoublePawnMove.h" />
+    <ClInclude Include="EnPassantMove.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="IMove.h" />
+    <ClInclude Include="Move.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputResult.h" />
     <ClInclude Include="Pawn.h" />

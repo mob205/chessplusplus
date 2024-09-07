@@ -5,15 +5,26 @@
 class Pawn : public Piece
 {
 public:
-	Pawn(Point position, Team team)
-		: Piece{ position, team }
+	Pawn(Point position, Team team, const int& currentTurn)
+		: Piece{ position, team }, currentTurn{ currentTurn }
 	{}
 
+	// Updates the last time a pawn does a double move
+	void updateDoubleMove() { turnDoubleMoved = currentTurn; }
+
+	// Returns true if this pawn is eligible to be En Passant'd this turn
+	bool isPassantable() const { return turnDoubleMoved != 0 && currentTurn == turnDoubleMoved + 1; }
+
+	// Returns the forward direction for this pawn
+	constexpr Point forward() const { return { 1 - (2 * team), 0 }; }
+
 	MoveSet getPossibleMoves(Board& board) const override;
-	char getSymbol() const override { return team ? 'p' : toupper('p'); }
-	bool isPassantable(int curTurn) const { turnDoubleMoved != 0 && curTurn == turnDoubleMoved + 1; }
+
+	char getSymbol() const override { return team ? toupper('p') : 'p'; }
+
+	std::string_view getName() const override { return "Pawn"; }
 
 private:
-	constexpr Point forward() const { return { 0, 1 - (2 * team) }; }
 	int turnDoubleMoved{};
+	const int& currentTurn{};
 };

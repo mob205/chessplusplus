@@ -40,7 +40,7 @@ namespace Input
 		}
 	}
 
-	inline InputResult getGameInput()
+	inline InputResult getTileInput()
 	{
 		while (true)
 		{

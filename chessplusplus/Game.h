@@ -9,10 +9,12 @@ class Game
 
 public:
 	Game();
+
 	Board& getBoard() { return board; }
 
 private:
 	Board board{};
-	Piece::Team currentTeam{};
+	int currentTurn{};
+	Piece::Team currentTeam{Piece::White};
 };
 

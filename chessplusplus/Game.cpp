@@ -9,11 +9,11 @@ Game::Game()
 	// Setup pawns pawns
 	for (int i = 0; i < Settings::g_boardSize; ++i)
 	{
-		Point whitePos{ Settings::g_boardSize - 2, i };
-		Point blackPos{ 1, i };
+		Point blackPos{ Settings::g_boardSize - 2, i };
+		Point whitePos{ 1, i };
 
-		board[whitePos] = std::make_unique<Pawn>(whitePos, Piece::White);
-		board[blackPos] = std::make_unique<Pawn>(blackPos, Piece::Black);
+		board[whitePos] = std::make_unique<Pawn>(whitePos, Piece::White, currentTurn);
+		board[blackPos] = std::make_unique<Pawn>(blackPos, Piece::Black, currentTurn);
 	}
 }
 
@@ -23,10 +23,11 @@ void playGame(Game& game)
 	InputResult res{};
 	while (res.result != InputResult::QUIT)
 	{
+		game.currentTeam = static_cast<Piece::Team>((game.currentTurn) % Piece::MaxTeams);
 		std::cout << board << '\n';
 		std::cout << "Select a piece to move, or type 'QUIT' to quit.\n";
 
-		InputResult res = Input::getGameInput();
+		res = Input::getTileInput();
 		if (res.result == InputResult::QUIT)
 		{
 			// Quitting stuff
@@ -45,7 +46,35 @@ void playGame(Game& game)
 			std::cout << "No owned piece is on this square!\n";
 			continue;
 		}
-		std::cout << board[res.point]->getSymbol();
+		
+		Point start{ res.point };
 
+		std::cout << "Selected a " << board[start]->getName() << '\n';
+
+
+		std::cout << "Select a tile to move to.\n";
+		InputResult end = Input::getTileInput();
+		
+		if (end.result == InputResult::QUIT)
+		{
+			continue;
+		}
+		if (end.result != InputResult::POINT)
+		{
+			std::cout << "Invalid input.\n";
+			continue;
+		}
+
+
+		MoveSet possibleMoves{ board[start]->getPossibleMoves(board) };
+		auto moveItr{ possibleMoves.find(end.point) };
+
+		if (moveItr == possibleMoves.end())
+		{
+			std::cout << "Invalid move.\n";
+			continue;
+		}
+		moveItr->second->ExecuteMove(board);
+		++game.currentTurn;
 	}
 }
