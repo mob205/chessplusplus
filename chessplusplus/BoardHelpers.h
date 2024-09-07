@@ -16,3 +16,8 @@ inline bool isEnemyPiece(const Board& board, const Point& point, Piece::Team tea
 {
 	return isOccupied(board, point) && board[point]->getTeam() != team;
 }
+
+inline bool isAlliedPiece(const Board& board, const Point& point, Piece::Team team)
+{
+	return isOccupied(board, point) && board[point]->getTeam() == team;
+}

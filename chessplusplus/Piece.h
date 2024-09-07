@@ -19,7 +19,7 @@ public:
 		MaxTeams
 	};
 
-	Piece(Point position, Team team)
+	Piece(const Point& position, Team team)
 		: position{ position }, team{ team }
 	{}
 
@@ -44,7 +44,8 @@ public:
 	// Prints the piece out
 	friend std::ostream& operator<<(std::ostream& out, Piece& piece)
 	{
-		out << " " << piece.getSymbol() << " ";
+		char symbol = piece.getSymbol();
+		out << " " << static_cast<char>(piece.team ? toupper(symbol) : symbol) << " ";
 		return out;
 	}
 

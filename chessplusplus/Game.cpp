@@ -1,8 +1,10 @@
 #include "Game.h"
 #include "Settings.h"
-#include "Pawn.h"
 #include "Input.h"
 #include "BoardHelpers.h"
+
+#include "Pawn.h"
+#include "Knight.h"
 
 Game::Game()
 {
@@ -15,6 +17,15 @@ Game::Game()
 		board[whitePos] = std::make_unique<Pawn>(whitePos, Piece::White, currentTurn);
 		board[blackPos] = std::make_unique<Pawn>(blackPos, Piece::Black, currentTurn);
 	}
+
+	for (int i = 0; i < Piece::MaxTeams; ++i)
+	{
+		// 0 for white, 7 for black
+		int rank = i * (Settings::g_boardSize - 1);
+
+		board[{rank, 1}] = std::make_unique<Knight>(Point{ rank, 1 }, static_cast<Piece::Team>(i));
+		board[{rank, 6}] = std::make_unique<Knight>(Point{ rank, 6 }, static_cast<Piece::Team>(i));
+	}
 }
 
 void playGame(Game& game)
@@ -24,7 +35,8 @@ void playGame(Game& game)
 	while (res.result != InputResult::QUIT)
 	{
 		game.currentTeam = static_cast<Piece::Team>((game.currentTurn) % Piece::MaxTeams);
-		std::cout << board << '\n';
+		std::cout << '\n' << board << '\n';
+		std::cout << (game.currentTeam ? "Black" : "White") << "'s turn!\n";
 		std::cout << "Select a piece to move, or type 'QUIT' to quit.\n";
 
 		res = Input::getTileInput();

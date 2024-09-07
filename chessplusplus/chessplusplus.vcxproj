@@ -133,6 +133,7 @@
     <ClCompile Include="DoublePawnMove.cpp" />
     <ClCompile Include="EnPassantMove.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Knight.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Move.cpp" />
     <ClCompile Include="Pawn.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="DoublePawnMove.h" />
     <ClInclude Include="EnPassantMove.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Knight.h" />
     <ClInclude Include="Move.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputResult.h" />

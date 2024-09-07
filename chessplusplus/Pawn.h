@@ -5,7 +5,7 @@
 class Pawn : public Piece
 {
 public:
-	Pawn(Point position, Team team, const int& currentTurn)
+	Pawn(const Point& position, Team team, const int& currentTurn)
 		: Piece{ position, team }, currentTurn{ currentTurn }
 	{}
 
@@ -20,7 +20,7 @@ public:
 
 	MoveSet getPossibleMoves(Board& board) const override;
 
-	char getSymbol() const override { return team ? toupper('p') : 'p'; }
+	char getSymbol() const override { return 'p'; }
 
 	std::string_view getName() const override { return "Pawn"; }
 
