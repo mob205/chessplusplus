@@ -11,7 +11,8 @@ Row& Board::operator[](int idx)
 }
 std::unique_ptr<Piece>& Board::operator[](Point point)
 {
-	return const_cast<std::unique_ptr<Piece>&>(std::as_const(*this)[point]);
+	assert(point.isInBounds() && "Attempted to index board by an out-of-bounds point.");
+	return board[point.rank][point.file];
 }
 const std::unique_ptr<Piece>& Board::operator[](Point point) const
 {

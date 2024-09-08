@@ -6,13 +6,14 @@
 #include "Pawn.h"
 #include "Knight.h"
 #include "Bishop.h"
-#include "Rook.h";
+#include "Rook.h"
 #include "Queen.h"
+#include "King.h"
 
 template<typename T>
-static void addPiece(Board& board, const Point& position, int team)
+static void addPiece(Board& board, const Point& position, Piece::Team team)
 {
-	board[position] = std::make_unique<T>(position, static_cast<Piece::Team>(team));
+	board[position] = std::make_unique<T>(position, team);
 }
 
 Game::Game()
@@ -32,15 +33,25 @@ Game::Game()
 	{
 		// 0 for white, 7 for black
 		int rank = i * (Settings::g_boardSize - 1);
+		Piece::Team team{ static_cast<Piece::Team>(i) };
+		Piece::Team opponent{ static_cast<Piece::Team>((i + 1) % Piece::MaxTeams) };
 
-		addPiece<Rook>(board, { rank, 0 }, i);
-		addPiece<Knight>(board, { rank, 1 }, i);
-		addPiece<Bishop>(board, { rank, 2 }, i);
-		addPiece<Queen>(board, { rank, 3 }, i);
+		addPiece<Rook>(board, { rank, 0 }, team);
+		addPiece<Knight>(board, { rank, 1 }, team);
+		addPiece<Bishop>(board, { rank, 2 }, team);
+		addPiece<Queen>(board, { rank, 3 }, team);
 
-		addPiece<Bishop>(board, { rank, 5 }, i);
-		addPiece<Knight>(board, { rank, 6 }, i);
-		addPiece<Rook>(board, { rank, 7 }, i);
+		// Create a new king
+		auto king = std::make_unique<King>(Point{ rank, 4 }, team, attackBoard);
+		// Save a raw pointer to view the king later
+		kings[i] = king.get();
+		// Move it onto the board
+		board[{rank, 4}] = std::move(king);
+
+
+		addPiece<Bishop>(board, { rank, 5 }, team);
+		addPiece<Knight>(board, { rank, 6 }, team);
+		addPiece<Rook>(board, { rank, 7 }, team);
 	}
 }
 
@@ -51,14 +62,20 @@ void playGame(Game& game)
 	while (res.result != InputResult::QUIT)
 	{
 		game.currentTeam = static_cast<Piece::Team>((game.currentTurn) % Piece::MaxTeams);
+		Piece::Team opp = static_cast<Piece::Team>((game.currentTeam + 1) % Piece::MaxTeams);
+		
+		game.attackBoard.update(board, game.currentTeam, game.currentTurn, game.kings);
+
+		//std::cout << game.attackBoard;
+
 		std::cout << '\n' << board << '\n';
 		std::cout << (game.currentTeam ? "Black" : "White") << "'s turn!\n";
 		std::cout << "Select a piece to move, or type 'QUIT' to quit.\n";
 
+
 		res = Input::getTileInput();
 		if (res.result == InputResult::QUIT)
 		{
-			// Quitting stuff
 			break;
 		}
 
@@ -102,6 +119,7 @@ void playGame(Game& game)
 			std::cout << "Invalid move.\n";
 			continue;
 		}
+
 		moveItr->second->ExecuteMove(board);
 		++game.currentTurn;
 	}

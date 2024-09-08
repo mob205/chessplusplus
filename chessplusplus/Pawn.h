@@ -9,6 +9,12 @@ public:
 		: Piece{ position, team }, currentTurn{ currentTurn }
 	{}
 
+
+	MoveSet getPossibleMoves(const Board& board, bool getDefenses) const override;
+	char getSymbol() const override { return 'p'; }
+	std::string_view getName() const override { return "Pawn"; }
+	Type getType() const override { return Type::Pawn; }
+
 	// Updates the last time a pawn does a double move
 	void updateDoubleMove() { turnDoubleMoved = currentTurn; }
 
@@ -18,11 +24,8 @@ public:
 	// Returns the forward direction for this pawn
 	constexpr Point forward() const { return { 1 - (2 * team), 0 }; }
 
-	MoveSet getPossibleMoves(Board& board) const override;
 
-	char getSymbol() const override { return 'p'; }
 
-	std::string_view getName() const override { return "Pawn"; }
 
 private:
 	int turnDoubleMoved{};

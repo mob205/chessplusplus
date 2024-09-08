@@ -9,9 +9,10 @@ public:
 		: LinePiece{ position, team }
 	{}
 
-	MoveSet getPossibleMoves(Board& board) const override;
+	MoveSet getPossibleMoves(const Board& board, bool getDefenses) const override;
 	char getSymbol() const override { return 'b'; }
 	std::string_view getName() const override { return "Bishop"; }
+	Type getType() const override { return Type::Bishop; }
 
 private:
 	static constexpr std::array directions

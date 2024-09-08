@@ -1,7 +1,7 @@
 #include "Bishop.h"
 
-MoveSet Bishop::getPossibleMoves(Board& board) const
+MoveSet Bishop::getPossibleMoves(const Board& board, bool getDefenses) const
 {
-    return getLineMoves(board, directions);
+    return getLineMoves(board, directions, getDefenses);
 }
 

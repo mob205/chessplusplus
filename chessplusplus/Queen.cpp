@@ -1,7 +1,7 @@
 #include "Queen.h"
 
-MoveSet Queen::getPossibleMoves(Board& board) const
+MoveSet Queen::getPossibleMoves(const Board& board, bool getDefenses) const
 {
-    return getLineMoves(board, directions);
+    return getLineMoves(board, directions, getDefenses);
 }
 

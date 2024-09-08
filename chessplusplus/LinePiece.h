@@ -13,7 +13,7 @@ public:
 
 protected:
 	template <int N>
-	MoveSet getLineMoves(Board& board, std::array<Point, N> directions) const
+	MoveSet getLineMoves(const Board& board, std::array<Point, N> directions, bool getDefenses) const
 	{
 		MoveSet set{};
 		for (int i = 0; i < N; ++i)
@@ -28,7 +28,8 @@ protected:
 				dest += direction;
 			}
 			// Last spot in the line is an enemy piece - can capture that piece, but can't move past it
-			if (dest.isInBounds() && isEnemyPiece(board, dest, team))
+			// Situational attack: Defending the allied allied piece
+			if (dest.isInBounds() && (isEnemyPiece(board, dest, team) || getDefenses))
 			{
 				set.insert({ dest, std::make_unique<StandardMove>(position, dest) });
 			}

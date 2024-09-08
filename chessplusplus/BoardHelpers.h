@@ -1,23 +1,14 @@
 #pragma once
-#include "Point.h"
-#include "Board.h"
+#include "Piece.h"
+struct Point;
+class Board;
 
-inline bool isOccupied(const Board& board, const Point& point)
-{
-	return static_cast<bool>(board[point]);
-}
+bool isOccupied(const Board& board, const Point& point);
 
-inline bool ownsPiece(const Board& board, const Point& point, Piece::Team team)
-{
-	return isOccupied(board, point) && board[point]->getTeam() == team;
-}
+bool ownsPiece(const Board& board, const Point& point, Piece::Team team);
 
-inline bool isEnemyPiece(const Board& board, const Point& point, Piece::Team team)
-{
-	return isOccupied(board, point) && board[point]->getTeam() != team;
-}
+bool isEnemyPiece(const Board& board, const Point& point, Piece::Team team);
 
-inline bool isAlliedPiece(const Board& board, const Point& point, Piece::Team team)
-{
-	return isOccupied(board, point) && board[point]->getTeam() == team;
-}
+bool isAlliedPiece(const Board& board, const Point& point, Piece::Team team);
+
+bool isType(const Board& board, const Point& point, Piece::Type type);

@@ -14,11 +14,10 @@ public:
 		: Piece{ position, team }
 	{}
 
-	MoveSet getPossibleMoves(Board& board) const override;
-
-	char getSymbol() const override { return 'k'; }
-
+	MoveSet getPossibleMoves(const Board& board, bool getDefenses) const override;
+	char getSymbol() const override { return 'n'; }
 	std::string_view getName() const override { return "Knight"; }
+	Type getType() const override { return Type::Knight; }
 
 private:
 	static constexpr std::array directions{

@@ -19,6 +19,17 @@ public:
 		MaxTeams
 	};
 
+	enum Type
+	{
+		Pawn,
+		Knight,
+		Bishop,
+		Rook,
+		Queen,
+		King,
+		MaxTypes
+	};
+
 	Piece(const Point& position, Team team)
 		: position{ position }, team{ team }
 	{}
@@ -33,8 +44,12 @@ public:
 	// Sets the moved state of the piece
 	void setMoved(bool state) { hasMoved = state; }
 
+	virtual Type getType() const = 0;
+
 	// Gets all possible moves that can be made by this piece on a given board
-	virtual MoveSet getPossibleMoves(Board& board) const = 0;
+	// If getDefenses, the returned MoveSet contains moves that aren't necessarily valid in the current board,
+	// but can be taken if another piece moves to capture
+	virtual MoveSet getPossibleMoves(const Board& board, bool getDefenses = false) const = 0;
 
 	// Gets the symbol used to represent this piece on the board
 	virtual char getSymbol() const = 0;
