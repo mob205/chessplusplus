@@ -113,10 +113,16 @@ void Game::playGame()
 		}
 		else if (res.result == InputResult::UNDO)
 		{
-			if (savedMove)
+			if (!moveHistory.empty())
 			{
-				savedMove->undoMove(board);
-				--currentTurn;
+				std::unique_ptr<Move> move = std::move(moveHistory.top());
+				moveHistory.pop();
+				move->undoMove(board);
+				std::cout << "Undo successful.\n";
+			}
+			else
+			{
+				std::cout << "No move to undo!\n";
 			}
 			continue;
 		}
@@ -170,8 +176,7 @@ void Game::playGame()
 			continue;
 		}
 
-		savedMove = std::move(moveItr->second);
-
+		moveHistory.push(std::move(moveItr->second));
 		++currentTurn;
 	}
 }
