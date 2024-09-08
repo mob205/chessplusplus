@@ -119,6 +119,7 @@ void Game::playGame()
 				moveHistory.pop();
 				move->undoMove(board);
 				std::cout << "Undo successful.\n";
+				--currentTurn;
 			}
 			else
 			{
@@ -153,7 +154,7 @@ void Game::playGame()
 		}
 
 
-		MoveSet possibleMoves{ board[start]->getPossibleMoves(board) };
+		MoveSet possibleMoves{ board[start]->getPossibleMoves(board, false, true) };
 		auto moveItr{ possibleMoves.find(end.point) };
 
 

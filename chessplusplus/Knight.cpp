@@ -2,7 +2,7 @@
 #include "BoardHelpers.h"
 #include "StandardMove.h"
 
-MoveSet Knight::getPossibleMoves(const Board& board, bool getDefenses) const
+MoveSet Knight::getPossibleMoves(const Board& board, bool getDefenses, bool allowRequireExtraInput) const
 {
     MoveSet set{};
     for (const auto& dir : directions)

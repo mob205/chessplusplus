@@ -2,73 +2,18 @@
 #include <iostream>
 #include <sstream>
 
-#include "Point.h"
+#include "Piece.h"
 #include "InputResult.h"
 
 namespace Input
 {
-	inline void displayMainMenu()
-	{
-		std::cout << "A. Start new game\n"
-			<< "B. Load a saved game\n"
-			<< "C. Quit\n";
-	}
-	inline bool isValidMenuInput(char input)
-	{
-		return input == 'A' || input == 'B' || input == 'C';
-	}
-	inline char getMenuInput()
-	{
-		displayMainMenu();
+	void displayMainMenu();
+	
+	bool isValidMenuInput(char input);
 
-		char input{};
-		while (true)
-		{
-			std::cin >> input;
+	char getMenuInput();
 
-			if (!std::cin || !isValidMenuInput(input))
-			{
-				std::cin.clear();
-				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	InputResult getTileInput();
 
-				std::cout << "Invalid input.\n";
-				continue;
-			}
-
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-			return input;
-		}
-	}
-
-	inline InputResult getTileInput()
-	{
-		while (true)
-		{
-			std::string rawInput{};
-			std::cin >> rawInput;
-
-			if (rawInput == "QUIT")
-			{
-				return { {}, InputResult::QUIT };
-			}
-			else if (rawInput == "SAVE")
-			{
-				return { {}, InputResult::SAVE };
-			}
-			else if (rawInput == "UNDO")
-			{
-				return { {}, InputResult:: UNDO };
-			}
-			std::stringstream inStream{ rawInput };
-
-			Point point{};
-			if (inStream >> point && point.isInBounds())
-			{
-				return { point, InputResult::POINT };
-			}
-
-			std::cout << "Invalid input.\n";
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-		}
-	}
+	Piece::Type getPromotionType();
 }

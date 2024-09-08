@@ -14,7 +14,7 @@ public:
 		: Piece{ position, team }
 	{}
 
-	MoveSet getPossibleMoves(const Board& board, bool getDefenses) const override;
+	MoveSet getPossibleMoves(const Board& board, bool getDefenses, bool allowRequireExtraInput) const override;
 	char getSymbol() const override { return 'n'; }
 	std::string_view getName() const override { return "Knight"; }
 	Type getType() const override { return Type::Knight; }

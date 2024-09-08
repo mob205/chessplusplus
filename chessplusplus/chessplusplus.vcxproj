@@ -136,11 +136,13 @@
     <ClCompile Include="DoublePawnMove.cpp" />
     <ClCompile Include="EnPassantMove.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="King.cpp" />
     <ClCompile Include="Knight.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Move.cpp" />
     <ClCompile Include="Pawn.cpp" />
+    <ClCompile Include="PawnMove.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Queen.cpp" />
     <ClCompile Include="Rook.cpp" />
@@ -161,6 +163,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputResult.h" />
     <ClInclude Include="Pawn.h" />
+    <ClInclude Include="PawnMove.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Queen.h" />

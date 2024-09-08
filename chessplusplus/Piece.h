@@ -50,7 +50,8 @@ public:
 	// Gets all possible moves that can be made by this piece on a given board
 	// If getDefenses, the returned MoveSet contains moves that aren't necessarily valid in the current board,
 	// but can be taken if another piece moves to capture
-	virtual MoveSet getPossibleMoves(const Board& board, bool getDefenses = false) const = 0;
+	// If allowRequireExtraInput, the returned MoveSet will contain moves that require additional user input (namely pawn promotion)
+	virtual MoveSet getPossibleMoves(const Board& board, bool getDefenses = false, bool allowRequireExtraInput = false) const = 0;
 
 	// Gets the symbol used to represent this piece on the board
 	virtual char getSymbol() const = 0;
