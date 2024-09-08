@@ -2,10 +2,17 @@
 #include "Board.h"
 #include "Pawn.h"
 
-void DoublePawnMove::ExecuteMove(Board& board) const
+void DoublePawnMove::executeMove(Board& board)
 {
-	Move::ExecuteMove(board);
+	Move::executeMove(board);
 
 	// Guaranteed to be a pawn, since only pawns should use DoublePawnMove
-	static_cast<Pawn*>(board[end].get())->updateDoubleMove();
+	static_cast<Pawn*>(board[end].get())->setDoubleMove();
+}
+
+void DoublePawnMove::undoMove(Board& board)
+{
+	Move::undoMove(board);
+
+	static_cast<Pawn*>(board[start].get())->unsetDoubleMove();
 }

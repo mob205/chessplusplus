@@ -11,9 +11,14 @@ class Game
 public:
 	Game();
 	Board& getBoard() { return board; }
-
+	void playGame();
 
 private:
+
+	bool hasPossibleNonKingMove(Piece::Team team);
+
+	bool isInCheck(Piece::Team team);
+
 	// Non-owning pointers to view kings
 	std::array<const Piece*, Piece::MaxTeams> kings;
 

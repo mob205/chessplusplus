@@ -2,7 +2,20 @@
 #include "Board.h"
 #include "Piece.h"
 
-void StandardMove::ExecuteMove(Board& board) const
+void StandardMove::executeMove(Board& board)
 {
-	Move::ExecuteMove(board);
+	Move::executeMove(board);
+}
+
+void StandardMove::undoMove(Board& board)
+{
+	Move::undoMove(board);
+}
+
+void StandardMove::printMove() const
+{
+	if (captured)
+	{
+		std::cout << "Captured a " << captured->getName() << '\n';
+	}
 }

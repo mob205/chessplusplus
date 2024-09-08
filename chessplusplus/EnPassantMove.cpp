@@ -3,13 +3,22 @@
 #include "Piece.h"
 
 
-void EnPassantMove::ExecuteMove(Board& board) const
+void EnPassantMove::executeMove(Board& board)
 {
 	// Move the pawn
-	Move::ExecuteMove(board);
-
-	std::cout << "EN PASSANT!!!\n";
+	Move::executeMove(board);
 
 	// Capture piece
-	board[captureSpot].reset();
+	// Captured should be nullptr after the base Move since it's impossible to en passant and diagonal capture at the same time
+	captured = std::move(board[captureSpot]);
+}
+
+void EnPassantMove::undoMove(Board& board)
+{
+	board[end]->setMoved(originalMoved);
+
+	board[start] = std::move(board[end]);
+	board[start]->updatePosition(start);
+
+	board[captureSpot] = std::move(captured);
 }

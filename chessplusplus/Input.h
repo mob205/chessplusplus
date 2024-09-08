@@ -55,7 +55,10 @@ namespace Input
 			{
 				return { {}, InputResult::SAVE };
 			}
-
+			else if (rawInput == "UNDO")
+			{
+				return { {}, InputResult:: UNDO };
+			}
 			std::stringstream inStream{ rawInput };
 
 			Point point{};

@@ -35,6 +35,7 @@ public:
 	{}
 
 	void updatePosition(Point newPos) { position = newPos; }
+	Point getPosition() const { return position; }
 
 	Team getTeam() const { return team; }
 

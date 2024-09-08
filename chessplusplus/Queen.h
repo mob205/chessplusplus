@@ -11,7 +11,7 @@ public:
 
 	MoveSet getPossibleMoves(const Board& board, bool getDefenses) const override;
 	char getSymbol() const override { return 'q'; }
-	std::string_view getName() const override { return "Q"; }
+	std::string_view getName() const override { return "Queen"; }
 	Type getType() const override { return Type::Queen; }
 
 private:

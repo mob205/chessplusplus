@@ -19,7 +19,7 @@ int main()
 		// Start a new game
 		{
 			Game game{};
-			playGame(game);
+			game.playGame();
 		}
 			break;
 		case 'B':

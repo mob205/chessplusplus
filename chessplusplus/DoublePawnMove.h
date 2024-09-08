@@ -9,5 +9,7 @@ public:
 		: Move{ start, end, false }
 	{}
 
-	void ExecuteMove(Board& board) const override;
+	void executeMove(Board& board) override;
+	void undoMove(Board& board) override;
+	void printMove() const override {};
 };

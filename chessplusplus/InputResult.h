@@ -8,7 +8,8 @@ struct InputResult
 	{
 		POINT,
 		SAVE,
-		QUIT
+		QUIT,
+		UNDO
 	};
 
 	Point point{};

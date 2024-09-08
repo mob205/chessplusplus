@@ -55,21 +55,48 @@ Game::Game()
 	}
 }
 
-void playGame(Game& game)
+bool Game::isInCheck(Piece::Team team)
 {
-	Board& board = game.getBoard();
+	Piece::Team oppTeam{ static_cast<Piece::Team>((currentTeam + 1) % Piece::MaxTeams) };
+	return attackBoard.isAttacking(kings[currentTeam]->getPosition(), oppTeam);
+}
+
+void Game::playGame()
+{
+	Board& board = getBoard();
 	InputResult res{};
 	while (res.result != InputResult::QUIT)
 	{
-		game.currentTeam = static_cast<Piece::Team>((game.currentTurn) % Piece::MaxTeams);
-		Piece::Team opp = static_cast<Piece::Team>((game.currentTeam + 1) % Piece::MaxTeams);
-		
-		game.attackBoard.update(board, game.currentTeam, game.currentTurn, game.kings);
+		static std::unique_ptr<Move> savedMove{};
 
-		//std::cout << game.attackBoard;
+		currentTeam = static_cast<Piece::Team>((currentTurn) % Piece::MaxTeams);
+		Piece::Team oppTeam{ static_cast<Piece::Team>((currentTeam + 1) % Piece::MaxTeams) };
+		
+		attackBoard.update(board, currentTeam, kings);
 
 		std::cout << '\n' << board << '\n';
-		std::cout << (game.currentTeam ? "Black" : "White") << "'s turn!\n";
+
+		// Check for end conditions
+		if (kings[currentTeam]->getPossibleMoves(board).size() == 0 && !hasPossibleNonKingMove(currentTeam))
+		{
+			if (isInCheck(currentTeam))
+			{
+				// The winner will be the player of *last* turn
+				std::cout << "CHECKMATE! " << (currentTeam ? "White" : "Black") << " wins!\n\n";
+				break;
+			}
+			else
+			{
+				std::cout << "Stalemate.\n\n";
+				break;
+			}
+		}
+		else if (isInCheck(currentTeam))
+		{
+			std::cout << "CHECK!\n\n";
+		}
+	
+		std::cout << (currentTeam ? "Black" : "White") << "'s turn!\n";
 		std::cout << "Select a piece to move, or type 'QUIT' to quit.\n";
 
 
@@ -79,14 +106,23 @@ void playGame(Game& game)
 			break;
 		}
 
-		if (res.result == InputResult::SAVE)
+		else if (res.result == InputResult::SAVE)
 		{
 			// Saving stuff
 			break;
 		}
+		else if (res.result == InputResult::UNDO)
+		{
+			if (savedMove)
+			{
+				savedMove->undoMove(board);
+				--currentTurn;
+			}
+			continue;
+		}
 
 		// Must be point result
-		if (!ownsPiece(board, res.point, game.currentTeam))
+		if (!ownsPiece(board, res.point, currentTeam))
 		{
 			std::cout << "No owned piece is on this square!\n";
 			continue;
@@ -94,7 +130,7 @@ void playGame(Game& game)
 		
 		Point start{ res.point };
 
-		std::cout << "Selected a " << board[start]->getName() << '\n';
+		std::cout << "Selected a " << board[start]->getName() << "\n\n";
 
 
 		std::cout << "Select a tile to move to, or type 'QUIT' to unselect the piece.\n";
@@ -114,13 +150,62 @@ void playGame(Game& game)
 		MoveSet possibleMoves{ board[start]->getPossibleMoves(board) };
 		auto moveItr{ possibleMoves.find(end.point) };
 
+
 		if (moveItr == possibleMoves.end())
 		{
 			std::cout << "Invalid move.\n";
 			continue;
 		}
 
-		moveItr->second->ExecuteMove(board);
-		++game.currentTurn;
+		moveItr->second->executeMove(board);
+		moveItr->second->printMove();
+		std::cout << '\n';
+
+		attackBoard.update(board, currentTeam, kings);
+		// Prevent moving pinned pieces
+		if (isInCheck(currentTeam))
+		{
+			moveItr->second->undoMove(board);
+			std::cout << "Invalid move.";
+			continue;
+		}
+
+		savedMove = std::move(moveItr->second);
+
+		++currentTurn;
 	}
+}
+
+// Returns true if the specified player has a valid piece move on the current board
+bool Game::hasPossibleNonKingMove(Piece::Team team)
+{
+	Piece::Team opp{ static_cast<Piece::Team>((currentTeam + 1) % Piece::MaxTeams) };
+	AttackBoard attackBoard{};
+
+	for (int rank = 0; rank < Settings::g_boardSize; ++rank)
+	{
+		for (int file = 0; file < Settings::g_boardSize; ++file)
+		{
+			Point pos{ rank, file };
+			if (!isAlliedPiece(board, pos, team) || board[pos]->getType() == Piece::King) { continue; }
+			
+			MoveSet set{ board[pos]->getPossibleMoves(board) };
+
+			// Simulate a move to ensure the piece isn't pinned
+			for (auto& move : set)
+			{
+				move.second->executeMove(board);
+				attackBoard.update(board, opp, kings);
+				move.second->undoMove(board);
+
+				// Valid move found!
+				if (!attackBoard.isAttacking(kings[team]->getPosition(), opp))
+				{
+					return true;
+				}
+			}
+		}
+	}
+	// Checked every move and none are valid
+	return false;
 }

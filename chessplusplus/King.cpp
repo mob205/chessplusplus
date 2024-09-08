@@ -18,7 +18,7 @@ MoveSet King::getPossibleMoves(const Board& board, bool getDefenses) const
             Point dest{ position + Point{dRank, dFile} };
 
             // Situational case: King defends the allied piece
-            if (dest.isInBounds() && (!isOccupied(board, dest) || isEnemyPiece(board, dest, team) || getDefenses) && !attackBoard.isAttacked(dest, opp))
+            if (dest.isInBounds() && (!isOccupied(board, dest) || isEnemyPiece(board, dest, team) || getDefenses) && !attackBoard.isAttacking(dest, opp))
             {
                 set.insert({ dest, std::make_unique<StandardMove>(position, dest) });
             }

@@ -8,7 +8,9 @@ public:
 		: Move{ start, end }, captureSpot{ captureSpot }
 	{}
 
-	void ExecuteMove(Board& board) const override;
+	void executeMove(Board& board) override;
+	void undoMove(Board& board) override;
+	void printMove() const override { std::cout << "EN PASSANT!!!"; }
 
 private:
 	Point captureSpot;

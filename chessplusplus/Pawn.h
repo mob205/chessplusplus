@@ -16,7 +16,13 @@ public:
 	Type getType() const override { return Type::Pawn; }
 
 	// Updates the last time a pawn does a double move
-	void updateDoubleMove() { turnDoubleMoved = currentTurn; }
+	void setDoubleMove() { turnDoubleMoved = currentTurn; }
+
+	// Resets the last time a pawn did a double move
+	void unsetDoubleMove() { turnDoubleMoved = 0; }
+
+	// Gets the last time a pawn double moved
+	int getDoubleMove() const { return turnDoubleMoved; }
 
 	// Returns true if this pawn is eligible to be En Passant'd this turn
 	bool isPassantable() const { return turnDoubleMoved != 0 && currentTurn == turnDoubleMoved + 1; }

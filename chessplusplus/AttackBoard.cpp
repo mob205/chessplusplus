@@ -3,11 +3,9 @@
 #include "Board.h"
 #include "Piece.h"
 
-void AttackBoard::update(const Board& board, Piece::Team team, int turn, std::array<const Piece*, Piece::MaxTeams> kings)
+void AttackBoard::update(const Board& board, Piece::Team team, std::array<const Piece*, Piece::MaxTeams> kings)
 {
 	// Same turn, so the attack board is still valid.
-	if (turn == currentTurn) { return; }
-	currentTurn = turn;
 
 	for (int i = 0; i < Piece::MaxTeams; ++i)
 	{
@@ -24,8 +22,7 @@ void AttackBoard::update(const Board& board, Piece::Team team, int turn, std::ar
 	//setKing(board, kings[team]);
 }
 
-
-bool AttackBoard::isAttacked(const Point& point, Piece::Team team) const
+bool AttackBoard::isAttacking(const Point& point, Piece::Team team) const
 {
 	return attackBoard[team][point.rank][point.file];
 }
@@ -74,7 +71,7 @@ void AttackBoard::setKing(const Board& board, const Piece* king)
 	}
 }
 
-std::ostream& operator<<(std::ostream& out, const AttackBoard& board)
+void AttackBoard::printBoard(std::ostream& out, Piece::Team team) const
 {
 	out << "   ";
 	for (int i = 0; i < Settings::g_boardSize; ++i)
@@ -93,7 +90,7 @@ std::ostream& operator<<(std::ostream& out, const AttackBoard& board)
 		out << rank + 1 << " |";
 		for (int file = 0; file < Settings::g_boardSize; ++file)
 		{
-			if (board.isAttacked({ rank, file }, Piece::Black))
+			if (this->isAttacking({ rank, file }, team))
 			{
 				out << " X ";
 			}
@@ -110,5 +107,4 @@ std::ostream& operator<<(std::ostream& out, const AttackBoard& board)
 		out << "---";
 	}
 	out << "\n";
-	return out;
 }
