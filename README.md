@@ -49,3 +49,7 @@ En Passant:
 Pawn Promotion:
 
 ![promotion](Images/promotion.png)
+
+# Future Goals
+In the future, I want to add a GUI to the project via SFML or similar graphics library.
+I also want to look into creating a chess engine that can power a basic AI chess opponent.
