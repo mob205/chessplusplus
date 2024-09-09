@@ -13,138 +13,168 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{a8ee2f02-dd5a-44d1-80ab-e0f26d102b24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Pieces">
+      <UniqueIdentifier>{4ea4b054-10b3-4c16-89d6-46a15e3b548d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Moves">
+      <UniqueIdentifier>{50ceca0b-296c-4308-bdab-57529bc343a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Boards">
+      <UniqueIdentifier>{6172f750-a660-4dac-a46a-4f30503aa823}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game">
+      <UniqueIdentifier>{fe0f5ea1-2987-43fc-aa41-be41f90b5fd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Input">
+      <UniqueIdentifier>{8b71d75b-49e5-4603-b8ca-7925aacaacc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Moves">
+      <UniqueIdentifier>{81936d93-8a5a-417d-98e1-9ffe88fc4d6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Boards">
+      <UniqueIdentifier>{e57d9c22-a1a0-40eb-bebc-bf623bc5be21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Pieces">
+      <UniqueIdentifier>{27a0ec47-f2f5-427e-8cb7-46c349e529f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game">
+      <UniqueIdentifier>{72b7b460-ef9a-4487-8c04-fbe30cb1e667}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Board.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Input\Input.cpp">
+      <Filter>Source Files\Input</Filter>
     </ClCompile>
-    <ClCompile Include="Point.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Piece\Bishop.cpp">
+      <Filter>Source Files\Pieces</Filter>
     </ClCompile>
-    <ClCompile Include="Pawn.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Piece\King.cpp">
+      <Filter>Source Files\Pieces</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Piece\Knight.cpp">
+      <Filter>Source Files\Pieces</Filter>
     </ClCompile>
-    <ClCompile Include="StandardMove.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Piece\Queen.cpp">
+      <Filter>Source Files\Pieces</Filter>
     </ClCompile>
-    <ClCompile Include="EnPassantMove.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Piece\Rook.cpp">
+      <Filter>Source Files\Pieces</Filter>
     </ClCompile>
-    <ClCompile Include="DoublePawnMove.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Piece\Pawn.cpp">
+      <Filter>Source Files\Pieces</Filter>
     </ClCompile>
-    <ClCompile Include="Move.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Move\Move.cpp">
+      <Filter>Source Files\Moves</Filter>
     </ClCompile>
-    <ClCompile Include="Knight.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Move\StandardMove.cpp">
+      <Filter>Source Files\Moves</Filter>
     </ClCompile>
-    <ClCompile Include="Rook.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Move\CastlingMove.cpp">
+      <Filter>Source Files\Moves</Filter>
     </ClCompile>
-    <ClCompile Include="Bishop.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Move\DoublePawnMove.cpp">
+      <Filter>Source Files\Moves</Filter>
     </ClCompile>
-    <ClCompile Include="Queen.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Move\EnPassantMove.cpp">
+      <Filter>Source Files\Moves</Filter>
     </ClCompile>
-    <ClCompile Include="AttackBoard.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Move\PawnMove.cpp">
+      <Filter>Source Files\Moves</Filter>
     </ClCompile>
-    <ClCompile Include="King.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Board\AttackBoard.cpp">
+      <Filter>Source Files\Boards</Filter>
     </ClCompile>
-    <ClCompile Include="BoardHelpers.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Board\Board.cpp">
+      <Filter>Source Files\Boards</Filter>
     </ClCompile>
-    <ClCompile Include="PawnMove.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Board\BoardHelpers.cpp">
+      <Filter>Source Files\Boards</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Game\GameSerializer.cpp">
+      <Filter>Source Files\Game</Filter>
     </ClCompile>
-    <ClCompile Include="GameSerializer.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\Game\Game.cpp">
+      <Filter>Source Files\Game</Filter>
     </ClCompile>
-    <ClCompile Include="CastlingMove.cpp">
+    <ClCompile Include="src\Game\Point.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Board.h">
+    <ClInclude Include="include\Game\Point.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Input.h">
+    <ClInclude Include="include\Game\Settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Point.h">
+    <ClInclude Include="include\Game\Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Settings.h">
+    <ClInclude Include="include\Game\GameSerializer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InputResult.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Input\Input.h">
+      <Filter>Header Files\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Piece.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Input\InputResult.h">
+      <Filter>Header Files\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Move.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Move\CastlingMove.h">
+      <Filter>Header Files\Moves</Filter>
     </ClInclude>
-    <ClInclude Include="Pawn.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Move\DoublePawnMove.h">
+      <Filter>Header Files\Moves</Filter>
     </ClInclude>
-    <ClInclude Include="StandardMove.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Move\EnPassantMove.h">
+      <Filter>Header Files\Moves</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Move\PawnMove.h">
+      <Filter>Header Files\Moves</Filter>
     </ClInclude>
-    <ClInclude Include="EnPassantMove.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Move\StandardMove.h">
+      <Filter>Header Files\Moves</Filter>
     </ClInclude>
-    <ClInclude Include="DoublePawnMove.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Board\AttackBoard.h">
+      <Filter>Header Files\Boards</Filter>
     </ClInclude>
-    <ClInclude Include="BoardHelpers.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Board\BoardHelpers.h">
+      <Filter>Header Files\Boards</Filter>
     </ClInclude>
-    <ClInclude Include="Knight.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Board\Board.h">
+      <Filter>Header Files\Boards</Filter>
     </ClInclude>
-    <ClInclude Include="LinePiece.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Piece\Bishop.h">
+      <Filter>Header Files\Pieces</Filter>
     </ClInclude>
-    <ClInclude Include="Rook.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Piece\King.h">
+      <Filter>Header Files\Pieces</Filter>
     </ClInclude>
-    <ClInclude Include="Bishop.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Piece\Knight.h">
+      <Filter>Header Files\Pieces</Filter>
     </ClInclude>
-    <ClInclude Include="Queen.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Piece\LinePiece.h">
+      <Filter>Header Files\Pieces</Filter>
     </ClInclude>
-    <ClInclude Include="AttackBoard.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Piece\Pawn.h">
+      <Filter>Header Files\Pieces</Filter>
     </ClInclude>
-    <ClInclude Include="King.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Piece\Piece.h">
+      <Filter>Header Files\Pieces</Filter>
     </ClInclude>
-    <ClInclude Include="PawnMove.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Piece\Queen.h">
+      <Filter>Header Files\Pieces</Filter>
     </ClInclude>
-    <ClInclude Include="GameSerializer.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Piece\Rook.h">
+      <Filter>Header Files\Pieces</Filter>
     </ClInclude>
-    <ClInclude Include="CastlingMove.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\Move\Move.h">
+      <Filter>Header Files\Moves</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

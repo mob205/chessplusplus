@@ -105,6 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>D:\Donny\Documents\C++ Projects\chessplusplus\chessplusplus\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -120,6 +121,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>D:\Donny\Documents\C++ Projects\chessplusplus\chessplusplus\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,51 +131,51 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AttackBoard.cpp" />
-    <ClCompile Include="Bishop.cpp" />
-    <ClCompile Include="Board.cpp" />
-    <ClCompile Include="BoardHelpers.cpp" />
-    <ClCompile Include="CastlingMove.cpp" />
-    <ClCompile Include="DoublePawnMove.cpp" />
-    <ClCompile Include="EnPassantMove.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GameSerializer.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="King.cpp" />
-    <ClCompile Include="Knight.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Move.cpp" />
-    <ClCompile Include="Pawn.cpp" />
-    <ClCompile Include="PawnMove.cpp" />
-    <ClCompile Include="Point.cpp" />
-    <ClCompile Include="Queen.cpp" />
-    <ClCompile Include="Rook.cpp" />
-    <ClCompile Include="StandardMove.cpp" />
+    <ClCompile Include="src\Board\AttackBoard.cpp" />
+    <ClCompile Include="src\Piece\Bishop.cpp" />
+    <ClCompile Include="src\Board\Board.cpp" />
+    <ClCompile Include="src\Board\BoardHelpers.cpp" />
+    <ClCompile Include="src\Move\CastlingMove.cpp" />
+    <ClCompile Include="src\Move\DoublePawnMove.cpp" />
+    <ClCompile Include="src\Move\EnPassantMove.cpp" />
+    <ClCompile Include="src\Game\Game.cpp" />
+    <ClCompile Include="src\Game\GameSerializer.cpp" />
+    <ClCompile Include="src\Input\Input.cpp" />
+    <ClCompile Include="src\Piece\King.cpp" />
+    <ClCompile Include="src\Piece\Knight.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Move\Move.cpp" />
+    <ClCompile Include="src\Piece\Pawn.cpp" />
+    <ClCompile Include="src\Move\PawnMove.cpp" />
+    <ClCompile Include="src\Game\Point.cpp" />
+    <ClCompile Include="src\Piece\Queen.cpp" />
+    <ClCompile Include="src\Piece\Rook.cpp" />
+    <ClCompile Include="src\Move\StandardMove.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AttackBoard.h" />
-    <ClInclude Include="Bishop.h" />
-    <ClInclude Include="Board.h" />
-    <ClInclude Include="BoardHelpers.h" />
-    <ClInclude Include="CastlingMove.h" />
-    <ClInclude Include="DoublePawnMove.h" />
-    <ClInclude Include="EnPassantMove.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="GameSerializer.h" />
-    <ClInclude Include="King.h" />
-    <ClInclude Include="Knight.h" />
-    <ClInclude Include="LinePiece.h" />
-    <ClInclude Include="Move.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="InputResult.h" />
-    <ClInclude Include="Pawn.h" />
-    <ClInclude Include="PawnMove.h" />
-    <ClInclude Include="Piece.h" />
-    <ClInclude Include="Point.h" />
-    <ClInclude Include="Queen.h" />
-    <ClInclude Include="Rook.h" />
-    <ClInclude Include="Settings.h" />
-    <ClInclude Include="StandardMove.h" />
+    <ClInclude Include="include\Board\AttackBoard.h" />
+    <ClInclude Include="include\Piece\Bishop.h" />
+    <ClInclude Include="include\Board\Board.h" />
+    <ClInclude Include="include\Board\BoardHelpers.h" />
+    <ClInclude Include="include\Move\CastlingMove.h" />
+    <ClInclude Include="include\Move\DoublePawnMove.h" />
+    <ClInclude Include="include\Move\EnPassantMove.h" />
+    <ClInclude Include="include\Game\Game.h" />
+    <ClInclude Include="include\Game\GameSerializer.h" />
+    <ClInclude Include="include\Piece\King.h" />
+    <ClInclude Include="include\Piece\Knight.h" />
+    <ClInclude Include="include\Piece\LinePiece.h" />
+    <ClInclude Include="include\Move\Move.h" />
+    <ClInclude Include="include\Input\Input.h" />
+    <ClInclude Include="include\Input\InputResult.h" />
+    <ClInclude Include="include\Piece\Pawn.h" />
+    <ClInclude Include="include\Move\PawnMove.h" />
+    <ClInclude Include="include\Piece\Piece.h" />
+    <ClInclude Include="include\Game\Point.h" />
+    <ClInclude Include="include\Piece\Queen.h" />
+    <ClInclude Include="include\Piece\Rook.h" />
+    <ClInclude Include="include\Game\Settings.h" />
+    <ClInclude Include="include\Move\StandardMove.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
