@@ -23,7 +23,19 @@ int main()
 		}
 			break;
 		case 'B':
-			// Load a game and play it
+		// Load a game and play it
+		{
+			Game game{};
+			if (game.getSerializer().loadGame(Input::getSaveName()))
+			{
+				std::cout << "Successfully loaded game.\n";
+				game.playGame();
+			}
+			else
+			{
+				std::cout << "Invalid save file.\n";
+			}
+		}
 			break;
 		case 'C':
 			std::cout << "Goodbye!";

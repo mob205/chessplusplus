@@ -17,4 +17,7 @@ public:
 
 private:
 	const AttackBoard& attackBoard;
+
+	bool areSpotsUnoccupied(const Board& board, const Point& start, const Point& dir, int num) const;
+	bool areSpotsUnattacked(const Point& start, const Point& dir, int num) const;
 };

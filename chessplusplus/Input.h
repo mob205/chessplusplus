@@ -16,4 +16,6 @@ namespace Input
 	InputResult getTileInput();
 
 	Piece::Type getPromotionType();
+
+	std::string getSaveName();
 }

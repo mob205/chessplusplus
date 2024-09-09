@@ -62,7 +62,7 @@ public:
 	friend std::ostream& operator<<(std::ostream& out, Piece& piece)
 	{
 		char symbol = piece.getSymbol();
-		out << " " << static_cast<char>(piece.team ? toupper(symbol) : symbol) << " ";
+		out << " " << static_cast<char>(piece.team ? symbol : toupper(symbol)) << " ";
 		return out;
 	}
 

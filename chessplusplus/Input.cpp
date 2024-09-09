@@ -33,7 +33,6 @@ namespace Input
 				continue;
 			}
 
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			return input;
 		}
 	}
@@ -96,6 +95,19 @@ namespace Input
 
 			std::cout << "Invalid input.\n";
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		}
+	}
+
+	std::string getSaveName()
+	{
+		std::string input{};
+		while (true)
+		{
+			std::cout << "Enter name of the save file: ";
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::getline(std::cin, input);
+			if (input != "") { return input; }
+			std::cout << "Invalid input.\n";
 		}
 	}
 }

@@ -64,8 +64,8 @@ bool Game::isInCheck(Piece::Team team)
 void Game::playGame()
 {
 	Board& board = getBoard();
-	InputResult res{};
-	while (res.result != InputResult::QUIT)
+	InputResult start{};
+	while (start.result != InputResult::QUIT)
 	{
 		static std::unique_ptr<Move> savedMove{};
 
@@ -81,7 +81,7 @@ void Game::playGame()
 		{
 			if (isInCheck(currentTeam))
 			{
-				// The winner will be the player of *last* turn
+				// The winner will be the player of last turn
 				std::cout << "CHECKMATE! " << (currentTeam ? "White" : "Black") << " wins!\n\n";
 				break;
 			}
@@ -100,23 +100,30 @@ void Game::playGame()
 		std::cout << "Select a piece to move, or type 'QUIT' to quit.\n";
 
 
-		res = Input::getTileInput();
-		if (res.result == InputResult::QUIT)
+		start = Input::getTileInput();
+		if (start.result == InputResult::QUIT)
 		{
 			break;
 		}
 
-		else if (res.result == InputResult::SAVE)
+		else if (start.result == InputResult::SAVE)
 		{
-			// Saving stuff
-			break;
+			if (serializer.saveGame(Input::getSaveName()))
+			{
+				std::cout << "Successfully saved the game.\n";
+			}
+			else
+			{
+				std::cout << "Failed to save the game.\n";
+			}
+			continue;
 		}
-		else if (res.result == InputResult::UNDO)
+		else if (start.result == InputResult::UNDO)
 		{
 			if (!moveHistory.empty())
 			{
-				std::unique_ptr<Move> move = std::move(moveHistory.top());
-				moveHistory.pop();
+				std::unique_ptr<Move> move = std::move(moveHistory.back());
+				moveHistory.pop_back();
 				move->undoMove(board);
 				std::cout << "Undo successful.\n";
 				--currentTurn;
@@ -129,15 +136,14 @@ void Game::playGame()
 		}
 
 		// Must be point result
-		if (!ownsPiece(board, res.point, currentTeam))
+		if (!ownsPiece(board, start.point, currentTeam))
 		{
 			std::cout << "No owned piece is on this square!\n";
 			continue;
 		}
 		
-		Point start{ res.point };
 
-		std::cout << "Selected a " << board[start]->getName() << "\n\n";
+		std::cout << "Selected a " << board[start.point]->getName() << "\n\n";
 
 
 		std::cout << "Select a tile to move to, or type 'QUIT' to unselect the piece.\n";
@@ -153,33 +159,45 @@ void Game::playGame()
 			continue;
 		}
 
-
-		MoveSet possibleMoves{ board[start]->getPossibleMoves(board, false, true) };
-		auto moveItr{ possibleMoves.find(end.point) };
-
-
-		if (moveItr == possibleMoves.end())
+		if (!processTurn(start.point, end.point, true))
 		{
 			std::cout << "Invalid move.\n";
-			continue;
 		}
-
-		moveItr->second->executeMove(board);
-		moveItr->second->printMove();
-		std::cout << '\n';
-
-		attackBoard.update(board, currentTeam, kings);
-		// Prevent moving pinned pieces
-		if (isInCheck(currentTeam))
-		{
-			moveItr->second->undoMove(board);
-			std::cout << "Invalid move.";
-			continue;
-		}
-
-		moveHistory.push(std::move(moveItr->second));
-		++currentTurn;
 	}
+}
+
+// Processes a turn given valid start and end inputs
+bool Game::processTurn(const Point& start, const Point& end, bool printMove)
+{
+	// Check if the input is a valid move of the selected piece
+	MoveSet possibleMoves{ board[start]->getPossibleMoves(board, false, true) };
+	auto moveItr{ possibleMoves.find(end) };
+
+	if (moveItr == possibleMoves.end())
+	{
+		return false;
+	}
+
+	moveItr->second->executeMove(board);
+	std::cout << '\n';
+
+	// Check if the moved piece was pinned
+	attackBoard.update(board, currentTeam, kings);
+	if (isInCheck(currentTeam))
+	{
+		moveItr->second->undoMove(board);
+		return false;
+	}
+
+	if (printMove)
+	{
+		moveItr->second->printMove();
+	}
+
+	// Go to next turn
+	moveHistory.push_back(std::move(moveItr->second));
+	++currentTurn;
+	return true;
 }
 
 // Returns true if the specified player has a valid piece move on the current board

@@ -20,6 +20,13 @@ std::ostream& operator<< (std::ostream& out, const Point& point)
 	return out;
 }
 
+Point& Point::operator+=(const Point& other)
+{
+	this->rank += other.rank;
+	this->file += other.file;
+	return *this;
+}
+
 Point operator+(const Point& p1, const Point& p2)
 {
 	return { p1.rank + p2.rank, p1.file + p2.file };
@@ -40,3 +47,12 @@ bool operator==(const Point& p1, const Point& p2)
 	return (p1.rank == p2.rank) && (p1.file == p2.file);
 }
 
+Point operator*(const Point& p1, int scalar)
+{
+	return { p1.rank * scalar, p1.file * scalar };
+}
+
+Point operator*(int scalar, const Point& p1)
+{
+	return p1 * scalar;
+}

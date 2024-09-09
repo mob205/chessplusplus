@@ -17,6 +17,9 @@ public:
 
 	bool isAttacking() const { return isAttackingMove; }
 
+	Point getStart() const { return start; }
+	Point getEnd() const { return end; }
+
 	virtual void printMove() const = 0;
 
 protected:

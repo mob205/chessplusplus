@@ -15,12 +15,11 @@ struct Point
 		return(0 <= rank && rank < Settings::g_boardSize && 0 <= file && file < Settings::g_boardSize);
 	}
 
-	Point& operator+=(const Point& other)
-	{
-		this->rank += other.rank;
-		this->file += other.file;
-		return *this;
-	}
+	Point& operator+=(const Point& other);
+
+	friend Point operator*(const Point& point, int scalar);
+	friend Point operator*(const Point& point, int scalar);
+	
 };
 
 // Hashing functor for using a Point as key in unordered_map
