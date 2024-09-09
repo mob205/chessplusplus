@@ -133,6 +133,7 @@
     <ClCompile Include="Bishop.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="BoardHelpers.cpp" />
+    <ClCompile Include="CastlingMove.cpp" />
     <ClCompile Include="DoublePawnMove.cpp" />
     <ClCompile Include="EnPassantMove.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="Bishop.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="BoardHelpers.h" />
+    <ClInclude Include="CastlingMove.h" />
     <ClInclude Include="DoublePawnMove.h" />
     <ClInclude Include="EnPassantMove.h" />
     <ClInclude Include="Game.h" />

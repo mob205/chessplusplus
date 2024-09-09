@@ -179,7 +179,6 @@ bool Game::processTurn(const Point& start, const Point& end, bool printMove)
 	}
 
 	moveItr->second->executeMove(board);
-	std::cout << '\n';
 
 	// Check if the moved piece was pinned
 	attackBoard.update(board, currentTeam, kings);
@@ -191,6 +190,7 @@ bool Game::processTurn(const Point& start, const Point& end, bool printMove)
 
 	if (printMove)
 	{
+		std::cout << '\n';
 		moveItr->second->printMove();
 	}
 

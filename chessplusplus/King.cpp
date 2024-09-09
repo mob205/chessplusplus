@@ -1,8 +1,10 @@
 #include "King.h"
 #include "BoardHelpers.h"
-#include "StandardMove.h"
 #include "AttackBoard.h"
 #include "Board.h"
+
+#include "StandardMove.h"
+#include "CastlingMove.h"
 
 
 MoveSet King::getPossibleMoves(const Board& board, bool getDefenses, bool allowRequireExtraInput) const
@@ -42,7 +44,7 @@ MoveSet King::getPossibleMoves(const Board& board, bool getDefenses, bool allowR
             && areSpotsUnoccupied(board, position, {0, -1}, 3) && areSpotsUnattacked(position, {0, -1}, 2))
         {
             Point dest{ position.rank, position.file - 2 };
-            set.insert({ dest, std::make_unique<StandardMove>(position, dest) });
+            set.insert({ dest, std::make_unique<CastlingMove>(position, dest, rookPos, dest + Point{0, 1}) });
         }
 
         // Check right rook
@@ -52,7 +54,7 @@ MoveSet King::getPossibleMoves(const Board& board, bool getDefenses, bool allowR
             && areSpotsUnoccupied(board, position, {0, 1}, 2) && areSpotsUnattacked(position, {0, 1}, 2))
         {
             Point dest{ position.rank, position.file + 2 };
-            set.insert({ dest, std::make_unique<StandardMove>(position, dest) });
+            set.insert({ dest, std::make_unique<CastlingMove>(position, dest, rookPos, dest + Point{0, -1}) });
         }
     }
     return set;
