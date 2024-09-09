@@ -2,7 +2,7 @@
 #include "Board/Board.h"
 #include "Piece/Piece.h"
 
-void CastlingMove::executeMove(Board& board)
+void CastlingMove::executeMove(Board& board, std::function<char()> callback)
 {
 	board[end] = std::move(board[start]);
 	board[rookEnd] = std::move(board[rookStart]);

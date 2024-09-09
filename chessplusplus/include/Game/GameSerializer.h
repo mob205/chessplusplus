@@ -11,6 +11,7 @@ public:
 
 	bool saveGame(const std::string& savename) const;
 	bool loadGame(const std::string& savename) const;
+	char readPromoType(std::ifstream& fp) const;
 
 private:
 	Game& game;

@@ -10,7 +10,7 @@ public:
 	{}
 
 
-	MoveSet getPossibleMoves(const Board& board, bool getDefenses, bool allowRequireExtraInput) const override;
+	MoveSet getPossibleMoves(const Board& board, bool getDefenses) const override;
 	char getSymbol() const override { return 'p'; }
 	std::string_view getName() const override { return "Pawn"; }
 	Type getType() const override { return Type::Pawn; }

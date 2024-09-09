@@ -69,28 +69,17 @@ namespace Input
 		}
 	}
 
-	Piece::Type getPromotionType()
+	char getPromotionType()
 	{
+		std::cout << "\nSelect a piece to promote to.\nQ - Queen | R - Rook | B - Bishop | N - Knight\n";
 		while (true)
 		{
 			char input{};
 			std::cin >> input;
 			
-			if (input == 'Q')
+			if (input == 'Q' || input == 'N' || input == 'B' || input == 'R')
 			{
-				return Piece::Queen;
-			}
-			else if (input == 'N')
-			{
-				return Piece::Knight;
-			}
-			else if (input == 'B')
-			{
-				return Piece::Bishop;
-			}
-			else if (input == 'R')
-			{
-				return Piece::Rook;
+				return input;
 			}
 
 			std::cout << "Invalid input.\n";

@@ -5,17 +5,15 @@
 class PawnMove : public Move
 {
 public:
-	PawnMove(const Point& start, const Point& end, bool isAttacking = false, bool canPromote = true)
-		: Move{start, end, isAttacking}, canPromote{canPromote}
+	PawnMove(const Point& start, const Point& end, bool isAttacking = false)
+		: Move{start, end, isAttacking}
 	{}
-	void executeMove(Board& board) override;
+	void executeMove(Board& board, std::function<char()> callback) override;
 	void undoMove(Board& board) override;
 	void printMove() const override;
 
 private:
-	void promotePawn(Board& board);
-
-	bool canPromote{};
+	void promotePawn(Board& board, std::function<char()> callback);
 
 	// Keep the promoted pawn in case of undo
 	std::unique_ptr<Piece> promotedPawn{};

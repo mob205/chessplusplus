@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include "Game/Point.h"
 
 class Piece;
@@ -7,7 +8,7 @@ class Board;
 class Move
 {
 public:
-	virtual void executeMove(Board& board) = 0;
+	virtual void executeMove(Board& board, std::function<char()> inputCallback = std::function<char()>{}) = 0;
 
 	virtual void undoMove(Board& board) = 0;
 
@@ -22,12 +23,18 @@ public:
 
 	virtual void printMove() const = 0;
 
+	char getExtraInput() const { return extraInput; }
+
 protected:
 	Point start;
 	Point end;
 
+	// Save the status of whether the moved piece had taken its first move prior to this move or not for undo
 	bool originalMoved{};
 	std::unique_ptr<Piece> captured{};
+
+	// Store extra input to be saved later, if needed
+	char extraInput{};
 
 private:
 	bool isAttackingMove{ true };

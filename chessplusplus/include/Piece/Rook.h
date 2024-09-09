@@ -9,7 +9,7 @@ public:
 		: LinePiece{ position, team }
 	{}
 
-	MoveSet getPossibleMoves(const Board& board, bool getDefenses, bool allowRequireExtraInput) const override;
+	MoveSet getPossibleMoves(const Board& board, bool getDefenses) const override;
 	char getSymbol() const override { return 'r'; }
 	std::string_view getName() const override { return "Rook"; }
 	Type getType() const override { return Type::Rook; }

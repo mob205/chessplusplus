@@ -8,37 +8,36 @@
 #include "Piece/Rook.h"
 #include "Piece/Bishop.h"
 
-void PawnMove::executeMove(Board& board)
+void PawnMove::executeMove(Board& board, std::function<char()> inputCallback)
 {
 	Move::executeMove(board);
 	int promoRank{ board[end]->getTeam() ? 0 : Settings::g_boardSize - 1 };
 
-	if (canPromote && board[end]->getPosition().rank == promoRank)
+	if (inputCallback && board[end]->getPosition().rank == promoRank)
 	{
-		promotePawn(board);
+		promotePawn(board, inputCallback);
 	}
 }
 
-void PawnMove::promotePawn(Board& board)
+void PawnMove::promotePawn(Board& board, std::function<char()> getInput)
 {
 	promotedPawn = std::move(board[end]);
-	std::cout << "\nSelect a piece to promote to.\nQ - Queen | R - Rook | B - Bishop | N - Knight\n";
 
-	Piece::Type promoType{ Input::getPromotionType() };
+	extraInput = getInput();
 	Piece::Team team{ promotedPawn->getTeam() };
-	switch (promoType)
+	switch (extraInput)
 	{
-	case Piece::Knight:
+	case 'N':
 		board[end] = std::make_unique<Knight>(end, team);
 		break;
-	case Piece::Queen:
-		board[end] = std::make_unique<Queen>(end, team);
-		break;
-	case Piece::Rook:
+	case 'R':
 		board[end] = std::make_unique<Rook>(end, team);
 		break;
-	case Piece::Bishop:
+	case 'B':
 		board[end] = std::make_unique<Bishop>(end, team);
+		break;
+	default:
+		board[end] = std::make_unique<Queen>(end, team);
 		break;
 	}
 	promotedPiece = board[end].get();

@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include <vector>
 
 #include "Board/Board.h"
@@ -22,7 +23,7 @@ private:
 
 	bool isInCheck(Piece::Team team);
 
-	bool processTurn(const Point& start, const Point& end, bool printMove);
+	bool processTurn(const Point& start, const Point& end, bool printMove, std::function<char()> getExtraInput);
 
 	std::vector<std::unique_ptr<Move>> moveHistory{};
 

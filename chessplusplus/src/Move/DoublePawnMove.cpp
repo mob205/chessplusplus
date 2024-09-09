@@ -2,7 +2,7 @@
 #include "Board/Board.h"
 #include "Piece/Pawn.h"
 
-void DoublePawnMove::executeMove(Board& board)
+void DoublePawnMove::executeMove(Board& board, std::function<char()> callback)
 {
 	Move::executeMove(board);
 

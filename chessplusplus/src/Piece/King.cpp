@@ -7,7 +7,7 @@
 #include "Move/CastlingMove.h"
 
 
-MoveSet King::getPossibleMoves(const Board& board, bool getDefenses, bool allowRequireExtraInput) const
+MoveSet King::getPossibleMoves(const Board& board, bool getDefenses) const
 {
     Piece::Team opp{ static_cast<Piece::Team>((team + 1) % Piece::MaxTeams) };
     MoveSet set{};

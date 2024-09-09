@@ -8,7 +8,7 @@ class CastlingMove : public Move
 		: Move{ kingStart, kingEnd, false }, rookStart{ rookStart }, rookEnd{ rookEnd }
 	{}
 
-	void executeMove(Board& board) override;
+	void executeMove(Board& board, std::function<char()> callback) override;
 	void undoMove(Board& board) override;
 	void printMove() const override;
 

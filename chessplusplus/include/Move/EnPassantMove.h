@@ -8,7 +8,7 @@ public:
 		: Move{ start, end }, captureSpot{ captureSpot }
 	{}
 
-	void executeMove(Board& board) override;
+	void executeMove(Board& board, std::function<char()> callback) override;
 	void undoMove(Board& board) override;
 	void printMove() const override { std::cout << "EN PASSANT!!!"; }
 

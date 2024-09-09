@@ -6,7 +6,7 @@
 #include "Move/DoublePawnMove.h"
 #include "Move/EnPassantMove.h"
 
-MoveSet Pawn::getPossibleMoves(const Board& board, bool getDefenses, bool allowRequireExtraInput) const
+MoveSet Pawn::getPossibleMoves(const Board& board, bool getDefenses) const
 {
 	MoveSet set{};
 	Point ahead{ position + forward() };
@@ -14,7 +14,7 @@ MoveSet Pawn::getPossibleMoves(const Board& board, bool getDefenses, bool allowR
 	// Forward move
 	if (ahead.isInBounds() && !isOccupied(board, ahead))
 	{
-		set.insert({ ahead, std::make_unique<PawnMove>(position, ahead, false, allowRequireExtraInput) });
+		set.insert({ ahead, std::make_unique<PawnMove>(position, ahead, false) });
 	}
 	
 	// Double forward move - pawn's first move only
@@ -33,7 +33,7 @@ MoveSet Pawn::getPossibleMoves(const Board& board, bool getDefenses, bool allowR
 		// Diagonal capture
 		if (forwardSide.isInBounds() && (isEnemyPiece(board, forwardSide, team) || getDefenses))
 		{
-			set.insert({ forwardSide, std::make_unique<PawnMove>(position, forwardSide, true, allowRequireExtraInput) });
+			set.insert({ forwardSide, std::make_unique<PawnMove>(position, forwardSide, true) });
 
 			// En passant isn't even possible if we can diagonal capture, so just continue
 			continue;

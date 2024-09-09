@@ -2,7 +2,7 @@
 #include "Board/Board.h"
 #include "Piece/Piece.h"
 
-void Move::executeMove(Board& board)
+void Move::executeMove(Board& board, std::function<char()> inputCallback)
 {
 	if (board[end])
 	{

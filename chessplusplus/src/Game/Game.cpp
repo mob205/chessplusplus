@@ -160,7 +160,7 @@ void Game::playGame()
 			continue;
 		}
 
-		if (!processTurn(start.point, end.point, true))
+		if (!processTurn(start.point, end.point, true, &Input::getPromotionType))
 		{
 			std::cout << "Invalid move.\n";
 		}
@@ -168,10 +168,10 @@ void Game::playGame()
 }
 
 // Processes a turn given valid start and end inputs
-bool Game::processTurn(const Point& start, const Point& end, bool printMove)
+bool Game::processTurn(const Point& start, const Point& end, bool printMove, std::function<char()> getExtraInput)
 {
 	// Check if the input is a valid move of the selected piece
-	MoveSet possibleMoves{ board[start]->getPossibleMoves(board, false, true) };
+	MoveSet possibleMoves{ board[start]->getPossibleMoves(board) };
 	auto moveItr{ possibleMoves.find(end) };
 
 	if (moveItr == possibleMoves.end())
@@ -183,9 +183,9 @@ bool Game::processTurn(const Point& start, const Point& end, bool printMove)
 
 	// Check if the moved piece was pinned
 	attackBoard.update(board, currentTeam, kings);
+	moveItr->second->undoMove(board);
 	if (isInCheck(currentTeam))
 	{
-		moveItr->second->undoMove(board);
 		return false;
 	}
 
@@ -194,6 +194,9 @@ bool Game::processTurn(const Point& start, const Point& end, bool printMove)
 		std::cout << '\n';
 		moveItr->second->printMove();
 	}
+
+	// Complete move
+	moveItr->second->executeMove(board, getExtraInput);
 
 	// Go to next turn
 	moveHistory.push_back(std::move(moveItr->second));
@@ -224,7 +227,7 @@ bool Game::hasPossibleNonKingMove(Piece::Team team)
 				move.second->undoMove(board);
 
 				// Valid move found!
-				if (!attackBoard.isAttacking(kings[team]->getPosition(), opp))
+				if (!isInCheck(team))
 				{
 					return true;
 				}

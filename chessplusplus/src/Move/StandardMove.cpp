@@ -2,7 +2,7 @@
 #include "Board/Board.h"
 #include "Piece/Piece.h"
 
-void StandardMove::executeMove(Board& board)
+void StandardMove::executeMove(Board& board, std::function<char()> callback)
 {
 	Move::executeMove(board);
 }

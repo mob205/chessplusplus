@@ -3,7 +3,7 @@
 #include "Piece/Piece.h"
 
 
-void EnPassantMove::executeMove(Board& board)
+void EnPassantMove::executeMove(Board& board, std::function<char()> callback)
 {
 	// Move the pawn
 	Move::executeMove(board);

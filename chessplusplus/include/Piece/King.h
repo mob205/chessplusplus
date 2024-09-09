@@ -10,7 +10,7 @@ public:
 	King(const Point& position, Team team, const AttackBoard& attackBoard)
 		: Piece{position, team}, attackBoard{attackBoard}
 	{}
-	MoveSet getPossibleMoves(const Board& board, bool getDefenses, bool allowRequireExtraInput) const override;
+	MoveSet getPossibleMoves(const Board& board, bool getDefenses) const override;
 	char getSymbol() const override { return 'k'; }
 	std::string_view getName() const override { return "King"; }
 	Type getType() const override { return Type::King; }
