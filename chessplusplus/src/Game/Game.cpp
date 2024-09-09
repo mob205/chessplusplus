@@ -73,6 +73,7 @@ void Game::playGame()
 		Piece::Team oppTeam{ static_cast<Piece::Team>((currentTeam + 1) % Piece::MaxTeams) };
 		
 		attackBoard.update(board, currentTeam, kings);
+		//attackBoard.printBoard(std::cout, oppTeam);
 
 		std::cout << '\n' << board << '\n';
 

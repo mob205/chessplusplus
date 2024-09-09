@@ -9,6 +9,9 @@ void CastlingMove::executeMove(Board& board)
 
 	board[end]->setMoved(true);
 	board[rookEnd]->setMoved(true);
+
+	board[end]->updatePosition(end);
+	board[rookEnd]->updatePosition(rookEnd);
 }
 
 void CastlingMove::undoMove(Board& board)
@@ -18,6 +21,9 @@ void CastlingMove::undoMove(Board& board)
 
 	board[start]->setMoved(false);
 	board[rookStart]->setMoved(false);
+
+	board[start]->updatePosition(start);
+	board[rookStart]->updatePosition(rookStart);
 }
 
 void CastlingMove::printMove() const
