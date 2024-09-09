@@ -16,29 +16,29 @@ Q - Queen | N - Knight | B - Bishop | R - Rook | P - Pawn | K - King
 # How to Play
 Each move is played by first inputting the tile of the piece you want to move. Then, input the tile that you want that piece to go to.
 
-![moving a pawn](https://github.com/mob205/chessplusplus/tree/main/Images/firstmove.png?raw=true)
+![moving a pawn](Images/firstMove.png)
 
 You can also enter various other commands while in a game.
 - UNDO - undo the last turn
 - SAVE - save the current game to file
 - QUIT - exit to main menu.
 
-![undoing a move](https://github.com/mob205/chessplusplus/tree/main/Images/undo.png?raw=true)
+![undoing a move](Images/undo.png)
 
 A game can be loaded from the main menu. Simply type the name of the save file when prompted. By default, save files are located in chessplusplus/Saves.
 
-![loading a saved game](https://github.com/mob205/chessplusplus/tree/main/Images/loading.png?raw=true)
+![loading a saved game](Images/loading.png)
 
 There are various saved games already prepared to show off some chess moves that require setup. 
 
 Scholar's Mate:
-![scholar's mate](https://github.com/mob205/chessplusplus/tree/main/Images/scholarsmate.png?raw=true)
+![scholar's mate](Images/scholarsmate.png)
 
 Castling:
-![castling](https://github.com/mob205/chessplusplus/tree/main/Images/castling.png?raw=true)
+![castling](Images/castling.png)
 
 En Passant:
-![en passant](https://github.com/mob205/chessplusplus/tree/main/Images/enpassant.png?raw=true)
+![en passant](Images/enpassant.png)
 
 Pawn Promotion:
-![promotion](https://github.com/mob205/chessplusplus/tree/main/Images/promotion.png?raw=true)
+![promotion](Images/promotion.png)
