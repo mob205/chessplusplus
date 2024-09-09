@@ -16,7 +16,7 @@ Q - Queen | N - Knight | B - Bishop | R - Rook | P - Pawn | K - King
 # How to Play
 Each move is played by first inputting the tile of the piece you want to move. Then, input the tile that you want that piece to go to.
 
-![moving a pawn](Images/firstMove.png)
+![moving a pawn](Images/firstmove.png)
 
 You can also enter various other commands while in a game.
 - UNDO - undo the last turn
