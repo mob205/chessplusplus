@@ -32,7 +32,7 @@ Game::Game()
 	for (int i = 0; i < Piece::MaxTeams; ++i)
 	{
 		// 0 for white, 7 for black
-		int rank = i * (Settings::g_boardSize - 1);
+		int rank{ i * (Settings::g_boardSize - 1) };
 		Piece::Team team{ static_cast<Piece::Team>(i) };
 		Piece::Team opponent{ static_cast<Piece::Team>((i + 1) % Piece::MaxTeams) };
 
@@ -42,8 +42,8 @@ Game::Game()
 		addPiece<Queen>(board, { rank, 3 }, team);
 
 		// Create a new king
-		auto king = std::make_unique<King>(Point{ rank, 4 }, team, attackBoard);
-		// Save a raw pointer to view the king later
+		auto king{ std::make_unique<King>(Point{ rank, 4 }, team, attackBoard) };
+		// Save a non-owning raw pointer to view the king later
 		kings[i] = king.get();
 		// Move it onto the board
 		board[{rank, 4}] = std::move(king);
@@ -63,7 +63,7 @@ bool Game::isInCheck(Piece::Team team)
 
 void Game::playGame()
 {
-	Board& board = getBoard();
+	Board& board{ getBoard() };
 	InputResult start{};
 	while (start.result != InputResult::QUIT)
 	{
@@ -170,10 +170,13 @@ void Game::playGame()
 // Processes a turn given valid start and end inputs
 bool Game::processTurn(const Point& start, const Point& end, bool printMove, std::function<char()> getExtraInput)
 {
+	if (!board[start]) { return false; }
+
 	// Check if the input is a valid move of the selected piece
 	MoveSet possibleMoves{ board[start]->getPossibleMoves(board) };
 	auto moveItr{ possibleMoves.find(end) };
 
+	// No moves found
 	if (moveItr == possibleMoves.end())
 	{
 		return false;
