@@ -2,29 +2,39 @@
 #include "Input/Input.h"
 #include "Piece/Piece.h"
 #include "Board/Board.h"
+#include "Piece/PieceEnums.h"
 
 #include "Piece/Knight.h"
 #include "Piece/Queen.h"
 #include "Piece/Rook.h"
 #include "Piece/Bishop.h"
 
-void PawnMove::executeMove(Board& board, std::function<char()> inputCallback)
+MoveResult PawnMove::executeMove(Board& board, std::function<char()> inputCallback)
 {
 	Move::executeMove(board);
 	int promoRank{ board[end]->getTeam() ? 0 : Settings::g_boardSize - 1 };
 
+	MoveResult res{};
 	if (inputCallback && board[end]->getPosition().rank == promoRank)
 	{
-		promotePawn(board, inputCallback);
+		PieceEnums::Type promoType{ promotePawn(board, inputCallback) };
+
+		res.type = MoveResult::Type::Promotion;
+		res.promotion = MoveResult::PromotionResult{ start, end, (captured) ? captured->getType() : PieceEnums::None, promoType };
+		return res;
 	}
+	
+	res.type = MoveResult::Type::Standard;
+	res.standard = MoveResult::StandardResult{ start, end, (captured) ? captured->getType() : PieceEnums::None };
+	return res;
 }
 
-void PawnMove::promotePawn(Board& board, std::function<char()> getInput)
+PieceEnums::Type PawnMove::promotePawn(Board& board, std::function<char()> getInput)
 {
 	promotedPawn = std::move(board[end]);
 
 	extraInput = getInput();
-	Piece::Team team{ promotedPawn->getTeam() };
+	PieceEnums::Team team{ promotedPawn->getTeam() };
 	switch (extraInput)
 	{
 	case 'N':
@@ -41,6 +51,7 @@ void PawnMove::promotePawn(Board& board, std::function<char()> getInput)
 		break;
 	}
 	promotedPiece = board[end].get();
+	return promotedPiece->getType();
 }
 
 void PawnMove::undoMove(Board& board)
@@ -51,16 +62,4 @@ void PawnMove::undoMove(Board& board)
 		board[end] = std::move(promotedPawn);
 	}
 	Move::undoMove(board);
-}
-
-void PawnMove::printMove() const
-{
-	if (captured)
-	{
-		std::cout << "Captured a " << captured->getName() << '\n';
-	}
-	if (promotedPiece)
-	{
-		std::cout << "Pawn promoted to " << promotedPiece->getName() << '\n';
-	}
 }

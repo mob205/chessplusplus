@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include "Piece/Piece.h"
+#include "Piece/PieceEnums.h"
 
 class AttackBoard;
 
@@ -13,7 +14,7 @@ public:
 	MoveSet getPossibleMoves(const Board& board, bool getDefenses) const override;
 	char getSymbol() const override { return 'k'; }
 	std::string_view getName() const override { return "King"; }
-	Type getType() const override { return Type::King; }
+	PieceEnums::Type getType() const override { return PieceEnums::King; }
 
 private:
 	const AttackBoard& attackBoard;

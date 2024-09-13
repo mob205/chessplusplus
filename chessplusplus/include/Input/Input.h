@@ -2,7 +2,6 @@
 #include <iostream>
 #include <sstream>
 
-#include "Piece/Piece.h"
 #include "Input/InputResult.h"
 
 namespace Input

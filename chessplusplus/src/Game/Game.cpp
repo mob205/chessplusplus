@@ -3,6 +3,7 @@
 #include "Input/Input.h"
 #include "Board/BoardHelpers.h"
 
+#include "Piece/PieceEnums.h"
 #include "Piece/Pawn.h"
 #include "Piece/Knight.h"
 #include "Piece/Bishop.h"
@@ -11,7 +12,7 @@
 #include "Piece/King.h"
 
 template<typename T>
-static void addPiece(Board& board, const Point& position, Piece::Team team)
+static void addPiece(Board& board, const Point& position, PieceEnums::Team team)
 {
 	board[position] = std::make_unique<T>(position, team);
 }
@@ -24,17 +25,17 @@ Game::Game()
 		Point blackPos{ Settings::g_boardSize - 2, i };
 		Point whitePos{ 1, i };
 
-		board[whitePos] = std::make_unique<Pawn>(whitePos, Piece::White, currentTurn);
-		board[blackPos] = std::make_unique<Pawn>(blackPos, Piece::Black, currentTurn);
+		board[whitePos] = std::make_unique<Pawn>(whitePos, PieceEnums::White, currentTurn);
+		board[blackPos] = std::make_unique<Pawn>(blackPos, PieceEnums::Black, currentTurn);
 	}
 
 	// Setup pieces
-	for (int i = 0; i < Piece::MaxTeams; ++i)
+	for (int i = 0; i < PieceEnums::MaxTeams; ++i)
 	{
 		// 0 for white, 7 for black
 		int rank{ i * (Settings::g_boardSize - 1) };
-		Piece::Team team{ static_cast<Piece::Team>(i) };
-		Piece::Team opponent{ static_cast<Piece::Team>((i + 1) % Piece::MaxTeams) };
+		PieceEnums::Team team{ static_cast<PieceEnums::Team>(i) };
+		PieceEnums::Team opponent{ static_cast<PieceEnums::Team>((i + 1) % PieceEnums::MaxTeams) };
 
 		addPiece<Rook>(board, { rank, 0 }, team);
 		addPiece<Knight>(board, { rank, 1 }, team);
@@ -55,9 +56,9 @@ Game::Game()
 	}
 }
 
-bool Game::isInCheck(Piece::Team team)
+bool Game::isInCheck(PieceEnums::Team team)
 {
-	Piece::Team oppTeam{ static_cast<Piece::Team>((currentTeam + 1) % Piece::MaxTeams) };
+	PieceEnums::Team oppTeam{ static_cast<PieceEnums::Team>((currentTeam + 1) % PieceEnums::MaxTeams) };
 	return attackBoard.isAttacking(kings[currentTeam]->getPosition(), oppTeam);
 }
 
@@ -69,33 +70,15 @@ void Game::playGame()
 	{
 		static std::unique_ptr<Move> savedMove{};
 
-		currentTeam = static_cast<Piece::Team>((currentTurn) % Piece::MaxTeams);
-		Piece::Team oppTeam{ static_cast<Piece::Team>((currentTeam + 1) % Piece::MaxTeams) };
+		currentTeam = static_cast<PieceEnums::Team>((currentTurn) % PieceEnums::MaxTeams);
+		PieceEnums::Team oppTeam{ static_cast<PieceEnums::Team>((currentTeam + 1) % PieceEnums::MaxTeams) };
 		
 		attackBoard.update(board, currentTeam, kings);
-		//attackBoard.printBoard(std::cout, oppTeam);
 
 		std::cout << '\n' << board << '\n';
 
 		// Check for end conditions
-		if (kings[currentTeam]->getPossibleMoves(board).size() == 0 && !hasPossibleNonKingMove(currentTeam))
-		{
-			if (isInCheck(currentTeam))
-			{
-				// The winner will be the player of last turn
-				std::cout << "CHECKMATE! " << (currentTeam ? "White" : "Black") << " wins!\n\n";
-				break;
-			}
-			else
-			{
-				std::cout << "Stalemate.\n\n";
-				break;
-			}
-		}
-		else if (isInCheck(currentTeam))
-		{
-			std::cout << "CHECK!\n\n";
-		}
+		
 	
 		std::cout << (currentTeam ? "Black" : "White") << "'s turn!\n";
 		std::cout << "Select a piece to move, or type 'QUIT' to quit.\n";
@@ -123,7 +106,7 @@ void Game::playGame()
 		{
 			if (!moveHistory.empty())
 			{
-				std::unique_ptr<Move> move = std::move(moveHistory.back());
+				std::unique_ptr<Move> move = std::move(moveHistory.back().move);
 				moveHistory.pop_back();
 				move->undoMove(board);
 				std::cout << "Undo successful.\n";
@@ -160,57 +143,131 @@ void Game::playGame()
 			continue;
 		}
 
-		if (!processTurn(start.point, end.point, true, &Input::getPromotionType))
+		MoveResult res{ processTurn(start.point, end.point, true, &Input::getPromotionType) };
+		
+		if (!res)
 		{
-			std::cout << "Invalid move.\n";
+			switch (res.reasonFailed)
+			{
+			case MoveResult::MoveFailReason::InvalidPiece:
+				std::cout << "Invalid move. There is no owned piece on this tile.\n";
+				break;
+			case MoveResult::MoveFailReason::Check:
+				std::cout << "Invalid move. King in check must be defended.\n";
+				break;
+			case MoveResult::MoveFailReason::Pinned:
+				std::cout << "Invalid move. Unable to take move that would put king in check";
+				break;
+			case MoveResult::MoveFailReason::NotInSet:
+				std::cout << "Invalid move. Piece is unable to move in this way.";
+				break;
+			}
+			continue;
+		}
+		
+		// Valid move
+		switch (res.type)
+		{
+		case MoveResult::Type::Standard:
+			if (res.standard.capturedPiece) 
+			{
+				std::cout << "Captured an enemy " << PieceEnums::pieceNames[res.standard.capturedPiece] << '\n';
+			}
+			break;
+		case MoveResult::Type::Castle:
+			std::cout << "Castled!";
+			break;
+		case MoveResult::Type::EnPassant:
+			std::cout << "EN PASSANT!!!!";
+			break;
+		case MoveResult::Type::Promotion:
+			if (res.promotion.capturedPiece)
+			{
+				std::cout << "Captured an enemy " << PieceEnums::pieceNames[res.promotion.capturedPiece] << '\n';
+			}
+			std::cout << "Promoted pawn to " << PieceEnums::pieceNames[res.promotion.promotionType] << '\n';
+			break;
+		}
+
+		switch (res.oppStatus)
+		{
+		case MoveResult::OpponentStatus::Check:
+			std::cout << "Check!\n";
+			break;
+		case MoveResult::OpponentStatus::Checkmate:
+			std::cout << "CHECKMATE! " << (currentTeam ? "Black" : "White") << " WINS!!\n";
+			return;
+		case MoveResult::OpponentStatus::Stalemate:
+			std::cout << "Stalemate.\n";
+			return;
 		}
 	}
 }
 
 // Processes a turn given valid start and end inputs
-bool Game::processTurn(const Point& start, const Point& end, bool printMove, std::function<char()> getExtraInput)
+MoveResult Game::processTurn(const Point& start, const Point& end, bool printMove, std::function<char()> getExtraInput)
 {
-	if (!board[start]) { return false; }
+	MoveResult failResult{};
+
+	if (!board[start])
+	{
+		failResult.reasonFailed = MoveResult::MoveFailReason::InvalidPiece;
+		return failResult;
+	}
 
 	// Check if the input is a valid move of the selected piece
 	MoveSet possibleMoves{ board[start]->getPossibleMoves(board) };
 	auto moveItr{ possibleMoves.find(end) };
 
-	// No moves found
+	// Not a valid move
 	if (moveItr == possibleMoves.end())
 	{
-		return false;
+		failResult.reasonFailed = MoveResult::MoveFailReason::NotInSet;
+		return failResult;
 	}
 
-	moveItr->second->executeMove(board);
+	// Check if the king is in check before the move to distinguish potential fail case
+	attackBoard.update(board, currentTeam, kings);
+	bool isInitialCheck{ isInCheck(currentTeam) };
+
 
 	// Check if the moved piece was pinned
+	moveItr->second->executeMove(board);
 	attackBoard.update(board, currentTeam, kings);
 	moveItr->second->undoMove(board);
 	if (isInCheck(currentTeam))
 	{
-		return false;
-	}
-
-	if (printMove)
-	{
-		std::cout << '\n';
-		moveItr->second->printMove();
+		// Cannot end turn with king in check
+		failResult.reasonFailed = isInitialCheck ? MoveResult::MoveFailReason::Check : MoveResult::MoveFailReason::Pinned;
+		return failResult;
 	}
 
 	// Complete move
-	moveItr->second->executeMove(board, getExtraInput);
+	MoveResult moveResult{ moveItr->second->executeMove(board, getExtraInput) };
 
 	// Go to next turn
-	moveHistory.push_back(std::move(moveItr->second));
+	moveHistory.emplace_back(std::move(moveItr->second), moveResult);
 	++currentTurn;
-	return true;
+
+	PieceEnums::Team opp{ getOppositeTeam(currentTeam) };
+	attackBoard.update(board, opp, kings);
+
+	// Check end conditions
+	if (kings[opp]->getPossibleMoves(board).size() == 0 && !hasPossibleNonKingMove(opp))
+	{
+		moveResult.oppStatus = isInCheck(opp) ? MoveResult::OpponentStatus::Checkmate : MoveResult::OpponentStatus::Stalemate;
+	}
+	else if (isInCheck(currentTeam))
+	{
+		moveResult.oppStatus = MoveResult::OpponentStatus::Check;
+	}
+	return moveResult;
 }
 
 // Returns true if the specified player has a valid piece move on the current board
-bool Game::hasPossibleNonKingMove(Piece::Team team)
+bool Game::hasPossibleNonKingMove(PieceEnums::Team team)
 {
-	Piece::Team opp{ static_cast<Piece::Team>((currentTeam + 1) % Piece::MaxTeams) };
+	PieceEnums::Team opp{ getOppositeTeam(currentTeam)};
 	AttackBoard attackBoard{};
 
 	for (int rank = 0; rank < Settings::g_boardSize; ++rank)
@@ -218,7 +275,7 @@ bool Game::hasPossibleNonKingMove(Piece::Team team)
 		for (int file = 0; file < Settings::g_boardSize; ++file)
 		{
 			Point pos{ rank, file };
-			if (!isAlliedPiece(board, pos, team) || board[pos]->getType() == Piece::King) { continue; }
+			if (!isAlliedPiece(board, pos, team) || board[pos]->getType() == PieceEnums::King) { continue; }
 			
 			MoveSet set{ board[pos]->getPossibleMoves(board) };
 
@@ -239,4 +296,9 @@ bool Game::hasPossibleNonKingMove(Piece::Team team)
 	}
 	// Checked every move and none are valid
 	return false;
+}
+
+PieceEnums::Team getOppositeTeam(PieceEnums::Team team)
+{
+	return static_cast<PieceEnums::Team>((team + 1) % PieceEnums::MaxTeams);
 }

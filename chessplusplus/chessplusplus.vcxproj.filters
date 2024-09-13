@@ -176,5 +176,14 @@
     <ClInclude Include="include\Move\Move.h">
       <Filter>Header Files\Moves</Filter>
     </ClInclude>
+    <ClInclude Include="include\Move\MoveResult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\MoveRecord.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Piece\PieceEnums.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

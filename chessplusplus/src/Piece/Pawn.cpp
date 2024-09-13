@@ -1,4 +1,6 @@
 #include "Piece/Pawn.h"
+#include "Piece/PieceEnums.h"
+
 #include "Board/Board.h"
 #include "Board/BoardHelpers.h"
 
@@ -40,7 +42,7 @@ MoveSet Pawn::getPossibleMoves(const Board& board, bool getDefenses) const
 		}
 
 		// En passant
-		if (side.isInBounds() && isEnemyPiece(board, side, team) && isType(board, side, Piece::Pawn))
+		if (side.isInBounds() && isEnemyPiece(board, side, team) && isType(board, side, PieceEnums::Pawn))
 		{
 			Pawn* sidePawn{ static_cast<Pawn*>(board[side].get())};
 			if (sidePawn->isPassantable())

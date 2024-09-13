@@ -154,6 +154,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Board\AttackBoard.h" />
+    <ClInclude Include="include\Game\MoveRecord.h" />
+    <ClInclude Include="include\Move\MoveResult.h" />
     <ClInclude Include="include\Piece\Bishop.h" />
     <ClInclude Include="include\Board\Board.h" />
     <ClInclude Include="include\Board\BoardHelpers.h" />
@@ -172,6 +174,7 @@
     <ClInclude Include="include\Move\PawnMove.h" />
     <ClInclude Include="include\Piece\Piece.h" />
     <ClInclude Include="include\Game\Point.h" />
+    <ClInclude Include="include\Piece\PieceEnums.h" />
     <ClInclude Include="include\Piece\Queen.h" />
     <ClInclude Include="include\Piece\Rook.h" />
     <ClInclude Include="include\Game\Settings.h" />

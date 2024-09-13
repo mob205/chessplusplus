@@ -3,14 +3,13 @@
 
 class CastlingMove : public Move
 {
-	public:
+public:
 	CastlingMove(const Point& kingStart, const Point& kingEnd, const Point& rookStart, const Point& rookEnd)
 		: Move{ kingStart, kingEnd, false }, rookStart{ rookStart }, rookEnd{ rookEnd }
 	{}
 
-	void executeMove(Board& board, std::function<char()> callback) override;
+	MoveResult executeMove(Board& board, std::function<char()> callback) override;
 	void undoMove(Board& board) override;
-	void printMove() const override;
 
 private:
 	Point rookStart{};

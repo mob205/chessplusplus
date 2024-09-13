@@ -8,9 +8,8 @@ public:
 		: Move{ start, end, isAttacking }
 	{}
 
-	void executeMove(Board& board, std::function<char()> callback) override;
+	MoveResult executeMove(Board& board, std::function<char()> callback) override;
 	void undoMove(Board& board) override;
-	void printMove() const override;
 
 	bool isAttacking() const { return true; }
 };

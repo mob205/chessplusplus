@@ -1,34 +1,38 @@
 #include "Board/AttackBoard.h"
 #include "Board/BoardHelpers.h"
 #include "Board/Board.h"
-#include "Piece/Piece.h"
 
-void AttackBoard::update(const Board& board, Piece::Team team, std::array<const Piece*, Piece::MaxTeams> kings)
+#include "Piece/Piece.h"
+#include "Piece/PieceEnums.h"
+
+#include "Move/Move.h"
+
+void AttackBoard::update(const Board& board, PieceEnums::Team team, std::array<const Piece*, PieceEnums::MaxTeams> kings)
 {
 	// Same turn, so the attack board is still valid.
 
-	for (int i = 0; i < Piece::MaxTeams; ++i)
+	for (int i = 0; i < PieceEnums::MaxTeams; ++i)
 	{
-		resetBoard(static_cast<Piece::Team>(i));
+		resetBoard(static_cast<PieceEnums::Team>(i));
 	}
 	
 	// Set where regular pieces are attacking, which will limit the kings' movements
 	setNonKing(board);
 
 	// Set the opposing team king can attack first, since it will limit the current team's king's movement 
-	setKing(board, kings[static_cast<Piece::Team>((team + 1) % Piece::MaxTeams)]);
+	setKing(board, kings[static_cast<PieceEnums::Team>((team + 1) % PieceEnums::MaxTeams)]);
 
 	// Where the current king is attacking shouldn't matter for current turn
 	//setKing(board, kings[team]);
 }
 
-bool AttackBoard::isAttacking(const Point& point, Piece::Team team) const
+bool AttackBoard::isAttacking(const Point& point, PieceEnums::Team team) const
 {
 	return attackBoard[team][point.rank][point.file];
 }
 
 // Resets the attack board to an initial state showing no tiles being attacked
-void AttackBoard::resetBoard(Piece::Team team)
+void AttackBoard::resetBoard(PieceEnums::Team team)
 {
 	std::fill(attackBoard[team].begin(), attackBoard[team].end(), std::array<bool, Settings::g_boardSize>{});
 }
@@ -44,7 +48,7 @@ void AttackBoard::setNonKing(const Board& board)
 
 			// Can only be attacked by enemy pieces
 			// King's moveset relies on the attackBoard, so don't check it while making it
-			if (!isOccupied(board, pos) || isType(board, pos, Piece::King)) { continue; }
+			if (!isOccupied(board, pos) || isType(board, pos, PieceEnums::King)) { continue; }
 		
 			MoveSet set{ board[pos]->getPossibleMoves(board, true) };
 
@@ -71,7 +75,7 @@ void AttackBoard::setKing(const Board& board, const Piece* king)
 	}
 }
 
-void AttackBoard::printBoard(std::ostream& out, Piece::Team team) const
+void AttackBoard::printBoard(std::ostream& out, PieceEnums::Team team) const
 {
 	out << "   ";
 	for (int i = 0; i < Settings::g_boardSize; ++i)

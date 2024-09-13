@@ -1,9 +1,10 @@
 #include "Move/EnPassantMove.h"
 #include "Board/Board.h"
 #include "Piece/Piece.h"
+#include "Piece/PieceEnums.h"
 
 
-void EnPassantMove::executeMove(Board& board, std::function<char()> callback)
+MoveResult EnPassantMove::executeMove(Board& board, std::function<char()> callback)
 {
 	// Move the pawn
 	Move::executeMove(board);
@@ -11,6 +12,11 @@ void EnPassantMove::executeMove(Board& board, std::function<char()> callback)
 	// Capture piece
 	// Captured should be nullptr after the base Move since it's impossible to en passant and diagonal capture at the same time
 	captured = std::move(board[captureSpot]);
+
+	MoveResult res{};
+	res.type = MoveResult::Type::EnPassant;
+	res.enpassant = MoveResult::EnPassantResult{ start, end, (captured) ? captured->getType() : PieceEnums::None };
+	return res;
 }
 
 void EnPassantMove::undoMove(Board& board)

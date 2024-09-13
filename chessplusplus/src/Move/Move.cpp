@@ -2,7 +2,7 @@
 #include "Board/Board.h"
 #include "Piece/Piece.h"
 
-void Move::executeMove(Board& board, std::function<char()> inputCallback)
+MoveResult Move::executeMove(Board& board, std::function<char()> inputCallback)
 {
 	if (board[end])
 	{
@@ -13,6 +13,8 @@ void Move::executeMove(Board& board, std::function<char()> inputCallback)
 
 	originalMoved = board[end]->getMoved();
 	board[end]->setMoved(true);
+
+	return MoveResult{};
 }
 
 void Move::undoMove(Board& board)

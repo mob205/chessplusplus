@@ -3,9 +3,6 @@
 
 #include <array>
 
-
-
-
 class Knight : public Piece
 {
 public:

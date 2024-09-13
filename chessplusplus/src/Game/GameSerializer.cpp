@@ -4,6 +4,28 @@
 
 #include "Game/GameSerializer.h"
 #include "Game/Game.h"
+#include "Move/Move.h"
+#include "Move/MoveResult.h"
+#include "Piece/PieceEnums.h"
+
+static char getPieceAsChar(PieceEnums::Type type)
+{
+	switch (type)
+	{
+	case PieceEnums::Queen:
+		return 'Q';
+	case PieceEnums::Bishop:
+		return 'B';
+	case PieceEnums::King:
+		return 'K';
+	case PieceEnums::Knight:
+		return 'N';
+	default:
+		// Since this is only used for promotion right now,
+		// no need to check for other types
+		return 'Q';
+	}
+}
 
 bool GameSerializer::saveGame(const std::string& savename) const
 {
@@ -13,12 +35,13 @@ bool GameSerializer::saveGame(const std::string& savename) const
 	{
 		return false;
 	}
-	for (const auto& move : game.moveHistory)
+	for (const auto& record : game.moveHistory)
 	{
-		fp << move->getStart() << move->getEnd();
-		if (move->getExtraInput())
+		fp << record.move->getStart() << record.move->getEnd();
+		if (record.result.type == MoveResult::Type::Promotion)
 		{
-			fp << move->getExtraInput();
+			char c{ getPieceAsChar(record.result.promotion.promotionType) };
+			fp << c;
 		}
 	}
 	return true;
@@ -54,3 +77,4 @@ char GameSerializer::readPromoType(std::ifstream& fp) const
 	fp >> input;
 	return input;
 }
+

@@ -4,8 +4,11 @@
 
 #include "Board/Board.h"
 #include "Piece/Piece.h"
+#include "Piece/PieceEnums.h"
+
 #include "Board/AttackBoard.h"
 #include "Game/GameSerializer.h"
+#include "Game/MoveRecord.h"
 
 class Game
 {
@@ -17,18 +20,18 @@ public:
 
 	GameSerializer& getSerializer() { return serializer; }
 
+	MoveResult processTurn(const Point& start, const Point& end, bool printMove, std::function<char()> getExtraInput);
+
 private:
 
-	bool hasPossibleNonKingMove(Piece::Team team);
+	bool hasPossibleNonKingMove(PieceEnums::Team team);
 
-	bool isInCheck(Piece::Team team);
+	bool isInCheck(PieceEnums::Team team);
 
-	bool processTurn(const Point& start, const Point& end, bool printMove, std::function<char()> getExtraInput);
-
-	std::vector<std::unique_ptr<Move>> moveHistory{};
+	std::vector<MoveRecord> moveHistory{};
 
 	// Non-owning pointers to view kings
-	std::array<const Piece*, Piece::MaxTeams> kings;
+	std::array<const Piece*, PieceEnums::MaxTeams> kings;
 
 	Board board{};
 	AttackBoard attackBoard{};
@@ -36,6 +39,7 @@ private:
 	GameSerializer serializer{ *this };
 
 	int currentTurn{};
-	Piece::Team currentTeam{Piece::White};
+	PieceEnums::Team currentTeam{PieceEnums::White};
 };
 
+PieceEnums::Team getOppositeTeam(PieceEnums::Team team);

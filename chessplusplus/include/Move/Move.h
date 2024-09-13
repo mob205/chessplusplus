@@ -2,13 +2,15 @@
 #include <functional>
 #include "Game/Point.h"
 
+#include "Move/MoveResult.h"
+
 class Piece;
 class Board;
 
 class Move
 {
 public:
-	virtual void executeMove(Board& board, std::function<char()> inputCallback = std::function<char()>{}) = 0;
+	virtual MoveResult executeMove(Board& board, std::function<char()> inputCallback = std::function<char()>{}) = 0;
 
 	virtual void undoMove(Board& board) = 0;
 
@@ -20,8 +22,6 @@ public:
 
 	Point getStart() const { return start; }
 	Point getEnd() const { return end; }
-
-	virtual void printMove() const = 0;
 
 	char getExtraInput() const { return extraInput; }
 
