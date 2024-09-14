@@ -85,15 +85,16 @@ MoveResult Game::processTurn(const Point& start, const Point& end, std::function
 	// Check if move would put king in check
 	moveItr->second->executeMove(board);
 	attackBoard.update(board, curTeam, kings);
-	moveItr->second->undoMove(board);
 	if (isInCheck(curTeam))
 	{
 		// Cannot end turn with king in check
+		moveItr->second->undoMove(board);
 		failResult.reasonFailed = isInitialCheck ? MoveResult::MoveFailReason::Check : MoveResult::MoveFailReason::Pinned;
 		return failResult;
 	}
+	moveItr->second->undoMove(board);
 
-	// Complete move
+	// Complete move, this time allowing extra input
 	MoveResult moveResult{ moveItr->second->executeMove(board, getExtraInput) };
 
 	moveResult.oppStatus = checkEndConditions();
@@ -116,14 +117,14 @@ MoveResult::OpponentStatus Game::checkEndConditions()
 	{
 		return isInCheck(opp) ? MoveResult::OpponentStatus::Checkmate : MoveResult::OpponentStatus::Stalemate;
 	}
-	else if (isInCheck(cur))
+	else if (isInCheck(opp))
 	{
 		return MoveResult::OpponentStatus::Check;
 	}
 	return MoveResult::OpponentStatus::Normal;
 }
 
-bool Game::isInCheck(PieceEnums::Team team)
+bool Game::isInCheck(PieceEnums::Team team) const
 {
 	PieceEnums::Team oppTeam{ getOppositeTeam(team) };
 	return attackBoard.isAttacking(kings[team]->getPosition(), oppTeam);

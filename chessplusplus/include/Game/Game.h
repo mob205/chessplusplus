@@ -19,6 +19,9 @@ public:
 	
 	// Returns reference to game board
 	const Board& getBoard() const { return board; }
+
+	// Returns the current turn
+	int getCurrentTurn() const { return currentTurn; }
 	
 	// Returns the team whose turn it currently is
 	PieceEnums::Team getCurrentTeam() const { return static_cast<PieceEnums::Team>((currentTurn) % PieceEnums::MaxTeams); }
@@ -38,7 +41,7 @@ private:
 	bool hasPossibleNonKingMove(PieceEnums::Team team);
 
 	// Returns true if this team's king is in check and false otherwise
-	bool isInCheck(PieceEnums::Team team);
+	bool isInCheck(PieceEnums::Team team) const;
 
 	// Analyzes board state for check, checkmate, and stalemate
 	MoveResult::OpponentStatus checkEndConditions();

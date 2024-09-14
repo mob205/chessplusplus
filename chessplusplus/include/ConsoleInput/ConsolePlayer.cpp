@@ -19,6 +19,7 @@ namespace IO
 
 			std::cout << '\n' << board << '\n';
 
+			std::cout << "Turn " << (game.getCurrentTurn() / 2) + 1 << '\n';
 			std::cout << (currentTeam ? "Black" : "White") << "'s turn!\n";
 			std::cout << "Select a piece to move, or type 'QUIT' to quit.\n";
 

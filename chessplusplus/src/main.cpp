@@ -26,7 +26,7 @@ void StartGameFromSave()
 	}
 }
 
-int main()
+void StartConsoleGame()
 {
 	std::cout << "Welcome to Chess!\n\n";
 
@@ -38,12 +38,12 @@ int main()
 		switch (input)
 		{
 		case 'A':
-		// Start a new game
+			// Start a new game
 		{
 			Game game{};
 			IO::playGame(game);
 		}
-			break;
+		break;
 		case 'B':
 			StartGameFromSave();
 			break;
@@ -52,6 +52,11 @@ int main()
 			break;
 		}
 	}
+}
+
+int main()
+{
+	StartConsoleGame();
 }
 
 
