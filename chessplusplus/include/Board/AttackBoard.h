@@ -8,7 +8,7 @@ class Board;
 class Piece;
 class King;
 
-using TeamAttackBoard = std::array<std::array<bool, Settings::g_boardSize>, Settings::g_boardSize>;
+using TeamAttackBoard = std::array<std::array<bool, Settings::boardSize>, Settings::boardSize>;
 
 class AttackBoard
 {

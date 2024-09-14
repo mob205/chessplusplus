@@ -2,5 +2,6 @@
 
 namespace Settings
 {
-	inline constexpr int g_boardSize{ 8 };
+	inline constexpr int boardSize{ 8 };
+	inline constexpr int pixelsPerTile{ 75 };
 }

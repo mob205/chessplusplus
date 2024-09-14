@@ -34,15 +34,15 @@ bool AttackBoard::isAttacking(const Point& point, PieceEnums::Team team) const
 // Resets the attack board to an initial state showing no tiles being attacked
 void AttackBoard::resetBoard(PieceEnums::Team team)
 {
-	std::fill(attackBoard[team].begin(), attackBoard[team].end(), std::array<bool, Settings::g_boardSize>{});
+	std::fill(attackBoard[team].begin(), attackBoard[team].end(), std::array<bool, Settings::boardSize>{});
 }
 
 // Sets the attack board to represent all board tiles being attacked by given team
 void AttackBoard::setNonKing(const Board& board)
 {
-	for (int rank = 0; rank < Settings::g_boardSize; ++rank)
+	for (int rank = 0; rank < Settings::boardSize; ++rank)
 	{
-		for (int file = 0; file < Settings::g_boardSize; ++file)
+		for (int file = 0; file < Settings::boardSize; ++file)
 		{
 			Point pos{ rank, file };
 
@@ -78,21 +78,21 @@ void AttackBoard::setKing(const Board& board, const Piece* king)
 void AttackBoard::printBoard(std::ostream& out, PieceEnums::Team team) const
 {
 	out << "   ";
-	for (int i = 0; i < Settings::g_boardSize; ++i)
+	for (int i = 0; i < Settings::boardSize; ++i)
 	{
 		out << " " << static_cast<char>('a' + i) << " ";
 	}
 
 	out << "\n   ";
-	for (int i = 0; i < Settings::g_boardSize; ++i)
+	for (int i = 0; i < Settings::boardSize; ++i)
 	{
 		out << "---";
 	}
 	out << "\n";
-	for (int rank = Settings::g_boardSize - 1; rank >= 0; --rank)
+	for (int rank = Settings::boardSize - 1; rank >= 0; --rank)
 	{
 		out << rank + 1 << " |";
-		for (int file = 0; file < Settings::g_boardSize; ++file)
+		for (int file = 0; file < Settings::boardSize; ++file)
 		{
 			if (this->isAttacking({ rank, file }, team))
 			{
@@ -106,7 +106,7 @@ void AttackBoard::printBoard(std::ostream& out, PieceEnums::Team team) const
 		out << "|\n";
 	}
 	out << "   ";
-	for (int i = 0; i < Settings::g_boardSize; ++i)
+	for (int i = 0; i < Settings::boardSize; ++i)
 	{
 		out << "---";
 	}

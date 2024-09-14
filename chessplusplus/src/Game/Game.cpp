@@ -20,9 +20,9 @@ static void addPiece(Board& board, const Point& position, PieceEnums::Team team)
 Game::Game()
 {
 	// Setup pawns
-	for (int i = 0; i < Settings::g_boardSize; ++i)
+	for (int i = 0; i < Settings::boardSize; ++i)
 	{
-		Point blackPos{ Settings::g_boardSize - 2, i };
+		Point blackPos{ Settings::boardSize - 2, i };
 		Point whitePos{ 1, i };
 
 		board[whitePos] = std::make_unique<Pawn>(whitePos, PieceEnums::White, currentTurn);
@@ -33,7 +33,7 @@ Game::Game()
 	for (int i = 0; i < PieceEnums::MaxTeams; ++i)
 	{
 		// 0 for white, 7 for black
-		int rank{ i * (Settings::g_boardSize - 1) };
+		int rank{ i * (Settings::boardSize - 1) };
 		PieceEnums::Team team{ static_cast<PieceEnums::Team>(i) };
 
 		addPiece<Rook>(board, { rank, 0 }, team);
@@ -150,9 +150,9 @@ bool Game::hasPossibleNonKingMove(PieceEnums::Team team)
 	PieceEnums::Team opp{ getOppositeTeam(team)};
 	AttackBoard attackBoard{};
 
-	for (int rank = 0; rank < Settings::g_boardSize; ++rank)
+	for (int rank = 0; rank < Settings::boardSize; ++rank)
 	{
-		for (int file = 0; file < Settings::g_boardSize; ++file)
+		for (int file = 0; file < Settings::boardSize; ++file)
 		{
 			Point pos{ rank, file };
 			if (!isAlliedPiece(board, pos, team) || board[pos]->getType() == PieceEnums::King) { continue; }

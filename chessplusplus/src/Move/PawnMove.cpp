@@ -12,7 +12,7 @@
 MoveResult PawnMove::executeMove(Board& board, std::function<char()> inputCallback)
 {
 	Move::executeMove(board);
-	int promoRank{ board[end]->getTeam() ? 0 : Settings::g_boardSize - 1 };
+	int promoRank{ board[end]->getTeam() ? 0 : Settings::boardSize - 1 };
 
 	MoveResult res{};
 	if (inputCallback && board[end]->getPosition().rank == promoRank)

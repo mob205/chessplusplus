@@ -9,7 +9,7 @@
 #include "Piece/Piece.h"
 
 
-using Row = std::array<std::unique_ptr<Piece>, Settings::g_boardSize>;
+using Row = std::array<std::unique_ptr<Piece>, Settings::boardSize>;
 using PieceRef = std::unique_ptr<Piece>&;
 
 class Board
@@ -26,5 +26,5 @@ public:
 	friend std::ostream& operator<<(std::ostream& out, const Board& board);
 
 private:
-	std::array<Row, Settings::g_boardSize> board{};
+	std::array<Row, Settings::boardSize> board{};
 };

@@ -3,10 +3,22 @@
 #include "Game/Game.h"
 #include "ConsoleInput/Input.h"
 #include "ConsoleInput/ConsolePlayer.h"
+#include "GUI/GUIMain.h"
 #include "Board/Board.h"
+#include "Game/Settings.h"
 
+#include "SFML/Graphics.hpp"
 
-void StartGameFromSave()
+void LoadConsoleGameFromSave();
+void StartConsoleGame();
+
+int main()
+{
+	GUI::startGUI();
+    return 0;
+}
+
+void LoadConsoleGameFromSave()
 {
 	Game game{};
 	GameSerializer::LoadGameResult res{ game.getSerializer().loadGame(IO::getSaveName()) };
@@ -45,7 +57,7 @@ void StartConsoleGame()
 		}
 		break;
 		case 'B':
-			StartGameFromSave();
+			LoadConsoleGameFromSave();
 			break;
 		case 'C':
 			std::cout << "Goodbye!";
@@ -53,11 +65,3 @@ void StartConsoleGame()
 		}
 	}
 }
-
-int main()
-{
-	StartConsoleGame();
-}
-
-
-

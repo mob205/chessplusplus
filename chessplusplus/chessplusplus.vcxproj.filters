@@ -108,6 +108,9 @@
     <ClCompile Include="include\ConsoleInput\ConsolePlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUI\GUIMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game\Point.h">
@@ -189,6 +192,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ConsoleInput\ConsolePlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUI\GUIMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

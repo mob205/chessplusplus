@@ -50,7 +50,7 @@ MoveSet King::getPossibleMoves(const Board& board, bool getDefenses) const
 
         // Check right rook
         // Only 2 checks need to be checked for vacancy on this side, not three
-        rookPos = { position.rank, Settings::g_boardSize - 1 };
+        rookPos = { position.rank, Settings::boardSize - 1 };
         if (isOccupied(board, rookPos) && board[rookPos]->getType() == PieceEnums::Rook && !board[rookPos]->getMoved()
             && areSpotsUnoccupied(board, position, {0, 1}, 2) && areSpotsUnattacked(position, {0, 1}, 2))
         {

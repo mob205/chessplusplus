@@ -12,7 +12,7 @@ struct Point
 	// Returns if the tile described is within the board bounds
 	bool isInBounds() const
 	{
-		return(0 <= rank && rank < Settings::g_boardSize && 0 <= file && file < Settings::g_boardSize);
+		return(0 <= rank && rank < Settings::boardSize && 0 <= file && file < Settings::boardSize);
 	}
 
 	Point& operator+=(const Point& other);

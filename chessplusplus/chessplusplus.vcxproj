@@ -105,11 +105,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Donny\Documents\C++ Projects\SFML-2.6.1\include;$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\Donny\Documents\C++ Projects\SFML build\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -121,18 +123,21 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Donny\Documents\C++ Projects\SFML-2.6.1\include;$(ProjectDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>D:\Donny\Documents\C++ Projects\SFML build\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="include\ConsoleInput\ConsolePlayer.cpp" />
     <ClCompile Include="src\Board\AttackBoard.cpp" />
+    <ClCompile Include="src\GUI\GUIMain.cpp" />
     <ClCompile Include="src\Piece\Bishop.cpp" />
     <ClCompile Include="src\Board\Board.cpp" />
     <ClCompile Include="src\Board\BoardHelpers.cpp" />
@@ -157,6 +162,7 @@
     <ClInclude Include="include\Board\AttackBoard.h" />
     <ClInclude Include="include\Game\MoveRecord.h" />
     <ClInclude Include="include\ConsoleInput\ConsolePlayer.h" />
+    <ClInclude Include="include\GUI\GUIMain.h" />
     <ClInclude Include="include\Move\MoveResult.h" />
     <ClInclude Include="include\Piece\Bishop.h" />
     <ClInclude Include="include\Board\Board.h" />
