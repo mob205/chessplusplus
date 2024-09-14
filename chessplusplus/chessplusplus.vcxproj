@@ -136,6 +136,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="include\ConsoleInput\ConsolePlayer.cpp" />
+    <ClCompile Include="src\GUI\Menu.cpp" />
+    <ClCompile Include="src\GUI\TestButton.cpp" />
+    <ClCompile Include="src\GUI\Button.cpp" />
     <ClCompile Include="src\Board\AttackBoard.cpp" />
     <ClCompile Include="src\GUI\GUIMain.cpp" />
     <ClCompile Include="src\Piece\Bishop.cpp" />
@@ -162,7 +165,10 @@
     <ClInclude Include="include\Board\AttackBoard.h" />
     <ClInclude Include="include\Game\MoveRecord.h" />
     <ClInclude Include="include\ConsoleInput\ConsolePlayer.h" />
+    <ClInclude Include="include\GUI\Button.h" />
     <ClInclude Include="include\GUI\GUIMain.h" />
+    <ClInclude Include="include\GUI\Menu.h" />
+    <ClInclude Include="include\GUI\TestButton.h" />
     <ClInclude Include="include\Move\MoveResult.h" />
     <ClInclude Include="include\Piece\Bishop.h" />
     <ClInclude Include="include\Board\Board.h" />
