@@ -30,3 +30,8 @@ bool isType(const Board& board, const Point& point, PieceEnums::Type type)
 {
 	return isOccupied(board, point) && board[point]->getType() == type;
 }
+
+PieceEnums::Team getOppositeTeam(PieceEnums::Team team)
+{
+	return static_cast<PieceEnums::Team>((team + 1) % PieceEnums::MaxTeams);
+}

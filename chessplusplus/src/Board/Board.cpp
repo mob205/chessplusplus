@@ -20,7 +20,7 @@ const std::unique_ptr<Piece>& Board::operator[](Point point) const
 	return board[point.rank][point.file];
 }
 
-std::ostream& operator<<(std::ostream& out, Board& board)
+std::ostream& operator<<(std::ostream& out, const Board& board)
 {
 	out << "   ";
 	for (int i = 0; i < Settings::g_boardSize; ++i)
@@ -39,9 +39,9 @@ std::ostream& operator<<(std::ostream& out, Board& board)
 		out << rank + 1 << " |";
 		for (int file = 0; file < Settings::g_boardSize; ++file)
 		{
-			if (board[rank][file])
+			if (board[{rank, file}])
 			{
-				out << *board[rank][file];
+				out << *board[{rank, file}];
 			}
 			else
 			{

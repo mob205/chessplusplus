@@ -14,19 +14,34 @@ class Game
 {
 	friend GameSerializer;
 public:
+	// Sets up initial chess board
 	Game();
-	Board& getBoard() { return board; }
-	void playGame();
+	
+	// Returns reference to game board
+	const Board& getBoard() const { return board; }
+	
+	// Returns the team whose turn it currently is
+	PieceEnums::Team getCurrentTeam() const { return static_cast<PieceEnums::Team>((currentTurn) % PieceEnums::MaxTeams); }
 
+	// Returns this game's serializer
 	GameSerializer& getSerializer() { return serializer; }
 
-	MoveResult processTurn(const Point& start, const Point& end, bool printMove, std::function<char()> getExtraInput);
+	// Processes a turn given valid start and end inputs
+	MoveResult processTurn(const Point& start, const Point& end, std::function<char()> getExtraInput);
+
+	// Undos the most recent move
+	bool undoMove();
 
 private:
-
+	// Returns true if this team has a possible move from any non-king piece or pawn
+	// Returns false otherwise
 	bool hasPossibleNonKingMove(PieceEnums::Team team);
 
+	// Returns true if this team's king is in check and false otherwise
 	bool isInCheck(PieceEnums::Team team);
+
+	// Analyzes board state for check, checkmate, and stalemate
+	MoveResult::OpponentStatus checkEndConditions();
 
 	std::vector<MoveRecord> moveHistory{};
 
@@ -39,7 +54,5 @@ private:
 	GameSerializer serializer{ *this };
 
 	int currentTurn{};
-	PieceEnums::Team currentTeam{PieceEnums::White};
 };
 
-PieceEnums::Team getOppositeTeam(PieceEnums::Team team);

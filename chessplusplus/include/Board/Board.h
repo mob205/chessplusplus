@@ -23,7 +23,7 @@ public:
 	const std::unique_ptr<Piece>& operator[](Point pos) const;
 
 	// Prints the board
-	friend std::ostream& operator<<(std::ostream& out, Board& board);
+	friend std::ostream& operator<<(std::ostream& out, const Board& board);
 
 private:
 	std::array<Row, Settings::g_boardSize> board{};

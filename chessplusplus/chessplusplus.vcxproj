@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\ConsoleInput\ConsolePlayer.cpp" />
     <ClCompile Include="src\Board\AttackBoard.cpp" />
     <ClCompile Include="src\Piece\Bishop.cpp" />
     <ClCompile Include="src\Board\Board.cpp" />
@@ -155,6 +156,7 @@
   <ItemGroup>
     <ClInclude Include="include\Board\AttackBoard.h" />
     <ClInclude Include="include\Game\MoveRecord.h" />
+    <ClInclude Include="include\ConsoleInput\ConsolePlayer.h" />
     <ClInclude Include="include\Move\MoveResult.h" />
     <ClInclude Include="include\Piece\Bishop.h" />
     <ClInclude Include="include\Board\Board.h" />
@@ -168,8 +170,8 @@
     <ClInclude Include="include\Piece\Knight.h" />
     <ClInclude Include="include\Piece\LinePiece.h" />
     <ClInclude Include="include\Move\Move.h" />
-    <ClInclude Include="include\Input\Input.h" />
-    <ClInclude Include="include\Input\InputResult.h" />
+    <ClInclude Include="include\ConsoleInput\Input.h" />
+    <ClInclude Include="include\ConsoleInput\InputResult.h" />
     <ClInclude Include="include\Piece\Pawn.h" />
     <ClInclude Include="include\Move\PawnMove.h" />
     <ClInclude Include="include\Piece\Piece.h" />

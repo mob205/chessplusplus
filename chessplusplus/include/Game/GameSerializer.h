@@ -5,12 +5,19 @@ class Game;
 class GameSerializer
 {
 public:
+	enum LoadGameResult
+	{
+		LoadSuccessful,
+		SaveNotFound,
+		SaveInvalid
+	};
+
 	GameSerializer(Game& game)
 		:game{ game }
 	{}
 
 	bool saveGame(const std::string& savename) const;
-	bool loadGame(const std::string& savename) const;
+	LoadGameResult loadGame(const std::string& savename) const;
 	char readPromoType(std::ifstream& fp) const;
 
 private:

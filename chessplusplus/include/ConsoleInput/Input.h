@@ -2,9 +2,9 @@
 #include <iostream>
 #include <sstream>
 
-#include "Input/InputResult.h"
+#include "ConsoleInput/InputResult.h"
 
-namespace Input
+namespace IO
 {
 	void displayMainMenu();
 	

@@ -1,7 +1,7 @@
-#include "Input/Input.h"
+#include "ConsoleInput/Input.h"
 #include "Game/Point.h"
 
-namespace Input
+namespace IO
 {
 	void displayMainMenu()
 	{

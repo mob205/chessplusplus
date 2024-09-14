@@ -47,12 +47,12 @@ bool GameSerializer::saveGame(const std::string& savename) const
 	return true;
 }
 
-bool GameSerializer::loadGame(const std::string& savename) const
+GameSerializer::LoadGameResult GameSerializer::loadGame(const std::string& savename) const
 {
 	std::ifstream fp{ saveDirectory + savename + extension };
 	if (!fp)
 	{
-		return false;
+		return SaveNotFound;
 	}
 	Point start{};
 	Point end{};
@@ -63,12 +63,12 @@ bool GameSerializer::loadGame(const std::string& savename) const
 
 	while (fp >> start >> end)
 	{
-		if (!game.processTurn(start, end, false, extraInput))
+		if (!game.processTurn(start, end, extraInput))
 		{
-			return false;
+			return SaveInvalid;
 		}
 	}
-	return true;
+	return LoadSuccessful;
 }
 
 char GameSerializer::readPromoType(std::ifstream& fp) const

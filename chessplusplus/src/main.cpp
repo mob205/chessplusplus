@@ -1,8 +1,30 @@
 #include <iostream>
 
 #include "Game/Game.h"
-#include "Input/Input.h"
+#include "ConsoleInput/Input.h"
+#include "ConsoleInput/ConsolePlayer.h"
 #include "Board/Board.h"
+
+
+void StartGameFromSave()
+{
+	Game game{};
+	GameSerializer::LoadGameResult res{ game.getSerializer().loadGame(IO::getSaveName()) };
+
+	switch (res)
+	{
+	case GameSerializer::LoadSuccessful:
+		std::cout << "Successfully loaded game.\n";
+		IO::playGame(game);
+		break;
+	case GameSerializer::SaveNotFound:
+		std::cout << "Save file does not exist.\n";
+		break;
+	case GameSerializer::SaveInvalid:
+		std::cout << "Save file is invalid.\n";
+		break;
+	}
+}
 
 int main()
 {
@@ -12,30 +34,18 @@ int main()
 	char input{};
 	while (input != 'C')
 	{
-		input = Input::getMenuInput();
+		input = IO::getMenuInput();
 		switch (input)
 		{
 		case 'A':
 		// Start a new game
 		{
 			Game game{};
-			game.playGame();
+			IO::playGame(game);
 		}
 			break;
 		case 'B':
-		// Load a game and play it
-		{
-			Game game{};
-			if (game.getSerializer().loadGame(Input::getSaveName()))
-			{
-				std::cout << "Successfully loaded game.\n";
-				game.playGame();
-			}
-			else
-			{
-				std::cout << "Invalid save file.\n";
-			}
-		}
+			StartGameFromSave();
 			break;
 		case 'C':
 			std::cout << "Goodbye!";
@@ -43,4 +53,6 @@ int main()
 		}
 	}
 }
+
+
 

@@ -1,5 +1,5 @@
 #include "Move/PawnMove.h"
-#include "Input/Input.h"
+#include "ConsoleInput/Input.h"
 #include "Piece/Piece.h"
 #include "Board/Board.h"
 #include "Piece/PieceEnums.h"
