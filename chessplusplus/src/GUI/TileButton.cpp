@@ -16,10 +16,15 @@ void TileButton::onUnclick()
 
 void TileButton::setPieceSprite(sf::Texture* texture)
 {
+	constexpr float pieceScale{ .75f };
+	constexpr float pieceSize{ pieceScale * GUI::pixelsPerTile };
+	constexpr float offset{ (GUI::pixelsPerTile - pieceSize) / 2 };
+
 	pieceTexture = texture;
 	pieceSprite.setTexture(*pieceTexture, true);
-	pieceSprite.setScale(static_cast<float>(GUI::pixelsPerTile) / pieceTexture->getSize().x, static_cast<float>(GUI::pixelsPerTile) / pieceTexture->getSize().y);
-	pieceSprite.setPosition(getPosition());
+	pieceSprite.setScale(pieceSize / pieceTexture->getSize().x, pieceSize / pieceTexture->getSize().y);
+
+	pieceSprite.setPosition(getPosition() + sf::Vector2f{offset, offset});
 }
 
 void TileButton::resetPieceSprite()
