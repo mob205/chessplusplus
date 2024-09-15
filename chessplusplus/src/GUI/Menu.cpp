@@ -42,12 +42,14 @@ void Menu::onButtonPress(sf::Vector2f point)
 
 void Menu::onButtonRelease(sf::Vector2f point)
 {
-	
+	std::cout << "Event release at relative position (" << point.x - getPosition().x << ", " << point.y - getPosition().y << ")\n";
 	for (int i = 0; i < buttons.size(); ++i)
 	{
 		if (buttons[i]->containsPoint(point - getPosition()))
 		{
+			std::cout << "Released on button " << i << "\n";
 			buttons[i]->onRelease();
+			break;
 		}
 	}
 }
@@ -56,4 +58,9 @@ void Menu::updateSprite()
 {
 	menuTexture.display();
 	menuSprite.setTexture(menuTexture.getTexture());
+}
+
+void Menu::onActive()
+{
+
 }

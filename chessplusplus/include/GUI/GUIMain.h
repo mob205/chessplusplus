@@ -7,7 +7,7 @@ namespace GUI
 	inline constexpr int buttonHeight{ 100 };
 	inline constexpr int pixelsPerTile{ 75 };
 	inline constexpr int boardLength{ Settings::boardSize * pixelsPerTile };
-	inline constexpr int menuSize{ 1000 };
+	inline constexpr int menuSize{ 1200 };
 
 	void startGUI();
 }

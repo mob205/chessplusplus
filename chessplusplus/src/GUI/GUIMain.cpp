@@ -2,60 +2,73 @@
 #include "SFML/Graphics.hpp"
 #include "Game/Settings.h"
 #include "Game/Game.h"
+#include "Piece/PieceEnums.h"
 
 #include "GUI/TestButton.h"
 #include "GUI/SwitchMenuButton.h"
 
 #include "GUI/GUImain.h"
 #include "GUI/Menu.h"
+#include "GUI/GameMenu.h"
 #include "GUI/MenuManager.h"
 
-static const sf::Color buttonColor{ 215, 215, 215 };
 
 namespace GUI
 {
-    // Creates the board texture
-    static bool SetupBoard(sf::RenderTexture& boardTexture)
+    const sf::Color buttonColor{ 215, 215, 215 };
+
+    static std::vector<std::vector<sf::Texture>> pieceTextures(PieceEnums::MaxTeams, std::vector<sf::Texture>(PieceEnums::MaxTypes));
+
+    static bool loadPieceTextures()
     {
-        sf::Vector2u textureSize{ boardLength, boardLength };
+        bool res{true};
+        res &= pieceTextures[PieceEnums::White][PieceEnums::Pawn].loadFromFile("../Resources/w_pawn.png");
+        res &= pieceTextures[PieceEnums::White][PieceEnums::Knight].loadFromFile("../Resources/w_knight.png");
+        res &= pieceTextures[PieceEnums::White][PieceEnums::Rook].loadFromFile("../Resources/w_rook.png");
+        res &= pieceTextures[PieceEnums::White][PieceEnums::Queen].loadFromFile("../Resources/w_queen.png");
+        res &= pieceTextures[PieceEnums::White][PieceEnums::King].loadFromFile("../Resources/w_king.png");
+        res &= pieceTextures[PieceEnums::White][PieceEnums::Bishop].loadFromFile("../Resources/w_bishop.png");
 
-        if (!boardTexture.create(textureSize.x, textureSize.y))
-        {
-            std::cerr << "Could not create board!\n";
-            return false;
-        }
+        res &= pieceTextures[PieceEnums::Black][PieceEnums::Pawn].loadFromFile("../Resources/b_pawn.png");
+        res &= pieceTextures[PieceEnums::Black][PieceEnums::Knight].loadFromFile("../Resources/b_knight.png");
+        res &= pieceTextures[PieceEnums::Black][PieceEnums::Rook].loadFromFile("../Resources/b_rook.png");
+        res &= pieceTextures[PieceEnums::Black][PieceEnums::Queen].loadFromFile("../Resources/b_queen.png");
+        res &= pieceTextures[PieceEnums::Black][PieceEnums::King].loadFromFile("../Resources/b_king.png");
+        res &= pieceTextures[PieceEnums::Black][PieceEnums::Bishop].loadFromFile("../Resources/b_bishop.png");
 
-        std::vector<sf::RectangleShape> rects(Settings::boardSize * Settings::boardSize, sf::RectangleShape{ sf::Vector2f{pixelsPerTile, pixelsPerTile} });
+        return res;
+    }
 
-        sf::Vector2f center{ static_cast<float>(textureSize.x / 2), static_cast<float>(textureSize.y / 2) };
+    static void setupBoard(GameMenu& menu)
+    {
+
+        sf::Vector2f center{ static_cast<float>(menuSize / 2), static_cast<float>(menuSize / 2) - 100};
 
         float offsetX{ -boardLength / 2 };
-        float offsetY{ offsetX };
+        float offsetY{ boardLength / 2 };
         for (int i = 0; i < Settings::boardSize; ++i)
         {
             float curOffsetX{ offsetX };
             for (int j = 0; j < Settings::boardSize; ++j)
             {
-                sf::RectangleShape& rectangle{ rects[Settings::boardSize * i + j] };
-                rectangle.setFillColor((i + j) % 2 == 0 ? sf::Color::White : sf::Color::Black);
-                rectangle.setPosition(sf::Vector2f{ curOffsetX, offsetY } + center);
-                boardTexture.draw(rectangle);
+                auto tileButton{ std::make_unique<TileButton>(sf::Vector2f{pixelsPerTile, pixelsPerTile}, (i + j) % 2 == 0 ? sf::Color::White : sf::Color::Black) };
+                tileButton->setPosition(sf::Vector2f{ curOffsetX, offsetY } + center);
+                menu.addTileButton(std::move(tileButton));
+
+                // Fill columns left to right
                 curOffsetX += pixelsPerTile;
             }
-            offsetY += pixelsPerTile;
+            // Fill rows bottom to top
+            offsetY -= pixelsPerTile;
         }
-        boardTexture.display();
-        return true;
     }
 
-    static void SetupMainMenu(Menu& menu, const sf::Font& font, MenuManager& manager)
+    static void setupMainMenu(Menu& menu, const sf::Font& font, MenuManager& manager)
     {
-
         sf::Text welcome{ "Welcome to Chess!", font, 90 };
         welcome.setPosition({ (menuSize - welcome.getGlobalBounds().width) / 2, 100});
         welcome.setFillColor(sf::Color::Black);
         menu.addElement(welcome);
-
 
         auto startButton{ std::make_unique<SwitchMenuButton>(sf::Vector2f{buttonWidth, buttonHeight}, buttonColor, "Start Game", font, 45, manager, 1) };
         startButton->setPosition({ (menuSize - buttonWidth) / 2, 300 });
@@ -66,13 +79,9 @@ namespace GUI
         menu.addButton(std::move(loadButton));
     }
 
-    static void SetupBoardMenu(Menu& menu, const sf::Font& font, MenuManager& manager)
+    static void setupBoardMenu(GameMenu& menu, const sf::Font& font, MenuManager& manager)
     {
-        sf::RenderTexture boardTexture{};
-        SetupBoard(boardTexture);
-        sf::Sprite boardSprite{ boardTexture.getTexture() };
-        boardSprite.setPosition(static_cast<float>((menuSize - boardTexture.getSize().x) / 2), static_cast<float>((menuSize - boardTexture.getSize().y) / 2) + 50);
-        menu.addElement(boardSprite);
+        setupBoard(menu);
 
         auto quitButton{ std::make_unique<SwitchMenuButton>(sf::Vector2f{buttonWidth, buttonHeight}, buttonColor, "Quit", font, 45, manager, 0) };
         quitButton->setPosition({ 50, 120});
@@ -81,7 +90,7 @@ namespace GUI
 
     void startGUI()
     {
-        sf::RenderWindow window(sf::VideoMode(1000, 800), "Chess");
+        sf::RenderWindow window(sf::VideoMode(1200, 1000), "Chess");
         window.setVerticalSyncEnabled(true);
         
         sf::Font font;
@@ -91,13 +100,17 @@ namespace GUI
             return;
         }
 
+        if (!loadPieceTextures())
+        {
+            std::cerr << "Could not load piece sprites.\n";
+        }
 
         Menu mainMenu{ {menuSize, menuSize } };
-        Menu boardMenu{ {menuSize, menuSize} };
+        GameMenu boardMenu{ {menuSize, menuSize}, pieceTextures };
         MenuManager menuManager{ mainMenu };
 
-        SetupMainMenu(mainMenu, font, menuManager);
-        SetupBoardMenu(boardMenu, font, menuManager);
+        setupMainMenu(mainMenu, font, menuManager);
+        setupBoardMenu(boardMenu, font, menuManager);
 
         menuManager.addMenu(boardMenu);
 
@@ -122,6 +135,10 @@ namespace GUI
                 if (event.type == sf::Event::MouseButtonPressed)
                 {
                     menuManager.getActiveMenu().onButtonPress(sf::Vector2f{static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y)});
+                }
+                if (event.type == sf::Event::MouseButtonReleased)
+                {
+                    menuManager.getActiveMenu().onButtonRelease(sf::Vector2f{ static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y) });
                 }
             }
 

@@ -137,6 +137,8 @@
   <ItemGroup>
     <ClCompile Include="include\ConsoleInput\ConsolePlayer.cpp" />
     <ClCompile Include="include\GUI\MenuManager.cpp" />
+    <ClCompile Include="src\GUI\GameMenu.cpp" />
+    <ClCompile Include="src\GUI\TileButton.cpp" />
     <ClCompile Include="src\GUI\Menu.cpp" />
     <ClCompile Include="src\GUI\SwitchMenuButton.cpp" />
     <ClCompile Include="src\GUI\TestButton.cpp" />
@@ -168,11 +170,13 @@
     <ClInclude Include="include\Game\MoveRecord.h" />
     <ClInclude Include="include\ConsoleInput\ConsolePlayer.h" />
     <ClInclude Include="include\GUI\Button.h" />
+    <ClInclude Include="include\GUI\GameMenu.h" />
     <ClInclude Include="include\GUI\GUIMain.h" />
     <ClInclude Include="include\GUI\Menu.h" />
     <ClInclude Include="include\GUI\MenuManager.h" />
     <ClInclude Include="include\GUI\SwitchMenuButton.h" />
     <ClInclude Include="include\GUI\TestButton.h" />
+    <ClInclude Include="include\GUI\TileButton.h" />
     <ClInclude Include="include\Move\MoveResult.h" />
     <ClInclude Include="include\Piece\Bishop.h" />
     <ClInclude Include="include\Board\Board.h" />

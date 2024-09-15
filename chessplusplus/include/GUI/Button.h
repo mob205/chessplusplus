@@ -4,6 +4,7 @@
 class Button : public sf::Drawable, public sf::Transformable
 {
 public:
+	Button(sf::Vector2f buttonSize, sf::Color buttonColor);
 	Button(sf::Vector2f buttonSize, sf::Color buttonColor, const sf::String& buttonText, const sf::Font& font, int fontSize);
 
 	sf::Sprite& getSprite() { return buttonSprite; }

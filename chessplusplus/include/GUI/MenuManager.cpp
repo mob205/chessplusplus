@@ -17,6 +17,7 @@ void MenuManager::setActiveMenu(int num)
 	{
 		std::cout << "Switching to menu " << num << '\n';
 		activeMenu = num;
+		menus[activeMenu].get().onActive();
 	}
 }
 

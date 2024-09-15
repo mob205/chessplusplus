@@ -10,14 +10,16 @@ public:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) const override;
 
+	virtual void onActive();
+
 	void addButton(std::unique_ptr<Button> button);
 
 	void addElement(const sf::Drawable& elem);
 
-	void onButtonPress(sf::Vector2f point);
+	virtual void onButtonPress(sf::Vector2f point);
 
-	void onButtonRelease(sf::Vector2f point);
-private:
+	virtual void onButtonRelease(sf::Vector2f point);
+protected:
 	std::vector<std::unique_ptr<Button>> buttons{};
 
 	sf::RenderTexture menuTexture{};
