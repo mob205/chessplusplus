@@ -52,7 +52,9 @@ namespace GUI
             for (int j = 0; j < Settings::boardSize; ++j)
             {
                 auto tileButton{ std::make_unique<TileButton>(sf::Vector2f{pixelsPerTile, pixelsPerTile}, (i + j) % 2 == 0 ? sf::Color::White : sf::Color::Black) };
-                tileButton->setPosition(sf::Vector2f{ curOffsetX, offsetY } + center);
+                tileButton->setOffset(sf::Vector2f{ curOffsetX, offsetY });
+                tileButton->recenter(center);
+                //tileButton->setPosition(sf::Vector2f{ curOffsetX, offsetY } + center);
                 menu.addTileButton(std::move(tileButton));
 
                 // Fill columns left to right
@@ -131,6 +133,8 @@ namespace GUI
                 {
                     sf::FloatRect visibleArea(0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height));
                     window.setView(sf::View(visibleArea));
+                    sf::Vector2f screenCenter{ static_cast<float>(window.getSize().x / 2), static_cast<float>(window.getSize().y / 2) };
+                    menuManager.getActiveMenu().onResize(screenCenter);
                 }
                 if (event.type == sf::Event::MouseButtonPressed)
                 {

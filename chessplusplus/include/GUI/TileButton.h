@@ -18,7 +18,11 @@ public:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+	void setOffset(sf::Vector2f offset);
+	void recenter(sf::Vector2f center);
+
 private:
 	sf::Texture* pieceTexture{};
 	sf::Sprite pieceSprite{};
+	sf::Vector2f positionOffset{};
 };

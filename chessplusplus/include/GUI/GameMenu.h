@@ -12,6 +12,8 @@ public:
 
 	void onActive() override;
 
+	void onResize(sf::Vector2f center) override;
+
 	void onButtonPress(sf::Vector2f point) override;
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

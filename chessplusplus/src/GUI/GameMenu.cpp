@@ -62,3 +62,11 @@ void GameMenu::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		target.draw(*tiles[i]);
 	}
 }
+
+void GameMenu::onResize(sf::Vector2f center)
+{
+	for (int i = 0; i < tiles.size(); ++i)
+	{
+		tiles[i]->recenter(center);
+	}
+}

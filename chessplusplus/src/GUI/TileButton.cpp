@@ -35,3 +35,14 @@ void TileButton::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		target.draw(pieceSprite, states);
 	}
 }
+
+void TileButton::setOffset(sf::Vector2f offset)
+{
+	positionOffset = offset;
+}
+
+void TileButton::recenter(sf::Vector2f center)
+{
+	setPosition(center + positionOffset);
+	pieceSprite.setPosition(getPosition());
+}

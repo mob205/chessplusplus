@@ -64,3 +64,8 @@ void Menu::onActive()
 {
 
 }
+
+void Menu::onResize(sf::Vector2f center)
+{
+
+}

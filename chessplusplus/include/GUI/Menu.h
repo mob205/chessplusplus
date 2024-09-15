@@ -19,6 +19,8 @@ public:
 	virtual void onButtonPress(sf::Vector2f point);
 
 	virtual void onButtonRelease(sf::Vector2f point);
+
+	virtual void onResize(sf::Vector2f center);
 protected:
 	std::vector<std::unique_ptr<Button>> buttons{};
 
