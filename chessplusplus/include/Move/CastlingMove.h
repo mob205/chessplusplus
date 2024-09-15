@@ -8,7 +8,7 @@ public:
 		: Move{ kingStart, kingEnd, false }, rookStart{ rookStart }, rookEnd{ rookEnd }
 	{}
 
-	MoveResult executeMove(Board& board, std::function<char()> callback) override;
+	MoveResult executeMove(Board& board, char extraInput = '\0') override;
 	void undoMove(Board& board) override;
 
 private:

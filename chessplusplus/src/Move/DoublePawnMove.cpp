@@ -2,7 +2,7 @@
 #include "Board/Board.h"
 #include "Piece/Pawn.h"
 
-MoveResult DoublePawnMove::executeMove(Board& board, std::function<char()> callback)
+MoveResult DoublePawnMove::executeMove(Board& board, char extraInput)
 {
 	Move::executeMove(board);
 

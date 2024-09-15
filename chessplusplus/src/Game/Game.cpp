@@ -56,7 +56,7 @@ Game::Game()
 }
 
 
-MoveResult Game::processTurn(const Point& start, const Point& end, std::function<char()> getExtraInput)
+MoveResult Game::processTurn(const Point& start, const Point& end, char extraInput)
 {
 	PieceEnums::Team curTeam = getCurrentTeam();
 	MoveResult failResult{};
@@ -83,7 +83,7 @@ MoveResult Game::processTurn(const Point& start, const Point& end, std::function
 	bool isInitialCheck{ isInCheck(curTeam) };
 
 	// Check if move would put king in check
-	moveItr->second->executeMove(board);
+	MoveResult moveResult = moveItr->second->executeMove(board, extraInput);
 	attackBoard.update(board, curTeam, kings);
 	if (isInCheck(curTeam))
 	{
@@ -92,10 +92,14 @@ MoveResult Game::processTurn(const Point& start, const Point& end, std::function
 		failResult.reasonFailed = isInitialCheck ? MoveResult::MoveFailReason::Check : MoveResult::MoveFailReason::Pinned;
 		return failResult;
 	}
-	moveItr->second->undoMove(board);
+	else if (moveResult.reasonFailed == MoveResult::MoveFailReason::NeedsInput)
+	{
+		moveItr->second->undoMove(board);
+		return moveResult;
+	}
 
 	// Complete move, this time allowing extra input
-	MoveResult moveResult{ moveItr->second->executeMove(board, getExtraInput) };
+	//MoveResult moveResult{ moveItr->second->executeMove(board, extraInput) };
 
 	moveResult.oppStatus = checkEndConditions();
 

@@ -2,7 +2,7 @@
 #include "Board/Board.h"
 #include "Piece/PieceEnums.h"
 
-MoveResult StandardMove::executeMove(Board& board, std::function<char()> callback)
+MoveResult StandardMove::executeMove(Board& board, char extraInput)
 {
 	Move::executeMove(board);
 

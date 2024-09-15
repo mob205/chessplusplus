@@ -57,7 +57,7 @@ void GameMenu::selectPiece(int i)
 		return;
 	}
 	Point start{ numToPoint(selectedPiece) };
-	logMove(game->processTurn(start, sel, std::function<char()>{}));
+	logMove(game->processTurn(start, sel, '\0'));
 
 	updateBoard();
 	updateTurnCounter();

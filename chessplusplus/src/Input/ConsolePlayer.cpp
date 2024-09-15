@@ -79,7 +79,7 @@ namespace IO
 				continue;
 			}
 
-			MoveResult res{ game.processTurn(start.point, end.point, &IO::getPromotionType) };
+			MoveResult res{ game.processTurn(start.point, end.point) };
 
 			if (!res)
 			{
@@ -97,7 +97,12 @@ namespace IO
 				case MoveResult::MoveFailReason::NotInSet:
 					std::cout << "Invalid move.";
 					break;
+				case MoveResult::MoveFailReason::NeedsInput:
+					// NeedsInput has lowest priority - if this is the reason it fails, then it must mean the move is otherwise valid
+					res = game.processTurn(start.point, end.point, IO::getPromotionType());
+					break;
 				}
+
 				continue;
 			}
 

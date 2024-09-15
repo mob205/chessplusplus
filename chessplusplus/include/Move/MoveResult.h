@@ -6,10 +6,11 @@ struct MoveResult
 	enum class MoveFailReason
 	{
 		None,			// Successful move
-		InvalidPiece,
+		InvalidPiece,   // Piece is not owned by player
 		NotInSet,		// The requested move is not how the piece moves
 		Pinned,			// The desired piece is defending the king and is unable to move
-		Check			// The king is in check and the attempted move did not defend the king
+		Check,			// The king is in check and the attempted move did not defend the king
+		NeedsInput,		// This move requires extra input. Other fail reasons take priority
 	};
 	enum class Type 
 	{

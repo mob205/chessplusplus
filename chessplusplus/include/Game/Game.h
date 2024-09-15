@@ -30,7 +30,7 @@ public:
 	GameSerializer& getSerializer() { return serializer; }
 
 	// Processes a turn given valid start and end inputs
-	MoveResult processTurn(const Point& start, const Point& end, std::function<char()> getExtraInput);
+	MoveResult processTurn(const Point& start, const Point& end, char extraInput = '\0');
 
 	// Undos the most recent move
 	bool undoMove();

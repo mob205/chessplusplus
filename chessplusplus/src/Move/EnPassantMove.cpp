@@ -4,7 +4,7 @@
 #include "Piece/PieceEnums.h"
 
 
-MoveResult EnPassantMove::executeMove(Board& board, std::function<char()> callback)
+MoveResult EnPassantMove::executeMove(Board& board, char extraInput)
 {
 	// Move the pawn
 	Move::executeMove(board);

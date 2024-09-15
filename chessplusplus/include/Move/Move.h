@@ -10,7 +10,7 @@ class Board;
 class Move
 {
 public:
-	virtual MoveResult executeMove(Board& board, std::function<char()> inputCallback = std::function<char()>{}) = 0;
+	virtual MoveResult executeMove(Board& board, char extraInput = '\0') = 0;
 
 	virtual void undoMove(Board& board) = 0;
 

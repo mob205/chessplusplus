@@ -9,19 +9,23 @@
 #include "Piece/Rook.h"
 #include "Piece/Bishop.h"
 
-MoveResult PawnMove::executeMove(Board& board, std::function<char()> inputCallback)
+MoveResult PawnMove::executeMove(Board& board, char extraInput)
 {
 	Move::executeMove(board);
 	int promoRank{ board[end]->getTeam() ? 0 : Settings::boardSize - 1 };
 
 	MoveResult res{};
-	if (inputCallback && board[end]->getPosition().rank == promoRank)
+	if (board[end]->getPosition().rank == promoRank && extraInput)
 	{
-		PieceEnums::Type promoType{ promotePawn(board, inputCallback) };
+		PieceEnums::Type promoType{ promotePawn(board, extraInput) };
 
 		res.type = MoveResult::Type::Promotion;
 		res.promotion = MoveResult::PromotionResult{ start, end, (captured) ? captured->getType() : PieceEnums::None, promoType };
 		return res;
+	}
+	else if (board[end]->getPosition().rank == promoRank && !extraInput)
+	{
+		res.reasonFailed = MoveResult::MoveFailReason::NeedsInput;
 	}
 	
 	res.type = MoveResult::Type::Standard;
@@ -29,11 +33,10 @@ MoveResult PawnMove::executeMove(Board& board, std::function<char()> inputCallba
 	return res;
 }
 
-PieceEnums::Type PawnMove::promotePawn(Board& board, std::function<char()> getInput)
+PieceEnums::Type PawnMove::promotePawn(Board& board, char extraInput)
 {
 	promotedPawn = std::move(board[end]);
 
-	extraInput = getInput();
 	PieceEnums::Team team{ promotedPawn->getTeam() };
 	switch (extraInput)
 	{

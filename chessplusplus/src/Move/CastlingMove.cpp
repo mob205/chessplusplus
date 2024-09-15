@@ -3,7 +3,7 @@
 #include "Piece/Piece.h"
 #include "Move/MoveResult.h"
 
-MoveResult CastlingMove::executeMove(Board& board, std::function<char()> callback)
+MoveResult CastlingMove::executeMove(Board& board, char extraInput)
 {
 	board[end] = std::move(board[start]);
 	board[rookEnd] = std::move(board[rookStart]);

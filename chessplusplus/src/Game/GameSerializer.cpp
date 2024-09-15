@@ -63,7 +63,7 @@ GameSerializer::LoadGameResult GameSerializer::loadGame(const std::string& saven
 
 	while (fp >> start >> end)
 	{
-		if (!game.processTurn(start, end, extraInput))
+		if (!game.processTurn(start, end) && !game.processTurn(start, end, readPromoType(fp)))
 		{
 			return SaveInvalid;
 		}
