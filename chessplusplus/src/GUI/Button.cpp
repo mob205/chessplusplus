@@ -12,7 +12,7 @@ Button::Button(sf::Vector2f buttonSize, sf::Color buttonColor, const sf::String&
 
     sf::Text rectText{ buttonText, font, static_cast<unsigned int>(fontSize)};
     rectText.setFillColor(sf::Color::Black);
-    rectText.setPosition((buttonSize.x - rectText.getGlobalBounds().width)/ 2, (buttonSize.y / 2) - rectText.getGlobalBounds().height);
+    rectText.setPosition((buttonSize.x - rectText.getGlobalBounds().width) / 2, (buttonSize.y / 2) - rectText.getGlobalBounds().height);
     buttonTexture.draw(rectText);
 
     buttonTexture.display();
@@ -21,7 +21,7 @@ Button::Button(sf::Vector2f buttonSize, sf::Color buttonColor, const sf::String&
 
 bool Button::containsPoint(sf::Vector2f point)
 {
-    return buttonSprite.getGlobalBounds().contains(point - this->getPosition());
+    return buttonSprite.getGlobalBounds().contains(point - getPosition());
 }
 
 void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const

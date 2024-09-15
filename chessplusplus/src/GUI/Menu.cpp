@@ -28,10 +28,12 @@ void Menu::addElement(const sf::Drawable& elem)
 
 void Menu::onButtonPress(sf::Vector2f point)
 {
+	std::cout << "Event click at relative position (" << point.x - getPosition().x << ", " << point.y - getPosition().y << ")\n";
 	for (int i = 0; i < buttons.size(); ++i)
 	{
 		if (buttons[i]->containsPoint(point - getPosition()))
 		{
+			std::cout << "Clicked on button " << i << "\n";
 			buttons[i]->onClick();
 			break;
 		}
