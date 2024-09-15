@@ -14,6 +14,7 @@ void StartConsoleGame();
 
 int main()
 {
+	//StartConsoleGame();
 	GUI::startGUI();
     return 0;
 }

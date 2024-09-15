@@ -18,13 +18,29 @@ public:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+	void setLogText(std::unique_ptr<sf::Text> log);
+
+	void setTurnCounter(std::unique_ptr<sf::Text> turnCounter);
+
 private:
-	sf::RenderTexture boardTexture{};
-	sf::Sprite boardSprite{};
+	void updateBoard();
+	void updateTurnCounter();
+
+	void selectPiece(int i);
+	void unselectPiece(bool clearLog);
+	void logMove(MoveResult res);
+
+	int selectedPiece{-1};
+
+	std::unique_ptr<sf::Text> eventLog{};
+	sf::Vector2f logOffset{};
+
+	std::unique_ptr<sf::Text> turnCounter{};
+	sf::Vector2f counterOffset{};
+
+	std::vector<std::vector<sf::Texture>>& pieceTextures;
 
 	std::vector<std::unique_ptr<TileButton>> tiles{};
 	std::unique_ptr<Game> game{};
-	std::vector<std::vector<sf::Texture>>& pieceTextures;
 
-	void updateBoard();
 };

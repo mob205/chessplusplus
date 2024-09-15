@@ -52,9 +52,8 @@ namespace GUI
             for (int j = 0; j < Settings::boardSize; ++j)
             {
                 auto tileButton{ std::make_unique<TileButton>(sf::Vector2f{pixelsPerTile, pixelsPerTile}, (i + j) % 2 == 0 ? sf::Color::White : sf::Color::Black) };
-                tileButton->setOffset(sf::Vector2f{ curOffsetX, offsetY });
+                tileButton->setOffset(sf::Vector2f{ curOffsetX - 150, offsetY });
                 tileButton->recenter(center);
-                //tileButton->setPosition(sf::Vector2f{ curOffsetX, offsetY } + center);
                 menu.addTileButton(std::move(tileButton));
 
                 // Fill columns left to right
@@ -88,6 +87,17 @@ namespace GUI
         auto quitButton{ std::make_unique<SwitchMenuButton>(sf::Vector2f{buttonWidth, buttonHeight}, buttonColor, "Quit", font, 45, manager, 0) };
         quitButton->setPosition({ 50, 120});
         menu.addButton(std::move(quitButton));
+
+        auto log{ std::make_unique<sf::Text>("Stuff goes here", font, 30) };
+        log->setFillColor(sf::Color::Black);
+        log->setPosition({ 775, 275 });
+        menu.setLogText(std::move(log));
+
+        auto turnCounter{ std::make_unique<sf::Text>("Turn XX - White to Move", font, 30) };
+        turnCounter->setFillColor(sf::Color::Black);
+        turnCounter->setPosition({ 275, 225 });
+        menu.setTurnCounter(std::move(turnCounter));
+
     }
 
     void startGUI()
