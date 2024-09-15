@@ -164,7 +164,6 @@ void GameMenu::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	Menu::draw(target, states);
 
-	
 	for (int i = 0; i < tiles.size(); ++i)
 	{
 		target.draw(*tiles[i]);

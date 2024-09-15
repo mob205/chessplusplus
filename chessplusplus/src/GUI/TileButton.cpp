@@ -17,7 +17,7 @@ void TileButton::onUnclick()
 void TileButton::setPieceSprite(sf::Texture* texture)
 {
 	pieceTexture = texture;
-	pieceSprite.setTexture(*pieceTexture);
+	pieceSprite.setTexture(*pieceTexture, true);
 	pieceSprite.setScale(static_cast<float>(GUI::pixelsPerTile) / pieceTexture->getSize().x, static_cast<float>(GUI::pixelsPerTile) / pieceTexture->getSize().y);
 	pieceSprite.setPosition(getPosition());
 }
