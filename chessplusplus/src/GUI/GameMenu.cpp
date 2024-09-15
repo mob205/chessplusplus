@@ -102,7 +102,7 @@ void GameMenu::logMove(MoveResult res)
 		}
 		break;
 	case MoveResult::Type::Castle:
-		eventLog->setString("Castled!");
+		eventLog->setString("Castled!\n");
 		break;
 	case MoveResult::Type::EnPassant:
 		eventLog->setString(eventLog->getString() + "EN PASSANT!!\n");

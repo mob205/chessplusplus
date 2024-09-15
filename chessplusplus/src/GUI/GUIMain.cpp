@@ -51,7 +51,7 @@ namespace GUI
             float curOffsetX{ offsetX };
             for (int j = 0; j < Settings::boardSize; ++j)
             {
-                auto tileButton{ std::make_unique<TileButton>(sf::Vector2f{pixelsPerTile, pixelsPerTile}, (i + j) % 2 == 0 ? sf::Color::White : sf::Color::Black) };
+                auto tileButton{ std::make_unique<TileButton>(sf::Vector2f{pixelsPerTile, pixelsPerTile}, (i + j) % 2 == 0 ? sf::Color::White : sf::Color{100, 100, 100})};
                 tileButton->setOffset(sf::Vector2f{ curOffsetX - 150, offsetY });
                 tileButton->recenter(center);
                 menu.addTileButton(std::move(tileButton));
