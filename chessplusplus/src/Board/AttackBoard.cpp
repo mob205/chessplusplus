@@ -7,7 +7,7 @@
 
 #include "Move/Move.h"
 
-void AttackBoard::update(const Board& board, PieceEnums::Team team, std::array<const Piece*, PieceEnums::MaxTeams> kings)
+void AttackBoard::update(const Board& board, PieceEnums::Team attacker, std::array<const Piece*, PieceEnums::MaxTeams> kings)
 {
 	// Same turn, so the attack board is still valid.
 
@@ -20,7 +20,7 @@ void AttackBoard::update(const Board& board, PieceEnums::Team team, std::array<c
 	setNonKing(board);
 
 	// Set the opposing team king can attack first, since it will limit the current team's king's movement 
-	setKing(board, kings[getOppositeTeam(team)]);
+	setKing(board, kings[getOppositeTeam(attacker)]);
 
 	// Where the current king is attacking shouldn't matter for current turn
 	//setKing(board, kings[team]);

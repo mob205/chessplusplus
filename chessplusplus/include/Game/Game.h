@@ -41,6 +41,7 @@ private:
 	bool hasPossibleNonKingMove(PieceEnums::Team team);
 
 	// Returns true if this team's king is in check and false otherwise
+	bool isInCheck(PieceEnums::Team team, const AttackBoard& attackBoard) const;
 	bool isInCheck(PieceEnums::Team team) const;
 
 	// Analyzes board state for check, checkmate, and stalemate

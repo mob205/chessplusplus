@@ -130,6 +130,12 @@ bool Game::isInCheck(PieceEnums::Team team) const
 	return attackBoard.isAttacking(kings[team]->getPosition(), oppTeam);
 }
 
+bool Game::isInCheck(PieceEnums::Team team, const AttackBoard& curAttackBoard) const
+{
+	PieceEnums::Team oppTeam{ getOppositeTeam(team) };
+	return curAttackBoard.isAttacking(kings[team]->getPosition(), oppTeam);
+}
+
 bool Game::undoMove()
 {
 	if (!moveHistory.empty())
@@ -148,7 +154,7 @@ bool Game::undoMove()
 bool Game::hasPossibleNonKingMove(PieceEnums::Team team)
 {
 	PieceEnums::Team opp{ getOppositeTeam(team)};
-	AttackBoard attackBoard{};
+	AttackBoard tempAttackBoard{};
 
 	for (int rank = 0; rank < Settings::boardSize; ++rank)
 	{
@@ -163,11 +169,11 @@ bool Game::hasPossibleNonKingMove(PieceEnums::Team team)
 			for (auto& move : set)
 			{
 				move.second->executeMove(board);
-				attackBoard.update(board, opp, kings);
+				tempAttackBoard.update(board, opp, kings);
 				move.second->undoMove(board);
 
 				// Valid move found!
-				if (!isInCheck(team))
+				if (!isInCheck(team, tempAttackBoard))
 				{
 					return true;
 				}

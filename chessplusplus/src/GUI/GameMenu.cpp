@@ -50,7 +50,7 @@ void GameMenu::selectPiece(int i)
 	{
 		return;
 	}
-	if (selectedPiece == -1)
+	if (selectedPiece == -1 || (selectedPiece != -1 && board[sel] && board[sel]->getTeam() == game->getCurrentTeam()))
 	{
 		selectedPiece = i;
 		eventLog->setString("Selected a " + std::string(board[sel]->getName()) + "\nSelect a tile to move to.\n");
