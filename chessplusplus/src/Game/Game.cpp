@@ -58,7 +58,7 @@ Game::Game()
 
 MoveResult Game::processTurn(const Point& start, const Point& end, char extraInput)
 {
-	PieceEnums::Team curTeam = getCurrentTeam();
+	PieceEnums::Team curTeam{ getCurrentTeam() };
 	MoveResult failResult{};
 
 	if (!board[start] || board[start]->getTeam() != curTeam)
@@ -66,6 +66,11 @@ MoveResult Game::processTurn(const Point& start, const Point& end, char extraInp
 		failResult.reasonFailed = MoveResult::MoveFailReason::InvalidPiece;
 		return failResult;
 	}
+
+	attackBoard.update(board, curTeam, kings);
+
+	// Check if the king is in check before the move to distinguish pinning from being in check
+	bool isInitialCheck{ isInCheck(curTeam, attackBoard) };
 
 	// Check if the input is a valid move of the selected piece
 	MoveSet possibleMoves{ board[start]->getPossibleMoves(board) };
@@ -78,14 +83,10 @@ MoveResult Game::processTurn(const Point& start, const Point& end, char extraInp
 		return failResult;
 	}
 
-	// Check if the king is in check before the move to distinguish potential fail case
-	attackBoard.update(board, curTeam, kings);
-	bool isInitialCheck{ isInCheck(curTeam) };
-
 	// Check if move would put king in check
-	MoveResult moveResult = moveItr->second->executeMove(board, extraInput);
+	MoveResult moveResult{ moveItr->second->executeMove(board, extraInput) };
 	attackBoard.update(board, curTeam, kings);
-	if (isInCheck(curTeam))
+	if (isInCheck(curTeam, attackBoard))
 	{
 		// Cannot end turn with king in check
 		moveItr->second->undoMove(board);
