@@ -12,7 +12,7 @@ public:
 
 	virtual void onActive();
 
-	void addButton(std::unique_ptr<Button> button);
+	void addButton(std::unique_ptr<Button> button, bool addToTexture = true);
 
 	void addElement(const sf::Drawable& elem);
 

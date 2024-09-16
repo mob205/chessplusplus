@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GUI\PromoButton.cpp" />
     <ClCompile Include="src\Input\ConsolePlayer.cpp" />
     <ClCompile Include="include\GUI\MenuManager.cpp" />
     <ClCompile Include="src\GUI\GameMenu.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="include\GUI\GUIMain.h" />
     <ClInclude Include="include\GUI\Menu.h" />
     <ClInclude Include="include\GUI\MenuManager.h" />
+    <ClInclude Include="include\GUI\PromoButton.h" />
     <ClInclude Include="include\GUI\SwitchMenuButton.h" />
     <ClInclude Include="include\GUI\TestButton.h" />
     <ClInclude Include="include\GUI\TileButton.h" />

@@ -16,16 +16,32 @@ static Point numToPoint(int i)
 
 GameMenu::GameMenu(sf::Vector2f size, std::vector<std::vector<sf::Texture>>& pieceTextures)
 	: Menu{ size }, pieceTextures{pieceTextures}
-{}
+{
+	promotionTexture.create(500, 300);
+}
 
 void GameMenu::addTileButton(std::unique_ptr<TileButton> tile)
 {
 	tiles.emplace_back(std::move(tile));
 }
 
+void GameMenu::addPromoButton(std::unique_ptr<PromoButton> promoButton)
+{
+	promoButtons.emplace_back(std::move(promoButton));
+}
+
 void GameMenu::onButtonPress(sf::Vector2f point)
 {
 	Menu::onButtonPress(point);
+
+	for (int i = 0; i < promoButtons.size(); ++i)
+	{
+		if (promoButtons[i]->containsPoint(point) && isPromoting)
+		{
+			promoButtons[i]->onClick();
+			return;
+		}
+	}
 	bool clickedTile{};
 	for (int i = 0; i < tiles.size(); ++i)
 	{
@@ -36,7 +52,7 @@ void GameMenu::onButtonPress(sf::Vector2f point)
 			break;
 		}
 	}
-	if (!clickedTile)
+	if (!clickedTile && !isPromoting)
 	{
 		unselectPiece(true);
 	}
@@ -44,6 +60,7 @@ void GameMenu::onButtonPress(sf::Vector2f point)
 
 void GameMenu::selectPiece(int i)
 {
+	if (isPromoting) { return; }
 	Point sel{ numToPoint(i) };
 	const Board& board{ game->getBoard() };
 	if (selectedPiece == -1 && (!board[sel] || board[sel]->getTeam() != game->getCurrentTeam()))
@@ -57,7 +74,17 @@ void GameMenu::selectPiece(int i)
 		return;
 	}
 	Point start{ numToPoint(selectedPiece) };
-	logMove(game->processTurn(start, sel, '\0'));
+	MoveResult res{ game->processTurn(start, sel, '\0') };
+
+	if (res.reasonFailed == MoveResult::MoveFailReason::NeedsInput)
+	{
+		isPromoting = true;
+		promoStart = start;
+		promoEnd = sel;
+		eventLog->setString("Choose a piece to promote to.\n");
+		return;
+	}
+	logMove(res);
 
 	updateBoard();
 	updateTurnCounter();
@@ -68,6 +95,7 @@ void GameMenu::unselectPiece(bool clearLog)
 {
 	selectedPiece = -1;
 	eventLog->setString((clearLog ? "" : eventLog->getString()) + "Select a piece to move.\n");
+	std::cout << "New event log string: " << std::string(eventLog->getString()) << '\n';
 }
 
 void GameMenu::logMove(MoveResult res)
@@ -130,12 +158,24 @@ void GameMenu::logMove(MoveResult res)
 	}
 }
 
+void GameMenu::insertPromoInput(char input)
+{
+	logMove(game->processTurn(promoStart, promoEnd, input));
+	isPromoting = false;
+
+	updateBoard();
+	updateTurnCounter();
+	unselectPiece(false);
+}
+
 void GameMenu::onActive()
 {
 	game = std::make_unique<Game>();
 	updateBoard();
 	updateTurnCounter();
 	unselectPiece(true);
+	updatePromo();
+	
 }
 
 void GameMenu::updateBoard()
@@ -163,7 +203,6 @@ void GameMenu::updateBoard()
 void GameMenu::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	Menu::draw(target, states);
-
 	for (int i = 0; i < tiles.size(); ++i)
 	{
 		target.draw(*tiles[i]);
@@ -175,6 +214,10 @@ void GameMenu::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	if (turnCounter)
 	{
 		target.draw(*turnCounter);
+	}
+	if (isPromoting)
+	{
+		target.draw(promoSprite);
 	}
 }
 
@@ -191,6 +234,11 @@ void GameMenu::onResize(sf::Vector2f center)
 	if (turnCounter)
 	{
 		turnCounter->setPosition(counterOffset + center);
+	}
+	promoSprite.setPosition(promotionOffset + center);
+	for (int i = 0; i < promoButtons.size(); ++i)
+	{
+		promoButtons[i]->recenter(promoSprite.getPosition());
 	}
 }
 
@@ -210,4 +258,21 @@ void GameMenu::setTurnCounter(std::unique_ptr<sf::Text> counter)
 void GameMenu::updateTurnCounter()
 {
 	turnCounter->setString("Turn " + std::to_string((game->getCurrentTurn() / 2) + 1) + " | " + (game->getCurrentTeam() ? "Black" : "White") + " to play");
+}
+
+sf::RenderTexture& GameMenu::getPromoTexture()
+{
+	return promotionTexture;
+}
+
+void GameMenu::updatePromo()
+{
+	promotionTexture.display();
+	promoSprite.setTexture(promotionTexture.getTexture());
+	promoSprite.setPosition({promoInitPos});
+	promotionOffset = promoInitPos - sf::Vector2f{ GUI::menuSize / 2, GUI::menuSize / 2 } + sf::Vector2f{ 0, 100 };
+	for (int i = 0; i < promoButtons.size(); ++i)
+	{
+		promoButtons[i]->recenter(promoInitPos);
+	}
 }

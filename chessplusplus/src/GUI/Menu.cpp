@@ -14,10 +14,14 @@ void Menu::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(menuSprite, states);
 }
 
-void Menu::addButton(std::unique_ptr<Button> button)
+void Menu::addButton(std::unique_ptr<Button> button, bool addToTexture)
 {
 	buttons.emplace_back(std::move(button));
-	addElement(*buttons.back());
+
+	if (addToTexture)
+	{
+		addElement(*buttons.back());
+	}
 }
 
 void Menu::addElement(const sf::Drawable& elem)
@@ -28,7 +32,6 @@ void Menu::addElement(const sf::Drawable& elem)
 
 void Menu::onButtonPress(sf::Vector2f point)
 {
-	std::cout << "Event click at relative position (" << point.x - getPosition().x << ", " << point.y - getPosition().y << ")\n";
 	for (int i = 0; i < buttons.size(); ++i)
 	{
 		if (buttons[i]->containsPoint(point - getPosition()))
@@ -42,7 +45,7 @@ void Menu::onButtonPress(sf::Vector2f point)
 
 void Menu::onButtonRelease(sf::Vector2f point)
 {
-	std::cout << "Event release at relative position (" << point.x - getPosition().x << ", " << point.y - getPosition().y << ")\n";
+	//std::cout << "Event release at relative position (" << point.x - getPosition().x << ", " << point.y - getPosition().y << ")\n";
 	for (int i = 0; i < buttons.size(); ++i)
 	{
 		if (buttons[i]->containsPoint(point - getPosition()))

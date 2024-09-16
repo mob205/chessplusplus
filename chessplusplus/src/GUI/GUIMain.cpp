@@ -6,6 +6,8 @@
 
 #include "GUI/TestButton.h"
 #include "GUI/SwitchMenuButton.h"
+#include "GUI/PromoButton.h"
+#include "GUI/TileButton.h"
 
 #include "GUI/GUImain.h"
 #include "GUI/Menu.h"
@@ -98,6 +100,41 @@ namespace GUI
         turnCounter->setPosition({ 275, 225 });
         menu.setTurnCounter(std::move(turnCounter));
 
+        sf::RectangleShape promotionBackground{ sf::Vector2f{450, 100} };
+        promotionBackground.setFillColor({ 150, 150, 100 });
+
+        sf::Text promotionText{ "Select a piece to promote to.", font, 30};
+        promotionText.setFillColor(sf::Color::Black);
+
+        auto queenButton{ std::make_unique<PromoButton>(sf::Vector2f{50, 50}, buttonColor, pieceTextures[PieceEnums::White][PieceEnums::Queen], menu, 'Q') };
+        auto knightButton{ std::make_unique<PromoButton>(sf::Vector2f{50, 50}, buttonColor, pieceTextures[PieceEnums::White][PieceEnums::Knight], menu, 'N') };
+        auto bishopButton{ std::make_unique<PromoButton>(sf::Vector2f{50, 50}, buttonColor, pieceTextures[PieceEnums::White][PieceEnums::Bishop], menu, 'B') };
+        auto rookButton{ std::make_unique<PromoButton>(sf::Vector2f{50, 50}, buttonColor, pieceTextures[PieceEnums::White][PieceEnums::Rook], menu, 'R') };
+
+        queenButton->setOffset({ 25, 40 });
+        knightButton->setOffset({ 142, 40 });
+        bishopButton->setOffset({ 259, 40 });
+        rookButton->setOffset({ 375, 40 });
+
+        sf::Vector2f center{};
+        queenButton->recenter(center);
+        knightButton->recenter(center);
+        bishopButton->recenter(center);
+        rookButton->recenter(center);
+
+        sf::RenderTexture& promoTex{ menu.getPromoTexture() };
+        promoTex.draw(promotionBackground);
+        promoTex.draw(promotionText);
+
+        promoTex.draw(*queenButton);
+        promoTex.draw(*knightButton);
+        promoTex.draw(*bishopButton);
+        promoTex.draw(*rookButton);
+
+        menu.addPromoButton(std::move(queenButton));
+        menu.addPromoButton(std::move(knightButton));
+        menu.addPromoButton(std::move(bishopButton));
+        menu.addPromoButton(std::move(rookButton));
     }
 
     void startGUI()
