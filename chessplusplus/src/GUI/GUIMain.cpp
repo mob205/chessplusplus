@@ -8,6 +8,7 @@
 #include "GUI/SwitchMenuButton.h"
 #include "GUI/PromoButton.h"
 #include "GUI/TileButton.h"
+#include "GUI/UndoButton.h"
 
 #include "GUI/GUImain.h"
 #include "GUI/Menu.h"
@@ -89,6 +90,10 @@ namespace GUI
         auto quitButton{ std::make_unique<SwitchMenuButton>(sf::Vector2f{buttonWidth, buttonHeight}, buttonColor, "Quit", font, 45, manager, 0) };
         quitButton->setPosition({ 50, 120});
         menu.addButton(std::move(quitButton));
+
+        auto undoButton{ std::make_unique<UndoButton>(sf::Vector2f{buttonWidth, buttonHeight}, buttonColor, "Undo", font, 45, menu) };
+        undoButton->setPosition({ 450, 120 });
+        menu.addButton(std::move(undoButton));
 
         auto log{ std::make_unique<sf::Text>("Stuff goes here", font, 30) };
         log->setFillColor(sf::Color::Black);

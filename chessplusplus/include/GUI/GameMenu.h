@@ -27,6 +27,8 @@ public:
 
 	void insertPromoInput(char input);
 
+	void undo();
+
 	sf::RenderTexture& getPromoTexture();
 
 private:

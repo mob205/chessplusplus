@@ -95,7 +95,6 @@ void GameMenu::unselectPiece(bool clearLog)
 {
 	selectedPiece = -1;
 	eventLog->setString((clearLog ? "" : eventLog->getString()) + "Select a piece to move.\n");
-	std::cout << "New event log string: " << std::string(eventLog->getString()) << '\n';
 }
 
 void GameMenu::logMove(MoveResult res)
@@ -176,6 +175,20 @@ void GameMenu::onActive()
 	unselectPiece(true);
 	updatePromo();
 	
+}
+
+void GameMenu::undo()
+{
+	if (game->undoMove())
+	{
+		eventLog->setString("Undo successful.\n");
+		updateBoard();
+		updateTurnCounter();
+	}
+	else
+	{
+		eventLog->setString("No move left to undo.\n");
+	}
 }
 
 void GameMenu::updateBoard()
