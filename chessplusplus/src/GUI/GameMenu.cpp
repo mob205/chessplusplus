@@ -8,6 +8,8 @@
 #include "Game/Settings.h"
 #include "Game/Point.h"
 
+#include "Game/GameSerializer.h"
+
 static Point numToPoint(int i)
 {
 	return { i / Settings::boardSize, i % Settings::boardSize };
@@ -30,16 +32,19 @@ void GameMenu::addPromoButton(std::unique_ptr<PromoButton> promoButton)
 	promoButtons.emplace_back(std::move(promoButton));
 }
 
-void GameMenu::onButtonPress(sf::Vector2f point)
+bool GameMenu::onButtonPress(sf::Vector2f point)
 {
-	Menu::onButtonPress(point);
+	if (Menu::onButtonPress(point))
+	{
+		return true;
+	}
 
 	for (int i = 0; i < promoButtons.size(); ++i)
 	{
 		if (promoButtons[i]->containsPoint(point) && isPromoting)
 		{
 			promoButtons[i]->onClick();
-			return;
+			return true;
 		}
 	}
 	bool clickedTile{};
@@ -52,15 +57,17 @@ void GameMenu::onButtonPress(sf::Vector2f point)
 			break;
 		}
 	}
-	if (!clickedTile && !isPromoting)
+	if (!clickedTile && !isPromoting && !isGameDone)
 	{
 		unselectPiece(true);
+		return false;
 	}
+	return true;
 }
 
 void GameMenu::selectPiece(int i)
 {
-	if (isPromoting) { return; }
+	if (isPromoting || isGameDone) { return; }
 	Point sel{ numToPoint(i) };
 	const Board& board{ game->getBoard() };
 	if (selectedPiece == -1 && (!board[sel] || board[sel]->getTeam() != game->getCurrentTeam()))
@@ -150,9 +157,11 @@ void GameMenu::logMove(MoveResult res)
 		break;
 	case MoveResult::OpponentStatus::Checkmate:
 		eventLog->setString(eventLog->getString() + "CHECKMATE! " + (game->getCurrentTeam() ? "Black" : "White") + " WINS!!\n");
+		isGameDone = true;
 		return;
 	case MoveResult::OpponentStatus::Stalemate:
 		eventLog->setString(eventLog->getString() + "Stalemate.\n");
+		isGameDone = true;
 		return;
 	}
 }
@@ -170,11 +179,11 @@ void GameMenu::insertPromoInput(char input)
 void GameMenu::onActive()
 {
 	game = std::make_unique<Game>();
+	isGameDone = false;
 	updateBoard();
 	updateTurnCounter();
 	unselectPiece(true);
 	updatePromo();
-	
 }
 
 void GameMenu::undo()
@@ -228,6 +237,10 @@ void GameMenu::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		target.draw(*turnCounter);
 	}
+	if (saveFileText)
+	{
+		target.draw(*saveFileText);
+	}
 	if (isPromoting)
 	{
 		target.draw(promoSprite);
@@ -247,6 +260,10 @@ void GameMenu::onResize(sf::Vector2f center)
 	if (turnCounter)
 	{
 		turnCounter->setPosition(counterOffset + center);
+	}
+	if (saveFileText)
+	{
+		saveFileText->setPosition(saveFileOffset + center);
 	}
 	promoSprite.setPosition(promotionOffset + center);
 	for (int i = 0; i < promoButtons.size(); ++i)
@@ -268,6 +285,12 @@ void GameMenu::setTurnCounter(std::unique_ptr<sf::Text> counter)
 	counterOffset = turnCounter->getPosition() - sf::Vector2f{ GUI::menuSize / 2, GUI::menuSize / 2 } + sf::Vector2f{ 0, 100 };
 }
 
+void GameMenu::setSaveText(std::unique_ptr<sf::Text> saveText)
+{
+	saveFileText = std::move(saveText);
+	saveFileOffset = saveFileText->getPosition() - sf::Vector2f{ GUI::menuSize / 2, GUI::menuSize / 2 } + sf::Vector2f{ 0, 100 };
+}
+
 void GameMenu::updateTurnCounter()
 {
 	turnCounter->setString("Turn " + std::to_string((game->getCurrentTurn() / 2) + 1) + " | " + (game->getCurrentTeam() ? "Black" : "White") + " to play");
@@ -287,5 +310,54 @@ void GameMenu::updatePromo()
 	for (int i = 0; i < promoButtons.size(); ++i)
 	{
 		promoButtons[i]->recenter(promoInitPos);
+	}
+}
+
+void GameMenu::onType(sf::Uint32 unicode)
+{
+	if (unicode == '\b' && currentSaveFile.size() > 0)
+	{
+		currentSaveFile.erase(currentSaveFile.end() - 1);
+	}
+	else if (unicode != '\b' && currentSaveFile.size() < 25)
+	{
+		currentSaveFile += unicode;
+	}
+	saveFileText->setString(currentSaveFile);
+}
+
+void GameMenu::loadGame()
+{
+	if (currentSaveFile.size() == 0) { return; }
+	auto newGame{ std::make_unique<Game>() };
+	GameSerializer::LoadGameResult res{ newGame->getSerializer().loadGame(currentSaveFile)};
+	switch (res)
+	{
+	case GameSerializer::LoadSuccessful:
+		eventLog->setString("Successfully loaded save.\n");
+		game = std::move(newGame);
+		isGameDone = false;
+		updateBoard();
+		updateTurnCounter();
+		break;
+	case GameSerializer::SaveNotFound:
+		eventLog->setString("Save not found.\n");
+		break;
+	case GameSerializer::SaveInvalid:
+		eventLog->setString("Save invalid.\n");
+		break;
+	}
+}
+
+void GameMenu::saveGame()
+{
+	if (currentSaveFile.size() == 0 || isGameDone) { return; }
+	if (game->getSerializer().saveGame(currentSaveFile))
+	{
+		eventLog->setString("Successfully saved game.\n");
+	}
+	else
+	{
+		eventLog->setString("Failed to save game.\n");
 	}
 }

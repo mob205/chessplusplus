@@ -16,11 +16,13 @@ public:
 
 	void addElement(const sf::Drawable& elem);
 
-	virtual void onButtonPress(sf::Vector2f point);
+	virtual bool onButtonPress(sf::Vector2f point);
 
 	virtual void onButtonRelease(sf::Vector2f point);
 
 	virtual void onResize(sf::Vector2f center);
+
+	virtual void onType(sf::Uint32 unicode);
 protected:
 	std::vector<std::unique_ptr<Button>> buttons{};
 

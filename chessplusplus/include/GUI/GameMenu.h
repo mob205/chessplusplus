@@ -17,17 +17,24 @@ public:
 
 	void onResize(sf::Vector2f center) override;
 
-	void onButtonPress(sf::Vector2f point) override;
+	bool onButtonPress(sf::Vector2f point) override;
+
+	void onType(sf::Uint32 unicode) override;
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	void setLogText(std::unique_ptr<sf::Text> log);
+
+	void setSaveText(std::unique_ptr<sf::Text> saveFileText);
 
 	void setTurnCounter(std::unique_ptr<sf::Text> turnCounter);
 
 	void insertPromoInput(char input);
 
 	void undo();
+
+	void saveGame();
+	void loadGame();
 
 	sf::RenderTexture& getPromoTexture();
 
@@ -41,6 +48,8 @@ private:
 	void logMove(MoveResult res);
 
 	int selectedPiece{ -1 };
+
+	bool isGameDone{};
 
 	bool isPromoting{};
 	Point promoStart{};
@@ -64,4 +73,8 @@ private:
 	sf::Vector2f promoInitPos{ 750, 750 };
 
 	std::vector<std::unique_ptr<PromoButton>> promoButtons{};
+
+	std::unique_ptr<sf::Text> saveFileText{};
+	sf::Vector2f saveFileOffset{};
+	std::string currentSaveFile{};
 };

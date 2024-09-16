@@ -9,6 +9,8 @@
 #include "GUI/PromoButton.h"
 #include "GUI/TileButton.h"
 #include "GUI/UndoButton.h"
+#include "GUI/SaveButton.h"
+#include "GUI/LoadButton.h"
 
 #include "GUI/GUImain.h"
 #include "GUI/Menu.h"
@@ -74,13 +76,13 @@ namespace GUI
         welcome.setFillColor(sf::Color::Black);
         menu.addElement(welcome);
 
-        auto startButton{ std::make_unique<SwitchMenuButton>(sf::Vector2f{buttonWidth, buttonHeight}, buttonColor, "Start Game", font, 45, manager, 1) };
+        auto startButton{ std::make_unique<SwitchMenuButton>(sf::Vector2f{buttonWidth, buttonHeight}, buttonColor, "Play", font, 45, manager, 1) };
         startButton->setPosition({ (menuSize - buttonWidth) / 2, 300 });
         menu.addButton(std::move(startButton));
 
-        auto loadButton{ std::make_unique<TestButton>(sf::Vector2f{buttonWidth, buttonHeight }, buttonColor, "Load Game", font, 45)};
+        /*auto loadButton{ std::make_unique<TestButton>(sf::Vector2f{buttonWidth, buttonHeight }, buttonColor, "Load Game", font, 45)};
         loadButton->setPosition({ (menuSize - buttonWidth) / 2, 500 });
-        menu.addButton(std::move(loadButton));
+        menu.addButton(std::move(loadButton));*/
     }
 
     static void setupBoardMenu(GameMenu& menu, const sf::Font& font, MenuManager& manager)
@@ -88,17 +90,40 @@ namespace GUI
         setupBoard(menu);
 
         auto quitButton{ std::make_unique<SwitchMenuButton>(sf::Vector2f{buttonWidth, buttonHeight}, buttonColor, "Quit", font, 45, manager, 0) };
-        quitButton->setPosition({ 50, 120});
+        quitButton->setPosition({ 40, 120});
         menu.addButton(std::move(quitButton));
 
         auto undoButton{ std::make_unique<UndoButton>(sf::Vector2f{buttonWidth, buttonHeight}, buttonColor, "Undo", font, 45, menu) };
-        undoButton->setPosition({ 450, 120 });
+        undoButton->setPosition({ 330, 120 });
         menu.addButton(std::move(undoButton));
+
+        auto loadButton{ std::make_unique<LoadButton>(sf::Vector2f{buttonWidth, buttonHeight}, buttonColor, "Load", font, 45, menu) };
+        loadButton->setPosition({ 620, 120 });
+        menu.addButton(std::move(loadButton));
+
+        auto saveButton{ std::make_unique<SaveButton>(sf::Vector2f{buttonWidth, buttonHeight}, buttonColor, "Save", font, 45, menu) };
+        saveButton->setPosition({ 910, 120 });
+        menu.addButton(std::move(saveButton));
 
         auto log{ std::make_unique<sf::Text>("Stuff goes here", font, 30) };
         log->setFillColor(sf::Color::Black);
         log->setPosition({ 775, 275 });
         menu.setLogText(std::move(log));
+
+        auto saveFileText{ std::make_unique<sf::Text>("", font, 25) };
+        saveFileText->setFillColor(sf::Color::Black);
+        saveFileText->setPosition(675, 125);
+        menu.setSaveText(std::move(saveFileText));
+
+        sf::RectangleShape saveTextBackground{ sf::Vector2f{475, 50} };
+        saveTextBackground.setPosition(650, 215);
+        saveTextBackground.setFillColor({ 100, 100, 100 });
+        menu.addElement(saveTextBackground);
+
+        sf::Text saveLabel{ "Save Name (type to enter): ", font, 25 };
+        saveLabel.setFillColor(sf::Color::Black);
+        saveLabel.setPosition(300, 225);
+        menu.addElement(saveLabel);
 
         auto turnCounter{ std::make_unique<sf::Text>("Turn XX - White to Move", font, 30) };
         turnCounter->setFillColor(sf::Color::Black);
@@ -168,11 +193,9 @@ namespace GUI
 
         menuManager.addMenu(boardMenu);
 
-
         while (window.isOpen())
         {
             window.clear(sf::Color(200, 200, 150));
-
 
             sf::Event event;
             while (window.pollEvent(event))
@@ -195,6 +218,10 @@ namespace GUI
                 if (event.type == sf::Event::MouseButtonReleased)
                 {
                     menuManager.getActiveMenu().onButtonRelease(sf::Vector2f{ static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y) });
+                }
+                if (event.type == sf::Event::TextEntered)
+                {
+                    menuManager.getActiveMenu().onType(event.text.unicode);
                 }
             }
 

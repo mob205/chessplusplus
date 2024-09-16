@@ -30,7 +30,7 @@ void Menu::addElement(const sf::Drawable& elem)
 	updateSprite();
 }
 
-void Menu::onButtonPress(sf::Vector2f point)
+bool Menu::onButtonPress(sf::Vector2f point)
 {
 	for (int i = 0; i < buttons.size(); ++i)
 	{
@@ -38,9 +38,10 @@ void Menu::onButtonPress(sf::Vector2f point)
 		{
 			std::cout << "Clicked on button " << i << "\n";
 			buttons[i]->onClick();
-			break;
+			return true;
 		}
 	}
+	return false;
 }
 
 void Menu::onButtonRelease(sf::Vector2f point)
@@ -69,6 +70,11 @@ void Menu::onActive()
 }
 
 void Menu::onResize(sf::Vector2f center)
+{
+
+}
+
+void Menu::onType(sf::Uint32 unicode)
 {
 
 }

@@ -135,10 +135,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GUI\LoadButton.cpp" />
+    <ClCompile Include="src\GUI\SaveButton.cpp" />
     <ClCompile Include="src\GUI\UndoButton.cpp" />
     <ClCompile Include="src\GUI\PromoButton.cpp" />
     <ClCompile Include="src\Input\ConsolePlayer.cpp" />
-    <ClCompile Include="include\GUI\MenuManager.cpp" />
+    <ClCompile Include="src\GUI\MenuManager.cpp" />
     <ClCompile Include="src\GUI\GameMenu.cpp" />
     <ClCompile Include="src\GUI\TileButton.cpp" />
     <ClCompile Include="src\GUI\Menu.cpp" />
@@ -174,9 +176,11 @@
     <ClInclude Include="include\GUI\Button.h" />
     <ClInclude Include="include\GUI\GameMenu.h" />
     <ClInclude Include="include\GUI\GUIMain.h" />
+    <ClInclude Include="include\GUI\LoadButton.h" />
     <ClInclude Include="include\GUI\Menu.h" />
     <ClInclude Include="include\GUI\MenuManager.h" />
     <ClInclude Include="include\GUI\PromoButton.h" />
+    <ClInclude Include="include\GUI\SaveButton.h" />
     <ClInclude Include="include\GUI\SwitchMenuButton.h" />
     <ClInclude Include="include\GUI\TestButton.h" />
     <ClInclude Include="include\GUI\TileButton.h" />
