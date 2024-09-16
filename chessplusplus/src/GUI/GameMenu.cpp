@@ -188,9 +188,11 @@ void GameMenu::onActive()
 
 void GameMenu::undo()
 {
+	if (isPromoting) { return; }
 	if (game->undoMove())
 	{
 		eventLog->setString("Undo successful.\n");
+		isGameDone = false;
 		updateBoard();
 		updateTurnCounter();
 	}
@@ -328,7 +330,7 @@ void GameMenu::onType(sf::Uint32 unicode)
 
 void GameMenu::loadGame()
 {
-	if (currentSaveFile.size() == 0) { return; }
+	if (currentSaveFile.size() == 0 || isPromoting) { return; }
 	auto newGame{ std::make_unique<Game>() };
 	GameSerializer::LoadGameResult res{ newGame->getSerializer().loadGame(currentSaveFile)};
 	switch (res)
@@ -351,7 +353,7 @@ void GameMenu::loadGame()
 
 void GameMenu::saveGame()
 {
-	if (currentSaveFile.size() == 0 || isGameDone) { return; }
+	if (currentSaveFile.size() == 0 || isGameDone || isPromoting) { return; }
 	if (game->getSerializer().saveGame(currentSaveFile))
 	{
 		eventLog->setString("Successfully saved game.\n");
