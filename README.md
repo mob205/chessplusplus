@@ -47,7 +47,12 @@ Pawn Promotion:
 ![promotion](Images/promotion.gif)
 
 Stalemate:
+
 ![stalemate](Images/stalemate.gif)
 
 # Future Goals
 In the future, look into creating a chess engine that can power a basic AI opponent.
+
+# Credits
+Piece sprites: JohnPablok's improved Cburnett chess set CC-BY-SA 3.0:
+https://opengameart.org/content/chess-pieces-and-board-squares
