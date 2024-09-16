@@ -1,4 +1,4 @@
-#include "MenuManager.h"
+#include "GUI/MenuManager.h"
 #include "SFML/Graphics.hpp"
 #include <iostream>
 

@@ -10,7 +10,6 @@
 
 
 using Row = std::array<std::unique_ptr<Piece>, Settings::boardSize>;
-using PieceRef = std::unique_ptr<Piece>&;
 
 class Board
 {
