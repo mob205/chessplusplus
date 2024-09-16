@@ -98,9 +98,6 @@ MoveResult Game::processTurn(const Point& start, const Point& end, char extraInp
 		return moveResult;
 	}
 
-	// Complete move, this time allowing extra input
-	//MoveResult moveResult{ moveItr->second->executeMove(board, extraInput) };
-
 	moveResult.oppStatus = checkEndConditions();
 
 	// Go to next turn
