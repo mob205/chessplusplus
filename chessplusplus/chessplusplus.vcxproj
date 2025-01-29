@@ -135,18 +135,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\GUI\LoadButton.cpp" />
-    <ClCompile Include="src\GUI\SaveButton.cpp" />
-    <ClCompile Include="src\GUI\UndoButton.cpp" />
-    <ClCompile Include="src\GUI\PromoButton.cpp" />
+    <ClCompile Include="src\GUI\GameDisplay.cpp" />
     <ClCompile Include="src\Input\ConsolePlayer.cpp" />
-    <ClCompile Include="src\GUI\MenuManager.cpp" />
-    <ClCompile Include="src\GUI\GameMenu.cpp" />
-    <ClCompile Include="src\GUI\TileButton.cpp" />
-    <ClCompile Include="src\GUI\Menu.cpp" />
-    <ClCompile Include="src\GUI\SwitchMenuButton.cpp" />
-    <ClCompile Include="src\GUI\TestButton.cpp" />
-    <ClCompile Include="src\GUI\Button.cpp" />
     <ClCompile Include="src\Board\AttackBoard.cpp" />
     <ClCompile Include="src\GUI\GUIMain.cpp" />
     <ClCompile Include="src\Piece\Bishop.cpp" />
@@ -173,18 +163,10 @@
     <ClInclude Include="include\Board\AttackBoard.h" />
     <ClInclude Include="include\Game\MoveRecord.h" />
     <ClInclude Include="include\ConsoleInput\ConsolePlayer.h" />
-    <ClInclude Include="include\GUI\Button.h" />
-    <ClInclude Include="include\GUI\GameMenu.h" />
+    <ClInclude Include="include\GUI\GameDisplay.h" />
     <ClInclude Include="include\GUI\GUIMain.h" />
-    <ClInclude Include="include\GUI\LoadButton.h" />
-    <ClInclude Include="include\GUI\Menu.h" />
-    <ClInclude Include="include\GUI\MenuManager.h" />
-    <ClInclude Include="include\GUI\PromoButton.h" />
-    <ClInclude Include="include\GUI\SaveButton.h" />
-    <ClInclude Include="include\GUI\SwitchMenuButton.h" />
-    <ClInclude Include="include\GUI\TestButton.h" />
-    <ClInclude Include="include\GUI\TileButton.h" />
-    <ClInclude Include="include\GUI\UndoButton.h" />
+    <ClInclude Include="include\GUI\Object.h" />
+    <ClInclude Include="include\GUI\ShapeObject.h" />
     <ClInclude Include="include\Move\MoveResult.h" />
     <ClInclude Include="include\Piece\Bishop.h" />
     <ClInclude Include="include\Board\Board.h" />
