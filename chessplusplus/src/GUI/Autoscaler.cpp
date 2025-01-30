@@ -1,11 +1,11 @@
-#include "GUI/GameDisplay.h"
+#include "GUI/Autoscaler.h"
 #include "GUI/Object.h"
 
 #include <iostream>
 
-using GUI::GameDisplay;
+using GUI::Autoscaler;
 
-void GameDisplay::onResize(const sf::RenderWindow& window)
+void Autoscaler::onResize(const sf::RenderWindow& window)
 {
 	sf::Vector2f windowSize = { static_cast<float>(window.getSize().x), static_cast<float>(window.getSize().y) };
 	sf::Vector2f displaySize{};
@@ -30,14 +30,6 @@ void GameDisplay::onResize(const sf::RenderWindow& window)
 	sf::Vector2f margin = windowSize - displaySize;
 	sf::Vector2f offset = sf::Vector2f{ margin.x / 2, margin.y / 2 };
 	setPosition(offset);
-}
-
-void GameDisplay::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	for (const auto& obj : objects)
-	{
-		target.draw(*obj, getTransform());
-	}
 }
 
 

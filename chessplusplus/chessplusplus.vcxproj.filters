@@ -111,7 +111,13 @@
     <ClCompile Include="src\GUI\GUIMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\GameDisplay.cpp">
+    <ClCompile Include="src\GUI\Autoscaler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\GUI\Object.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\GUI\ShapeObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -197,7 +203,7 @@
     <ClInclude Include="include\ConsoleInput\ConsolePlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\GUI\GameDisplay.h">
+    <ClInclude Include="include\GUI\Autoscaler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\GUI\Object.h">

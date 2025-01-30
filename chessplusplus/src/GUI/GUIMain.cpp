@@ -5,7 +5,7 @@
 #include "Game/Game.h"
 #include "Piece/PieceEnums.h"
 
-#include "GUI/GameDisplay.h"
+#include "GUI/Autoscaler.h"
 #include "GUI/ShapeObject.h"
 
 
@@ -54,28 +54,30 @@ namespace GUI
 		sf::RenderWindow window(sf::VideoMode(static_cast<unsigned int>(startingSize.x), static_cast<unsigned int>(startingSize.y)), "Chess");
 		window.setVerticalSyncEnabled(true);
 
-		GUI::GameDisplay display{ startingSize };
+		GUI::Autoscaler display{ startingSize };
 
-		auto ul = makeShape<sf::RectangleShape>(sf::Vector2f{ 10, 10 });
+		auto ul = makeShape<sf::RectangleShape>("Top Left", sf::Vector2f{10, 10});
 		ul->getShape().setFillColor(sf::Color::Red);
 		ul->setPosition(sf::Vector2f{ 0,0 });
 
-		auto ur = makeShape<sf::RectangleShape>(sf::Vector2f{ 10, 10 });
+		auto ur = makeShape<sf::RectangleShape>("Top Right", sf::Vector2f{10, 10});
 		ur->getShape().setFillColor(sf::Color::Green);
 		ur->setPosition(sf::Vector2f{ startingSize.x - 10, 0 });
 
-		auto ll = makeShape<sf::RectangleShape>(sf::Vector2f{ 10, 10 });
+		auto ll = makeShape<sf::RectangleShape>("Bottom Left", sf::Vector2f{ 10, 10 });
 		ll->getShape().setFillColor(sf::Color::Yellow);
 		ll->setPosition(sf::Vector2f{ 0, startingSize.y - 10 });
 
-		auto lr = makeShape<sf::RectangleShape>(sf::Vector2f{ 10, 10 });
+		auto lr = makeShape<sf::RectangleShape>("Bottom Right", sf::Vector2f{10, 10});
 		lr->getShape().setFillColor(sf::Color::Blue);
 		lr->setPosition(sf::Vector2f{ startingSize.x - 10, startingSize.y - 10 });
 
-		display.addObject(ul);
-		display.addObject(ur);
-		display.addObject(ll);
-		display.addObject(lr);
+		display.addChild(ul);
+		display.addChild(ur);
+		display.addChild(ll);
+		display.addChild(lr);
+
+		ul->setVisibility(false);
 
 		while (window.isOpen())
 		{

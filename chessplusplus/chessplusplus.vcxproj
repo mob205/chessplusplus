@@ -135,7 +135,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\GUI\GameDisplay.cpp" />
+    <ClCompile Include="include\GUI\Object.cpp" />
+    <ClCompile Include="include\GUI\ShapeObject.cpp" />
+    <ClCompile Include="src\GUI\Autoscaler.cpp" />
     <ClCompile Include="src\Input\ConsolePlayer.cpp" />
     <ClCompile Include="src\Board\AttackBoard.cpp" />
     <ClCompile Include="src\GUI\GUIMain.cpp" />
@@ -163,7 +165,7 @@
     <ClInclude Include="include\Board\AttackBoard.h" />
     <ClInclude Include="include\Game\MoveRecord.h" />
     <ClInclude Include="include\ConsoleInput\ConsolePlayer.h" />
-    <ClInclude Include="include\GUI\GameDisplay.h" />
+    <ClInclude Include="include\GUI\Autoscaler.h" />
     <ClInclude Include="include\GUI\GUIMain.h" />
     <ClInclude Include="include\GUI\Object.h" />
     <ClInclude Include="include\GUI\ShapeObject.h" />
