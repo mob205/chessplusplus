@@ -32,5 +32,11 @@ void Autoscaler::onResize(const sf::RenderWindow& window)
 	setPosition(offset);
 }
 
+bool GUI::Autoscaler::interact_impl(const sf::Vector2f& interactPoint)
+{
+	return interactPoint.x > 0 && interactPoint.x <= referenceSize.x
+		&& interactPoint.y > 0 && interactPoint.y <= referenceSize.y;
+}
+
 
 

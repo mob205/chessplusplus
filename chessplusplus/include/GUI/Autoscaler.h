@@ -11,11 +11,18 @@ namespace GUI
 	class Autoscaler : public Object
 	{
 	public:
-		Autoscaler(sf::Vector2f initialSize)
-			: Object{ "" }, aspectRatio{ initialSize.x / initialSize.y }, referenceSize{ initialSize }
+		Autoscaler(const std::string& name, const sf::Vector2f& initialSize)
+			: Object{ name }, aspectRatio{ initialSize.x / initialSize.y }, referenceSize{ initialSize }
+		{}
+
+		Autoscaler(const sf::Vector2f& initialSize)
+			: Autoscaler{ "", initialSize }
 		{}
 
 		void onResize(const sf::RenderWindow& window);
+		
+	protected:
+		virtual bool interact_impl(const sf::Vector2f& interactPoint) override;
 
 	private:
 		float aspectRatio{};

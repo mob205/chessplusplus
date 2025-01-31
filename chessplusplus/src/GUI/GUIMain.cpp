@@ -54,7 +54,7 @@ namespace GUI
 		sf::RenderWindow window(sf::VideoMode(static_cast<unsigned int>(startingSize.x), static_cast<unsigned int>(startingSize.y)), "Chess");
 		window.setVerticalSyncEnabled(true);
 
-		GUI::Autoscaler display{ startingSize };
+		GUI::Autoscaler world{ startingSize };
 
 		auto ul = makeShape<sf::RectangleShape>("Top Left", sf::Vector2f{10, 10});
 		ul->getShape().setFillColor(sf::Color::Red);
@@ -72,10 +72,10 @@ namespace GUI
 		lr->getShape().setFillColor(sf::Color::Blue);
 		lr->setPosition(sf::Vector2f{ startingSize.x - 10, startingSize.y - 10 });
 
-		display.addChild(ul);
-		display.addChild(ur);
-		display.addChild(ll);
-		display.addChild(lr);
+		world.addChild(ul);
+		world.addChild(ur);
+		world.addChild(ll);
+		world.addChild(lr);
 
 		ul->setVisibility(false);
 
@@ -94,11 +94,16 @@ namespace GUI
 				{
 					sf::FloatRect visibleArea(0, 0, static_cast<float>(event.size.width), static_cast<float>(event.size.height));
 					window.setView(sf::View(visibleArea));
-					display.onResize(window);
+					world.onResize(window);
+				}
+				if (event.type == sf::Event::MouseButtonPressed)
+				{
+					sf::Vector2f clickPosition{ static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y) };
+					world.interact(clickPosition);
 				}
 			}
 
-			window.draw(display);
+			window.draw(world);
 			window.display();
 		}
 	}

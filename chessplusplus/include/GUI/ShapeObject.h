@@ -1,10 +1,9 @@
 #pragma once
 
 #include "SFML/Graphics.hpp"
-#include <memory>
 #include "GUI/Object.h"
 
-#include <iostream>
+#include <memory>
 
 namespace GUI
 {
@@ -13,15 +12,19 @@ namespace GUI
 	public:
 		virtual ~ShapeObject() = default;
 
-		ShapeObject(std::unique_ptr<sf::Shape> inShape)
-			: Object{ "ShapeObject" }, shape{ std::move(inShape) }
-		{}
-
 		ShapeObject(const std::string& name, std::unique_ptr<sf::Shape> inShape)
 			: Object{ name }, shape { std::move(inShape) }
 		{}
 
+		ShapeObject(std::unique_ptr<sf::Shape> inShape)
+			: ShapeObject{ "ShapeObject", std::move(inShape) }
+		{}
+
 		sf::Shape& getShape() { return *shape; }
+
+	protected:
+
+		virtual bool interact_impl(const sf::Vector2f& interactPoint) override;
 
 	private:
 		std::unique_ptr<sf::Shape> shape;
