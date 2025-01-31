@@ -23,12 +23,13 @@ namespace GUI
 		sf::Shape& getShape() { return *shape; }
 
 	protected:
-
 		virtual bool interact_impl(const sf::Vector2f& interactPoint) override;
+
+		virtual void draw_impl(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) const override;
+
 
 	private:
 		std::unique_ptr<sf::Shape> shape;
-		void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	};
 
 	// Use concept for a more helpful error message if a shape isn't passed
@@ -41,8 +42,8 @@ namespace GUI
 		return std::make_shared<ShapeObject>(std::make_unique<ShapeType>(std::forward<Args>(args)...));
 	}
 
-	template<typename ShapeType, typename U, typename... Args> requires ShapeDerived<ShapeType> && std::convertible_to<U, std::string>
-	std::shared_ptr<ShapeObject> makeShape(const U& name, Args&&... args)
+	template<typename ShapeType, typename StringType, typename... Args> requires ShapeDerived<ShapeType> && std::convertible_to<StringType, std::string>
+	std::shared_ptr<ShapeObject> makeShape(const StringType& name, Args&&... args)
 	{
 		return std::make_shared<ShapeObject>(name, std::make_unique<ShapeType>(std::forward<Args>(args)...));
 	}

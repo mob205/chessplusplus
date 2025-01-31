@@ -1,13 +1,15 @@
 #include <iostream>
 #include <memory>
 #include "SFML/Graphics.hpp"
+
 #include "Game/Settings.h"
 #include "Game/Game.h"
 #include "Piece/PieceEnums.h"
 
+#include "GUI/GUISettings.h"
 #include "GUI/Autoscaler.h"
 #include "GUI/ShapeObject.h"
-
+#include "GUI/TextObject.h"
 
 namespace GUI
 {
@@ -50,34 +52,34 @@ namespace GUI
 			return;
 		}
 
-		sf::Vector2f startingSize{ 1080.0f, 900.0f };
-		sf::RenderWindow window(sf::VideoMode(static_cast<unsigned int>(startingSize.x), static_cast<unsigned int>(startingSize.y)), "Chess");
+		sf::RenderWindow window(sf::VideoMode(static_cast<unsigned int>(startSizeX), static_cast<unsigned int>(startSizeY)), "Chess");
 		window.setVerticalSyncEnabled(true);
 
-		GUI::Autoscaler world{ startingSize };
+		GUI::Autoscaler world{ {startSizeX, startSizeY} };
 
 		auto ul = makeShape<sf::RectangleShape>("Top Left", sf::Vector2f{10, 10});
 		ul->getShape().setFillColor(sf::Color::Red);
-		ul->setPosition(sf::Vector2f{ 0,0 });
+		ul->setPosition(sf::Vector2f{ 100,0 });
 
 		auto ur = makeShape<sf::RectangleShape>("Top Right", sf::Vector2f{10, 10});
 		ur->getShape().setFillColor(sf::Color::Green);
-		ur->setPosition(sf::Vector2f{ startingSize.x - 10, 0 });
+		ur->setPosition(sf::Vector2f{ startSizeX - 10, 0 });
 
 		auto ll = makeShape<sf::RectangleShape>("Bottom Left", sf::Vector2f{ 10, 10 });
 		ll->getShape().setFillColor(sf::Color::Yellow);
-		ll->setPosition(sf::Vector2f{ 0, startingSize.y - 10 });
+		ll->setPosition(sf::Vector2f{ 0, startSizeY - 10 });
 
 		auto lr = makeShape<sf::RectangleShape>("Bottom Right", sf::Vector2f{10, 10});
 		lr->getShape().setFillColor(sf::Color::Blue);
-		lr->setPosition(sf::Vector2f{ startingSize.x - 10, startingSize.y - 10 });
+		lr->setPosition(sf::Vector2f{ startSizeX - 10, startSizeY - 10 });
 
 		world.addChild(ul);
 		world.addChild(ur);
 		world.addChild(ll);
 		world.addChild(lr);
 
-		ul->setVisibility(false);
+		auto text = std::make_shared<TextObject>("Upper Right Label", "Upper Right Label", font, 30);
+		ul->addChild(text);
 
 		while (window.isOpen())
 		{

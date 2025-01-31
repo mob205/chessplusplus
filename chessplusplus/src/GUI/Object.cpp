@@ -1,4 +1,4 @@
-#include "Object.h"
+#include "GUI/Object.h"
 
 #include <iostream>
 
@@ -11,6 +11,7 @@ void Object::addChild(std::shared_ptr<Object> object)
 
 bool Object::interact(const sf::Vector2f& interactPoint)
 {
+	if (!getVisibility()) { return false; }
 	bool res{};
 
 	const sf::Vector2f transformedPoint = getInverseTransform().transformPoint(interactPoint);
@@ -31,16 +32,31 @@ bool Object::interact(const sf::Vector2f& interactPoint)
 	return res;
 }
 
+void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	if (!getVisibility()) { return; }
+
+	// Combine parent and this object's transform
+	sf::RenderStates transformedStates = states.transform * getTransform();
+
+	// Draw this object
+	draw_impl(target, transformedStates);
+
+	// Draw children
+	for (const auto& child : children)
+	{
+		target.draw(*child, transformedStates);
+	}
+}
+
+
 bool GUI::Object::interact_impl(const sf::Vector2f& point)
 {
 	return false;
 }
 
-void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void GUI::Object::draw_impl(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	if (!getVisibility()) { return; }
-	for (const auto& child : children)
-	{
-		target.draw(*child, states.transform * getTransform());
-	}
+	// By default, objects do not draw anything
 }
+

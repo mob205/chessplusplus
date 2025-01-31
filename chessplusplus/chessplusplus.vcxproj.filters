@@ -114,18 +114,18 @@
     <ClCompile Include="src\GUI\Autoscaler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\GUI\Object.cpp">
+    <ClCompile Include="src\GUI\Object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\GUI\ShapeObject.cpp">
+    <ClCompile Include="src\GUI\ShapeObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\TextObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game\Point.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Game\Settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Game\Game.h">
@@ -213,6 +213,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\GUI\GUIMain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUI\TextObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUI\GUISettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -33,6 +33,16 @@ namespace GUI
 	protected:
 		std::vector<std::shared_ptr<Object>> children{};
 		
+		
+
+
+
+	private:
+		std::string name{ "Object" };
+		bool isVisible{ true };
+
+		void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) const override;
+
 		/**
 		*	Implementation for checking if a point interacts with the object.
 		*	The point will be transformed to this object's local space, according to its transform.
@@ -41,13 +51,11 @@ namespace GUI
 		*/
 		virtual bool interact_impl(const sf::Vector2f& point);
 
-		void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) const override;
-
-	private:
-		std::string name{ "Object" };
-
-		bool isVisible{ true };
-
+		/**
+		*	Implementation for drawing the object to a render target.
+		*	States will be transformed to this object's local space, according to its transform.	
+		*/
+		virtual void draw_impl(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) const;
 	public:
 		std::string_view getName() const { return name; }
 

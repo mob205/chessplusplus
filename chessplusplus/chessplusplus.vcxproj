@@ -135,9 +135,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="include\GUI\Object.cpp" />
-    <ClCompile Include="include\GUI\ShapeObject.cpp" />
+    <ClCompile Include="src\GUI\Object.cpp" />
+    <ClCompile Include="src\GUI\ShapeObject.cpp" />
     <ClCompile Include="src\GUI\Autoscaler.cpp" />
+    <ClCompile Include="src\GUI\TextObject.cpp" />
     <ClCompile Include="src\Input\ConsolePlayer.cpp" />
     <ClCompile Include="src\Board\AttackBoard.cpp" />
     <ClCompile Include="src\GUI\GUIMain.cpp" />
@@ -165,8 +166,10 @@
     <ClInclude Include="include\Board\AttackBoard.h" />
     <ClInclude Include="include\Game\MoveRecord.h" />
     <ClInclude Include="include\ConsoleInput\ConsolePlayer.h" />
+    <ClInclude Include="include\Game\Settings.h" />
     <ClInclude Include="include\GUI\Autoscaler.h" />
     <ClInclude Include="include\GUI\GUIMain.h" />
+    <ClInclude Include="include\GUI\GUISettings.h" />
     <ClInclude Include="include\GUI\Object.h" />
     <ClInclude Include="include\GUI\ShapeObject.h" />
     <ClInclude Include="include\Move\MoveResult.h" />
@@ -191,8 +194,8 @@
     <ClInclude Include="include\Piece\PieceEnums.h" />
     <ClInclude Include="include\Piece\Queen.h" />
     <ClInclude Include="include\Piece\Rook.h" />
-    <ClInclude Include="include\Game\Settings.h" />
     <ClInclude Include="include\Move\StandardMove.h" />
+    <ClInclude Include="include\GUI\TextObject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
