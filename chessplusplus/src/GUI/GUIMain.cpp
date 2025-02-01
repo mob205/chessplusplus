@@ -48,7 +48,7 @@ namespace GUI
 
 		auto welcomeText = std::make_shared<TextObject>("Welcome to Chess!", font, 50);
 		sf::Vector2f textSize = welcomeText->getTextSize();
-		welcomeText->setPosition({-textSize.x / 2, -textSize.y / 2});
+		welcomeText->setPosition(-textSize / 2.f);
 		welcomeTextCenter->addChild(welcomeText);
 
 		auto startButton = std::make_shared<Object>("Start Button");
@@ -57,7 +57,7 @@ namespace GUI
 
 		sf::Vector2f buttonBackgroundSize{ 250, 75 };
 		auto buttonBackground = makeShape<sf::RectangleShape>("Start Button Background", buttonBackgroundSize);
-		buttonBackground->setPosition({ -buttonBackgroundSize.x / 2, -buttonBackgroundSize.y / 2 });
+		buttonBackground->setPosition(-buttonBackgroundSize / 2.f);
 		buttonBackground->getShape().setFillColor(buttonColor);
 		startButton->addChild(buttonBackground);
 
