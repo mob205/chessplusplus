@@ -117,9 +117,6 @@
     <ClCompile Include="src\GUI\Object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\ShapeObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\GUI\TextObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
