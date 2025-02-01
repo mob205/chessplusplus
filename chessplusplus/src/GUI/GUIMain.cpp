@@ -57,7 +57,7 @@ namespace GUI
 
 		GUI::Autoscaler world{ {startSizeX, startSizeY} };
 
-		auto ul = makeShape<sf::RectangleShape>("Top Left", sf::Vector2f{10, 10});
+		auto ul = makeShape<sf::RectangleShape>("Top Left", sf::Vector2f{ 10, 10 });
 		ul->getShape().setFillColor(sf::Color::Red);
 		ul->setPosition(sf::Vector2f{ 100,0 });
 
