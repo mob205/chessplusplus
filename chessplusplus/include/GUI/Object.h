@@ -8,6 +8,10 @@ namespace GUI
 	class Object : public sf::Drawable, public sf::Transformable
 	{
 	public:
+		Object()
+			: name{ "Object" }
+		{}
+
 		Object(const std::string& objectName)
 			: name{ objectName }
 		{}
@@ -32,10 +36,6 @@ namespace GUI
 
 	protected:
 		std::vector<std::shared_ptr<Object>> children{};
-		
-		
-
-
 
 	private:
 		std::string name{ "Object" };

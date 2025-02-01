@@ -16,6 +16,7 @@ namespace GUI
 	const sf::Color buttonColor{ 215, 215, 215 };
 
 	static std::vector<std::vector<sf::Texture>> pieceTextures(PieceEnums::MaxTeams, std::vector<sf::Texture>(PieceEnums::MaxTypes));
+	static sf::Font font;
 
 	static bool loadPieceTextures()
 	{
@@ -37,9 +38,39 @@ namespace GUI
 		return res;
 	}
 
+	static std::shared_ptr<Object> createMainMenu()
+	{
+		auto mainMenu = std::make_shared<Object>("Main Menu");
+
+		auto welcomeTextCenter = std::make_shared<Object>("Welcome Text");
+		welcomeTextCenter->setPosition({ startSizeX / 2, 150 });
+		mainMenu->addChild(welcomeTextCenter);
+
+		auto welcomeText = std::make_shared<TextObject>("Welcome to Chess!", font, 50);
+		sf::Vector2f textSize = welcomeText->getTextSize();
+		welcomeText->setPosition({-textSize.x / 2, -textSize.y / 2});
+		welcomeTextCenter->addChild(welcomeText);
+
+		auto startButton = std::make_shared<Object>("Start Button");
+		startButton->setPosition({ startSizeX / 2, startSizeY / 2 });
+		mainMenu->addChild(startButton);
+
+		sf::Vector2f buttonBackgroundSize{ 250, 75 };
+		auto buttonBackground = makeShape<sf::RectangleShape>("Start Button Background", buttonBackgroundSize);
+		buttonBackground->setPosition({ -buttonBackgroundSize.x / 2, -buttonBackgroundSize.y / 2 });
+		buttonBackground->getShape().setFillColor(buttonColor);
+		startButton->addChild(buttonBackground);
+
+		auto buttonText = std::make_shared<TextObject>("Start Text", "PLAY", font, 50);
+		textSize = buttonText->getTextSize();
+		buttonText->setPosition({ -textSize.x / 2, -textSize.y});
+		startButton->addChild(buttonText);
+
+		return mainMenu;
+	}
+
 	void startGUI()
 	{
-		sf::Font font;
 		if (!font.loadFromFile("../Resources/Raleway-Black.ttf"))
 		{
 			std::cerr << "Could not load font file.\n";
@@ -57,29 +88,7 @@ namespace GUI
 
 		GUI::Autoscaler world{ {startSizeX, startSizeY} };
 
-		auto ul = makeShape<sf::RectangleShape>("Top Left", sf::Vector2f{ 10, 10 });
-		ul->getShape().setFillColor(sf::Color::Red);
-		ul->setPosition(sf::Vector2f{ 100,0 });
-
-		auto ur = makeShape<sf::RectangleShape>("Top Right", sf::Vector2f{10, 10});
-		ur->getShape().setFillColor(sf::Color::Green);
-		ur->setPosition(sf::Vector2f{ startSizeX - 10, 0 });
-
-		auto ll = makeShape<sf::RectangleShape>("Bottom Left", sf::Vector2f{ 10, 10 });
-		ll->getShape().setFillColor(sf::Color::Yellow);
-		ll->setPosition(sf::Vector2f{ 0, startSizeY - 10 });
-
-		auto lr = makeShape<sf::RectangleShape>("Bottom Right", sf::Vector2f{10, 10});
-		lr->getShape().setFillColor(sf::Color::Blue);
-		lr->setPosition(sf::Vector2f{ startSizeX - 10, startSizeY - 10 });
-
-		world.addChild(ul);
-		world.addChild(ur);
-		world.addChild(ll);
-		world.addChild(lr);
-
-		auto text = std::make_shared<TextObject>("Upper Right Label", "Upper Right Label", font, 30);
-		ul->addChild(text);
+		world.addChild(createMainMenu());
 
 		while (window.isOpen())
 		{

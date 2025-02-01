@@ -28,6 +28,11 @@ namespace GUI
 			return text.getString();
 		}
 
+		sf::Vector2f getTextSize() const
+		{
+			return text.getLocalBounds().getSize();
+		}
+
 		void setText(const std::string& newText)
 		{
 			text.setString(newText);

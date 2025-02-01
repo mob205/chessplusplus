@@ -4,6 +4,7 @@
 
 using GUI::Object;
 
+// TODO: Add safeguards to prevent recursive hierarchies
 void Object::addChild(std::shared_ptr<Object> object)
 {
 	children.push_back(object);
