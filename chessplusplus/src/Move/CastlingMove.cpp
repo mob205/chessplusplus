@@ -11,8 +11,8 @@ MoveResult CastlingMove::executeMove(Board& board, char extraInput)
 	board[end]->setMoved(true);
 	board[rookEnd]->setMoved(true);
 
-	board[end]->updatePosition(end);
-	board[rookEnd]->updatePosition(rookEnd);
+	board[end]->setPosition(end);
+	board[rookEnd]->setPosition(rookEnd);
 
 	MoveResult res{};
 	res.type = MoveResult::Type::Castle;
@@ -28,6 +28,6 @@ void CastlingMove::undoMove(Board& board)
 	board[start]->setMoved(false);
 	board[rookStart]->setMoved(false);
 
-	board[start]->updatePosition(start);
-	board[rookStart]->updatePosition(rookStart);
+	board[start]->setPosition(start);
+	board[rookStart]->setPosition(rookStart);
 }

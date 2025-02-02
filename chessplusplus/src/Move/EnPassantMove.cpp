@@ -24,7 +24,7 @@ void EnPassantMove::undoMove(Board& board)
 	board[end]->setMoved(originalMoved);
 
 	board[start] = std::move(board[end]);
-	board[start]->updatePosition(start);
+	board[start]->setPosition(start);
 
 	board[captureSpot] = std::move(captured);
 }

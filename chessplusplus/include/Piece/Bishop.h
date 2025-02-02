@@ -5,8 +5,8 @@
 class Bishop : public LinePiece
 {
 public:
-	Bishop(const Point& position, Team team)
-		: LinePiece{ position, team }
+	Bishop(Team team)
+		: LinePiece{ team }
 	{}
 
 	MoveSet getPossibleMoves(const Board& board, bool getDefenses) const override;

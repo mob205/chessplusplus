@@ -7,8 +7,8 @@
 class LinePiece : public Piece
 {
 public:
-	LinePiece(const Point& position, Team team)
-		: Piece{ position, team }
+	LinePiece(Team team)
+		: Piece{ team }
 	{}
 
 protected:

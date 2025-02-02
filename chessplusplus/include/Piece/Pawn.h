@@ -5,8 +5,8 @@
 class Pawn : public Piece
 {
 public:
-	Pawn(const Point& position, Team team, const int& currentTurn)
-		: Piece{ position, team }, currentTurn{ currentTurn }
+	Pawn(Team team, const int& currentTurn)
+		: Piece{ team }, currentTurn{ currentTurn }
 	{}
 
 
