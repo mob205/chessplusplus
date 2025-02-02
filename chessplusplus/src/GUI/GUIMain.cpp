@@ -15,12 +15,17 @@
 
 namespace GUI
 {
-	static std::vector<std::vector<sf::Texture>> pieceTextures(PieceEnums::MaxTeams, std::vector<sf::Texture>(PieceEnums::MaxTypes));
+	static PieceTextures pieceTextures(PieceEnums::MaxTeams, std::vector<sf::Texture>(PieceEnums::MaxTypes));
 	static sf::Font font;
 
 	static bool loadPieceTextures()
 	{
 		bool res{ true };
+		sf::Texture blankTexture{};
+		blankTexture.create(pixelsPerTile, pixelsPerTile);
+		pieceTextures[PieceEnums::White][PieceEnums::None] = blankTexture;
+		pieceTextures[PieceEnums::Black][PieceEnums::None] = blankTexture;
+
 		res &= pieceTextures[PieceEnums::White][PieceEnums::Pawn].loadFromFile("../Resources/w_pawn.png");
 		res &= pieceTextures[PieceEnums::White][PieceEnums::Knight].loadFromFile("../Resources/w_knight.png");
 		res &= pieceTextures[PieceEnums::White][PieceEnums::Rook].loadFromFile("../Resources/w_rook.png");
@@ -62,7 +67,7 @@ namespace GUI
 		auto mainMenu = createMainMenu(font, controller);
 		world.addChild(mainMenu);
 
-		auto chessMenu = createChessMenu(font, controller);
+		auto chessMenu = createChessMenu(font, controller, pieceTextures);
 		world.addChild(chessMenu);
 		chessMenu->setActive(false);
 

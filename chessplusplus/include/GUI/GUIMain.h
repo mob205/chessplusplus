@@ -2,6 +2,7 @@
 #include "SFML/Graphics.hpp"
 #include "Game/Settings.h"
 
+using PieceTextures = std::vector<std::vector<sf::Texture>>;
 
 namespace GUI
 {

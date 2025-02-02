@@ -35,11 +35,11 @@ namespace GUI
 		return ((buttonNumber + 1) * buttonLeftPadding) + (buttonWidth / 2.f) + (buttonNumber * buttonWidth);
 	}
 
-	static std::shared_ptr<Chessboard> makeChessboard()
+	static std::shared_ptr<Chessboard> makeChessboard(const PieceTextures& pieceTextures)
 	{
 		const sf::Vector2f tileSize{ pixelsPerTile, pixelsPerTile };
 
-		auto board = std::make_shared<Chessboard>("Chess Board");
+		auto board = std::make_shared<Chessboard>("Chess Board", pieceTextures);
 
 		sf::RenderTexture boardTexture{};
 		boardTexture.create(boardLength, boardLength);
@@ -54,23 +54,29 @@ namespace GUI
 
 			for (int j = 0; j < Settings::boardSize; ++j)
 			{
-				sf::Color color = (i + j) % 2 == 0 ? teamBlackColor : teamWhiteColor;
 				
 				// Name for debug purposes
 				std::string name = std::string{ "Tile Row: " } + std::to_string(i) + std::string{ " Col: " } + std::to_string(j);
 
-				// Set up tile
-				auto tile = makeWrapper<sf::RectangleShape>(name, sf::Vector2f{tileSize});
-				board->addChild(tile);
-				tile->setPosition({ curOffsetX, offsetY });
-				tile->getObject().setFillColor(color);
+				sf::Vector2f tilePosition{ curOffsetX, offsetY };
 
-				// Draw to render texture once rather than drawing individual tiles every frame
-				boardTexture.draw(*tile);
-				tile->setVisibility(false);
+				// Setup a square to draw the board texture
+				sf::RectangleShape boardSquare{ tileSize };
+				boardSquare.setPosition(tilePosition);
+				sf::Color color = (i + j) % 2 == 0 ? teamBlackColor : teamWhiteColor;
+				boardSquare.setFillColor(color);
+				boardTexture.draw(boardSquare);
 
-				// Move tile into place for interacting. Render textures don't support negative coordinates, so need to do it after drawing
-				tile->move(interactOffset);
+				// Setup a rect that is clickable
+				auto tileInteractable = makeWrapper<sf::RectangleShape>(name, tileSize);
+				tileInteractable->setPosition(tilePosition + interactOffset);
+				tileInteractable->setVisibility(false);
+				board->addChild(tileInteractable);
+
+				// Setup a sprite for piece sprites
+				auto tileSprite = makeWrapper<sf::Sprite>("Tile Sprite");
+				tileInteractable->addChild(tileSprite);
+				tileSprite->setInteractable(false);
 
 				// Fill columns left to right
 				curOffsetX += pixelsPerTile;
@@ -106,7 +112,7 @@ namespace GUI
 		return mainMenu;
 	}
 
-	std::shared_ptr<Object> createChessMenu(const sf::Font& font, GUIController& controller)
+	std::shared_ptr<Object> createChessMenu(const sf::Font& font, GUIController& controller, const PieceTextures& textures)
 	{
 		constexpr float buttonsTopPadding{ (startSizeX / 64.f) + (buttonHeight / 2.f) };
 
@@ -134,7 +140,7 @@ namespace GUI
 		saveButton->setInteractEvent([&]() { controller.onSave(); });
 		menu->addChild(saveButton);
 
-		auto board = makeChessboard();
+		auto board = makeChessboard(textures);
 		board->setPosition({ startSizeX / 2, startSizeY / 2 });
 		menu->addChild(board);
 

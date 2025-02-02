@@ -39,6 +39,8 @@ namespace GUI
 		*/
 		void setActive(bool isActive);
 
+		std::shared_ptr<Object> getChild(int childIndex) const;
+
 	protected:
 		std::vector<std::shared_ptr<Object>> children{};
 
