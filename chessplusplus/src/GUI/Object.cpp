@@ -34,6 +34,8 @@ bool Object::interact(const sf::Vector2f& interactPoint)
 	{
 		// Assumes that an interactable parent does not have interactable children
 		std::cout << "Interacted with " << getName() << ".\n";
+
+		if (onInteractEvent) { onInteractEvent(); }
 		return true;
 	}
 
@@ -43,6 +45,7 @@ bool Object::interact(const sf::Vector2f& interactPoint)
 		// Assumes that only one child can be interacted with at a time
 		if (child->interact(transformedPoint))
 		{
+			if (onInteractEvent) { onInteractEvent(); }
 			return true;
 		}
 	}

@@ -16,7 +16,7 @@ namespace GUI
 		{}
 
 		// Button callbacks
-		void onPlay();
+		void onStart();
 		void onQuit();
 		void onUndo();
 		void onLoad();

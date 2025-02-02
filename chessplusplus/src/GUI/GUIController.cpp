@@ -5,7 +5,7 @@
 
 namespace GUI
 {
-	void GUIController::onPlay()
+	void GUIController::onStart()
 	{
 		mainMenu->setVisibility(false);
 		gameMenu->setVisibility(true);

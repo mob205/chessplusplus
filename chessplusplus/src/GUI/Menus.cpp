@@ -80,6 +80,7 @@ namespace GUI
 
 		auto startButton = makeButton("Start Button", font, { 250, 75 }, "PLAY");
 		startButton->setPosition({ startSizeX / 2, startSizeY / 2 });
+		startButton->setInteractEvent([&]() { controller.onStart(); });
 		mainMenu->addChild(startButton);
 
 		controller.setMainMenu(mainMenu);
@@ -97,18 +98,22 @@ namespace GUI
 
 		auto quitButton = makeButton("Quit Button", font, buttonSize, "Quit");
 		quitButton->setPosition({ getButtonX(0) , buttonsTopPadding});
+		quitButton->setInteractEvent([&]() { controller.onQuit(); });
 		menu->addChild(quitButton);
 
 		auto undoButton = makeButton("Undo Button", font, buttonSize, "Undo");
 		undoButton->setPosition({ getButtonX(1), buttonsTopPadding});
+		undoButton->setInteractEvent([&]() { controller.onUndo(); });
 		menu->addChild(undoButton);
 
 		auto loadButton = makeButton("Load Button", font, buttonSize, "Load");
 		loadButton->setPosition({ getButtonX(2), buttonsTopPadding});
+		loadButton->setInteractEvent([&]() { controller.onLoad(); });
 		menu->addChild(loadButton);
 
 		auto saveButton = makeButton("Save Button", font, buttonSize, "Save");
 		saveButton->setPosition({ getButtonX(3), buttonsTopPadding});
+		saveButton->setInteractEvent([&]() { controller.onSave(); });
 		menu->addChild(saveButton);
 
 		auto board = makeChessboard();

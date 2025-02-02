@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <vector>
 #include "SFML/Graphics.hpp"
 
@@ -40,6 +41,7 @@ namespace GUI
 	private:
 		std::string name{ "Object" };
 		bool isVisible{ true };
+		std::function<void()> onInteractEvent;
 
 		void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) const override;
 
@@ -64,5 +66,7 @@ namespace GUI
 		*/
 		bool getVisibility() const { return isVisible; }
 		void setVisibility(bool visibility) { isVisible = visibility; }
+
+		void setInteractEvent(std::function<void()> onInteract) { onInteractEvent = onInteract; }
 	};
 }
