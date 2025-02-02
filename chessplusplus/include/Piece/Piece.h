@@ -17,11 +17,11 @@ using PieceEnums::Type;
 class Piece
 {
 public:
-	Piece(const Point& position, Team team)
-		: position{ position }, team{ team }
+	Piece(Team team)
+		: team{ team }
 	{}
 
-	void updatePosition(Point newPos) { position = newPos; }
+	void setPosition(Point newPos) { position = newPos; }
 
 	Point getPosition() const { return position; }
 

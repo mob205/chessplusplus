@@ -7,8 +7,8 @@ class Knight : public Piece
 {
 public:
 
-	Knight(const Point& position, Team team)
-		: Piece{ position, team }
+	Knight(Team team)
+		: Piece{ team }
 	{}
 
 	MoveSet getPossibleMoves(const Board& board, bool getDefenses) const override;

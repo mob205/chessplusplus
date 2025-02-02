@@ -41,16 +41,16 @@ PieceEnums::Type PawnMove::promotePawn(Board& board, char extraInput)
 	switch (extraInput)
 	{
 	case 'N':
-		board[end] = std::make_unique<Knight>(end, team);
+		board.addPiece<Knight>(end, team);
 		break;
 	case 'R':
-		board[end] = std::make_unique<Rook>(end, team);
+		board.addPiece<Rook>(end, team);
 		break;
 	case 'B':
-		board[end] = std::make_unique<Bishop>(end, team);
+		board.addPiece<Bishop>(end, team);
 		break;
 	default:
-		board[end] = std::make_unique<Queen>(end, team);
+		board.addPiece<Queen>(end, team);
 		break;
 	}
 	promotedPiece = board[end].get();

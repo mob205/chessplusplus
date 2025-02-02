@@ -5,8 +5,8 @@
 class Rook : public LinePiece
 {
 public:
-	Rook(const Point& position, Team team)
-		: LinePiece{ position, team }
+	Rook(Team team)
+		: LinePiece{ team }
 	{}
 
 	MoveSet getPossibleMoves(const Board& board, bool getDefenses) const override;

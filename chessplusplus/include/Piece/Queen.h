@@ -5,8 +5,8 @@
 class Queen : public LinePiece
 {
 public:
-	Queen(const Point& position, Team team)
-		: LinePiece{ position, team }
+	Queen(Team team)
+		: LinePiece{ team }
 	{}
 
 	MoveSet getPossibleMoves(const Board& board, bool getDefenses) const override;

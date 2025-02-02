@@ -8,8 +8,8 @@ class AttackBoard;
 class King : public Piece
 {
 public:
-	King(const Point& position, Team team, const AttackBoard& attackBoard)
-		: Piece{position, team}, attackBoard{attackBoard}
+	King(Team team, const AttackBoard& attackBoard)
+		: Piece{ team }, attackBoard{attackBoard}
 	{}
 	MoveSet getPossibleMoves(const Board& board, bool getDefenses) const override;
 	char getSymbol() const override { return 'k'; }

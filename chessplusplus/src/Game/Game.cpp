@@ -11,12 +11,6 @@
 #include "Piece/Queen.h"
 #include "Piece/King.h"
 
-template<typename T>
-static void addPiece(Board& board, const Point& position, PieceEnums::Team team)
-{
-	board[position] = std::make_unique<T>(position, team);
-}
-
 Game::Game()
 {
 	// Setup pawns
@@ -25,8 +19,8 @@ Game::Game()
 		Point blackPos{ Settings::boardSize - 2, i };
 		Point whitePos{ 1, i };
 
-		board[whitePos] = std::make_unique<Pawn>(whitePos, PieceEnums::White, currentTurn);
-		board[blackPos] = std::make_unique<Pawn>(blackPos, PieceEnums::Black, currentTurn);
+		board.addPiece<Pawn>(whitePos, PieceEnums::White, currentTurn);
+		board.addPiece<Pawn>(blackPos, PieceEnums::Black, currentTurn);
 	}
 
 	// Setup pieces
@@ -36,22 +30,19 @@ Game::Game()
 		int rank{ i * (Settings::boardSize - 1) };
 		PieceEnums::Team team{ static_cast<PieceEnums::Team>(i) };
 
-		addPiece<Rook>(board, { rank, 0 }, team);
-		addPiece<Knight>(board, { rank, 1 }, team);
-		addPiece<Bishop>(board, { rank, 2 }, team);
-		addPiece<Queen>(board, { rank, 3 }, team);
+		board.addPiece<Rook>({ rank, 0 }, team);
+		board.addPiece<Knight>({ rank, 1 }, team);
+		board.addPiece<Bishop>({ rank, 2 }, team);
+		board.addPiece<Queen>({ rank, 3 }, team);
 
-		// Create a new king
-		auto king{ std::make_unique<King>(Point{ rank, 4 }, team, attackBoard) };
+		board.addPiece<King>({ rank, 4 }, team, attackBoard);
 		// Save a non-owning raw pointer to view the king later
-		kings[i] = king.get();
-		// Move it onto the board
-		board[{rank, 4}] = std::move(king);
+		kings[i] = board[{rank, 4}].get();
 
 
-		addPiece<Bishop>(board, { rank, 5 }, team);
-		addPiece<Knight>(board, { rank, 6 }, team);
-		addPiece<Rook>(board, { rank, 7 }, team);
+		board.addPiece<Bishop>({ rank, 5 }, team);
+		board.addPiece<Knight>({ rank, 6 }, team);
+		board.addPiece<Rook>({ rank, 7 }, team);
 	}
 }
 

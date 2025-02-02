@@ -3,7 +3,6 @@
 #include "Board/Board.h"
 #include "Piece/Piece.h"
 
-
 Row& Board::operator[](int idx)
 {
 	assert(0 <= idx && idx < Settings::boardSize && "Attempted to index board by an out-of-bounds index");
