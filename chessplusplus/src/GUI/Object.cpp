@@ -13,7 +13,6 @@ namespace GUI
 			return;
 		}
 
-
 		if (!object)
 		{
 			std::cerr << "Attempted to add a null child!";
@@ -30,7 +29,7 @@ namespace GUI
 		const sf::Vector2f transformedPoint = getInverseTransform().transformPoint(interactPoint);
 
 		// Check for interaction with self
-		if (interact_impl(transformedPoint) && !getName().empty())
+		if (containsPoint(transformedPoint) && !getName().empty())
 		{
 			// Assumes that an interactable parent does not have interactable children
 			std::cout << "Interacted with " << getName() << ".\n";
@@ -89,7 +88,7 @@ namespace GUI
 	}
 
 
-	bool Object::interact_impl(const sf::Vector2f& point)
+	bool Object::containsPoint(const sf::Vector2f& point)
 	{
 		return false;
 	}

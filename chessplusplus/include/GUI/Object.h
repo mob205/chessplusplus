@@ -60,7 +60,7 @@ namespace GUI
 		*	@param point Point to test for interaction
 		*	@return true if mouse click interacted with the object
 		*/
-		virtual bool interact_impl(const sf::Vector2f& point);
+		virtual bool containsPoint(const sf::Vector2f& point);
 
 		/**
 		*	Implementation for drawing the object to a render target.

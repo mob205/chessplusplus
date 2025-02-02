@@ -35,60 +35,6 @@ namespace GUI
 		return ((buttonNumber + 1) * buttonLeftPadding) + (buttonWidth / 2.f) + (buttonNumber * buttonWidth);
 	}
 
-	static std::shared_ptr<Chessboard> makeChessboard(const PieceTextures& pieceTextures)
-	{
-		const sf::Vector2f tileSize{ pixelsPerTile, pixelsPerTile };
-
-		auto board = std::make_shared<Chessboard>("Chess Board", pieceTextures);
-
-		sf::RenderTexture boardTexture{};
-		boardTexture.create(boardLength, boardLength);
-
-		sf::Vector2f interactOffset{ -boardLength / 2.f, -boardLength / 2.f };
-
-		float offsetX{ 0 };
-		float offsetY{ 0 };
-		for(int i = 0; i < Settings::boardSize; ++i)
-		{
-			float curOffsetX{ offsetX };
-
-			for (int j = 0; j < Settings::boardSize; ++j)
-			{
-				
-				// Name for debug purposes
-				std::string name = std::string{ "Tile Row: " } + std::to_string(i) + std::string{ " Col: " } + std::to_string(j);
-
-				sf::Vector2f tilePosition{ curOffsetX, offsetY };
-
-				// Setup a square to draw the board texture
-				sf::RectangleShape boardSquare{ tileSize };
-				boardSquare.setPosition(tilePosition);
-				sf::Color color = (i + j) % 2 == 0 ? teamBlackColor : teamWhiteColor;
-				boardSquare.setFillColor(color);
-				boardTexture.draw(boardSquare);
-
-				// Setup a rect that is clickable
-				auto tileInteractable = makeWrapper<sf::RectangleShape>(name, tileSize);
-				tileInteractable->setPosition(tilePosition + interactOffset);
-				tileInteractable->setVisibility(false);
-				board->addChild(tileInteractable);
-
-				// Setup a sprite for piece sprites
-				auto tileSprite = makeWrapper<sf::Sprite>("Tile Sprite");
-				tileInteractable->addChild(tileSprite);
-				tileSprite->setInteractable(false);
-
-				// Fill columns left to right
-				curOffsetX += pixelsPerTile;
-			}
-			// Fill rows top to bottom
-			offsetY += pixelsPerTile;
-		}
-		
-		board->setBoardTexture(boardTexture.getTexture());
-		return board;
-	}
-
 	std::shared_ptr<Object> createMainMenu(const sf::Font& font, GUIController& controller)
 	{
 		auto mainMenu = std::make_shared<Object>("Main Menu");
@@ -140,12 +86,11 @@ namespace GUI
 		saveButton->setInteractEvent([&]() { controller.onSave(); });
 		menu->addChild(saveButton);
 
-		auto board = makeChessboard(textures);
+		auto board = std::make_shared<Chessboard>("Chess Board", textures);
 		board->setPosition({ startSizeX / 2, startSizeY / 2 });
 		menu->addChild(board);
 
 		controller.setBoard(board);
-
 		controller.setGameMenu(menu);
 
 		return menu;

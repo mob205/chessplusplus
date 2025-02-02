@@ -6,14 +6,14 @@
 #include "GUI/Object.h"
 #include <vector>
 
+class Board;
+
 namespace GUI
 {
 	class Chessboard : public Object
 	{
 	public:
-		Chessboard(const std::string& objectName, const PieceTextures& pieceTextures)
-			: Object{ objectName }, textures{ pieceTextures }
-		{}
+		Chessboard(const std::string& objectName, const PieceTextures& pieceTextures);
 
 	protected:
 		virtual void draw_impl(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -29,7 +29,9 @@ namespace GUI
 		*/
 		void setTile(int idx, const sf::Texture& texture, float scale);
 
-	public:
 		void setBoardTexture(const sf::Texture& tex);
+
+	public:
+		void updateBoard(const Board& board);
 	};
 }

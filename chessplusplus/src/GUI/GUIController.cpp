@@ -9,6 +9,8 @@ namespace GUI
 	{
 		mainMenu->setActive(false);
 		gameMenu->setActive(true);
+
+		chessboard->updateBoard(game->getBoard());
 	}
 
 	void GUIController::onQuit()

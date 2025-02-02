@@ -30,7 +30,7 @@ namespace GUI
 		SFMLType& getObject() { return obj; }
 
 	protected:
-		virtual bool interact_impl(const sf::Vector2f& point) override
+		virtual bool containsPoint(const sf::Vector2f& point) override
 		{
 			return obj.getLocalBounds().contains(point);
 		}
@@ -59,7 +59,7 @@ namespace GUI
 
 	// Member function specializations for shape types
 	template<>
-	inline bool SFMLObject<sf::CircleShape>::interact_impl(const sf::Vector2f& point)
+	inline bool SFMLObject<sf::CircleShape>::containsPoint(const sf::Vector2f& point)
 	{
 		// Origin is in the the top-left corner of the bounding box of circle, so subtract to displacement from circle center
 		float r = obj.getRadius();

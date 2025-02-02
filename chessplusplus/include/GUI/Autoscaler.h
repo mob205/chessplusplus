@@ -22,7 +22,7 @@ namespace GUI
 		void onResize(const sf::RenderWindow& window);
 		
 	protected:
-		virtual bool interact_impl(const sf::Vector2f& interactPoint) override;
+		virtual bool containsPoint(const sf::Vector2f& interactPoint) override;
 
 	private:
 		float aspectRatio{};

@@ -45,7 +45,7 @@ public:
 	virtual std::string_view getName() const = 0;
 
 	// Prints the piece out
-	friend std::ostream& operator<<(std::ostream& out, Piece& piece)
+	friend std::ostream& operator<<(std::ostream& out, const Piece& piece)
 	{
 		char symbol = piece.getSymbol();
 		out << " " << static_cast<char>(static_cast<bool>(piece.team) ? symbol : toupper(symbol)) << " ";

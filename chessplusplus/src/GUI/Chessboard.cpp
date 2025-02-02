@@ -1,11 +1,62 @@
 #include "GUI/Chessboard.h"
 #include "GUI/SFMLObject.h"
 #include "Piece/PieceEnums.h"
+#include "Board/Board.h"
+#include "Game/Settings.h"
+#include "Game/Point.h"
 #include <memory>
 #include <iostream>
 
 namespace GUI
 {
+	Chessboard::Chessboard(const std::string& objectName, const PieceTextures& pieceTextures)
+		: Object{ objectName }, textures{ pieceTextures }
+	{
+		sf::RenderTexture boardTexture{};
+		boardTexture.create(boardLength, boardLength);
+
+		const sf::Vector2f tileSize{ pixelsPerTile, pixelsPerTile };
+		const sf::Vector2f interactOffset{ -boardLength / 2.f, -boardLength / 2.f };
+
+		float offsetX{ 0 };
+		float offsetY{ pixelsPerTile * (Settings::boardSize - 1) };
+		for (int i = 0; i < Settings::boardSize; ++i)
+		{
+			float curOffsetX{ offsetX };
+
+			for (int j = 0; j < Settings::boardSize; ++j)
+			{
+				// Name for debug purposes
+				std::string name = std::string{ "Tile " } + std::string(1, j + 'a') + std::to_string(i + 1);
+
+				sf::Vector2f tilePosition{ curOffsetX, offsetY };
+
+				// Setup a square to draw the board texture
+				sf::RectangleShape boardSquare{ tileSize };
+				boardSquare.setPosition(tilePosition);
+				sf::Color color = (i + j) % 2 == 0 ? teamBlackColor : teamWhiteColor;
+				boardSquare.setFillColor(color);
+				boardTexture.draw(boardSquare);
+
+				// Setup a rect that is clickable
+				auto tileInteractable = makeWrapper<sf::RectangleShape>(name, tileSize);
+				tileInteractable->setPosition(tilePosition + interactOffset);
+				tileInteractable->setVisibility(false);
+				addChild(tileInteractable);
+
+				// Setup a sprite for piece sprites
+				auto tileSprite = makeWrapper<sf::Sprite>("Tile Sprite");
+				tileInteractable->addChild(tileSprite);
+				tileSprite->setInteractable(false);
+
+				// Fill columns left to right
+				curOffsetX += pixelsPerTile;
+			}
+			// Fill rows bottom to top
+			offsetY -= pixelsPerTile;
+		}
+		setBoardTexture(boardTexture.getTexture());
+	}
 	void Chessboard::draw_impl(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		target.draw(boardSprite, states);
@@ -31,6 +82,30 @@ namespace GUI
 		boardTex = tex;
 		boardSprite.setTexture(boardTex); 
 		boardSprite.setOrigin({ static_cast<float>(boardTex.getSize().x) / 2.f, static_cast<float>(boardTex.getSize().y) / 2.f });
+	}
+
+	void Chessboard::updateBoard(const Board& gameBoard)
+	{
+		for (int i = 0; i < Settings::boardSize; ++i)
+		{
+			for (int j = 0; j < Settings::boardSize; ++j)
+			{
+				int childIndex = i * Settings::boardSize + j;
+				const Piece* piece = gameBoard[{i, j}].get();
+				
+				const sf::Texture* tex{};
+				if (piece)
+				{
+					tex = &textures[piece->getTeam()][piece->getType()];
+				}
+				else
+				{
+					tex = &textures[PieceEnums::White][PieceEnums::None];
+				}
+
+				setTile(childIndex, *tex, .8f);
+			}
+		}
 	}
 
 }
