@@ -60,7 +60,7 @@ namespace GUI
 		std::string_view getName() const { return name; }
 
 		/**
-		*	Returns whether this object should be drawn to the screen.
+		*	A visible object is drawn to the screen and is interactable
 		*/
 		bool getVisibility() const { return isVisible; }
 		void setVisibility(bool visibility) { isVisible = visibility; }

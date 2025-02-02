@@ -1,4 +1,4 @@
-#include "ConsoleInput/ConsolePlayer.h"
+#include "ConsoleInput/ConsoleController.h"
 #include "Game/Game.h"
 #include "Board/Board.h"
 #include "ConsoleInput/Input.h"

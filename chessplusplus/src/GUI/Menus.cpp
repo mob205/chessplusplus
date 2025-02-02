@@ -1,0 +1,123 @@
+#include "SFML/Graphics.hpp"
+#include "GUI/Menus.h"
+#include "GUI/GUIController.h"
+#include "GUI/ShapeObject.h"
+#include "GUI/TextObject.h"
+#include "GUI/GUIMain.h"
+#include "Game/Settings.h"
+
+namespace GUI
+{
+	// Helper function to make an object with centered rectangle and centered text
+	static std::shared_ptr<Object> makeButton(const std::string& buttonName, const sf::Font& font, sf::Vector2f size, const std::string& text)
+	{
+		auto button = std::make_shared<Object>(buttonName);
+
+		auto buttonRect = makeShape<sf::RectangleShape>(buttonName + " Background", size);
+		buttonRect->setPosition(-size / 2.f);
+		buttonRect->getShape().setFillColor(buttonColor);
+		button->addChild(buttonRect);
+
+		auto buttonText = std::make_shared<TextObject>(buttonName + " Text", text, font, 50);
+		sf::Vector2f textSize = buttonText->getTextSize();
+		buttonText->setPosition({ -textSize.x / 2, -textSize.y });
+		button->addChild(buttonText);
+
+		return button;
+	}
+
+	// Helper function to get the desired X position for a chess menu button
+	static inline consteval float getButtonX(int buttonNumber)
+	{
+		constexpr float buttonLeftPadding{ startSizeX / 64.f };
+
+		return ((buttonNumber + 1) * buttonLeftPadding) + (buttonWidth / 2.f) + (buttonNumber * buttonWidth);
+	}
+
+	static std::shared_ptr<Object> makeChessboard()
+	{
+		const sf::Vector2f center{ startSizeX / 2, startSizeY / 2 };
+		const sf::Vector2f tileSize{ pixelsPerTile, pixelsPerTile };
+
+		auto board = std::make_shared<Object>("Chess Board");
+
+		float offsetX{ -boardLength / 2 };
+		float offsetY{ -boardLength / 2 };
+		for(int i = 0; i < Settings::boardSize; ++i)
+		{
+			float curOffsetX{ offsetX };
+
+			for (int j = 0; j < Settings::boardSize; ++j)
+			{
+				sf::Color color = (i + j) % 2 == 0 ? teamWhiteColor : teamBlackColor;
+
+				auto tile = makeShape<sf::RectangleShape>("Chess Square", tileSize);
+				tile->setPosition({ curOffsetX, offsetY });
+				tile->getShape().setFillColor(color);
+				board->addChild(tile);
+
+				// Fill columns left to right
+				curOffsetX += pixelsPerTile;
+			}
+			// Fill rows top to bottom
+			offsetY += pixelsPerTile;
+		}
+		return board;
+	}
+
+	std::shared_ptr<Object> createMainMenu(const sf::Font& font, GUIController& controller)
+	{
+		auto mainMenu = std::make_shared<Object>("Main Menu");
+
+		auto welcomeTextCenter = std::make_shared<Object>("Welcome Text");
+		welcomeTextCenter->setPosition({ startSizeX / 2, 150 });
+		mainMenu->addChild(welcomeTextCenter);
+
+		auto welcomeText = std::make_shared<TextObject>("Welcome to Chess!", font, 50);
+		sf::Vector2f textSize = welcomeText->getTextSize();
+		welcomeText->setPosition(-textSize / 2.f);
+		welcomeTextCenter->addChild(welcomeText);
+
+		auto startButton = makeButton("Start Button", font, { 250, 75 }, "PLAY");
+		startButton->setPosition({ startSizeX / 2, startSizeY / 2 });
+		mainMenu->addChild(startButton);
+
+		controller.setMainMenu(mainMenu);
+
+		return mainMenu;
+	}
+
+	std::shared_ptr<Object> createChessMenu(const sf::Font& font, GUIController& controller)
+	{
+		constexpr float buttonsTopPadding{ (startSizeX / 64.f) + (buttonHeight / 2.f) };
+
+		const sf::Vector2f buttonSize = { buttonWidth, buttonHeight };
+
+		auto menu = std::make_shared<Object>("Chess Menu");
+
+		auto quitButton = makeButton("Quit Button", font, buttonSize, "Quit");
+		quitButton->setPosition({ getButtonX(0) , buttonsTopPadding});
+		menu->addChild(quitButton);
+
+		auto undoButton = makeButton("Undo Button", font, buttonSize, "Undo");
+		undoButton->setPosition({ getButtonX(1), buttonsTopPadding});
+		menu->addChild(undoButton);
+
+		auto loadButton = makeButton("Load Button", font, buttonSize, "Load");
+		loadButton->setPosition({ getButtonX(2), buttonsTopPadding});
+		menu->addChild(loadButton);
+
+		auto saveButton = makeButton("Save Button", font, buttonSize, "Save");
+		saveButton->setPosition({ getButtonX(3), buttonsTopPadding});
+		menu->addChild(saveButton);
+
+		auto board = makeChessboard();
+		board->setPosition({ startSizeX / 2, startSizeY / 2 });
+		menu->addChild(board);
+
+		controller.setGameMenu(menu);
+
+		return menu;
+
+	}
+}

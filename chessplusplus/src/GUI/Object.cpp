@@ -4,33 +4,49 @@
 
 using GUI::Object;
 
-// TODO: Add safeguards to prevent recursive hierarchies
 void Object::addChild(std::shared_ptr<Object> object)
 {
+	// TODO: Add more in-depth safeguards to prevent recursive hierarchies
+	if (object.get() == this)
+	{
+		std::cerr << "Attempted to add self as a child!";
+		return;
+	}
+
+
+	if (!object)
+	{
+		std::cerr << "Attempted to add a null child!";
+		return;
+	}
+
 	children.push_back(object);
 }
 
 bool Object::interact(const sf::Vector2f& interactPoint)
 {
 	if (!getVisibility()) { return false; }
-	bool res{};
 
 	const sf::Vector2f transformedPoint = getInverseTransform().transformPoint(interactPoint);
 
-	// Interact with this object
-	res |= interact_impl(transformedPoint);
-
-	if (res && !getName().empty())
+	// Check for interaction with self
+	if (interact_impl(transformedPoint) && !getName().empty())
 	{
+		// Assumes that an interactable parent does not have interactable children
 		std::cout << "Interacted with " << getName() << ".\n";
+		return true;
 	}
 
-	// Interact with children
+	// Check for interaction with children
 	for (const auto& child : children)
 	{
-		res |= child->interact(transformedPoint);
+		// Assumes that only one child can be interacted with at a time
+		if (child->interact(transformedPoint))
+		{
+			return true;
+		}
 	}
-	return res;
+	return false;
 }
 
 void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const

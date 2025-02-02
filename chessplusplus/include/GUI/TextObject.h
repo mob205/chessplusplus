@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GUISettings.h"
 #include "SFML/Graphics.hpp"
 #include "GUI/Object.h"
 

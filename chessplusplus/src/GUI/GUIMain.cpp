@@ -6,15 +6,15 @@
 #include "Game/Game.h"
 #include "Piece/PieceEnums.h"
 
-#include "GUI/GUISettings.h"
+#include "GUI/GUIController.h"
+#include "GUI/GUIMain.h"
 #include "GUI/Autoscaler.h"
 #include "GUI/ShapeObject.h"
 #include "GUI/TextObject.h"
+#include "GUI/Menus.h"
 
 namespace GUI
 {
-	const sf::Color buttonColor{ 215, 215, 215 };
-
 	static std::vector<std::vector<sf::Texture>> pieceTextures(PieceEnums::MaxTeams, std::vector<sf::Texture>(PieceEnums::MaxTypes));
 	static sf::Font font;
 
@@ -38,37 +38,6 @@ namespace GUI
 		return res;
 	}
 
-	static std::shared_ptr<Object> createMainMenu()
-	{
-		auto mainMenu = std::make_shared<Object>("Main Menu");
-
-		auto welcomeTextCenter = std::make_shared<Object>("Welcome Text");
-		welcomeTextCenter->setPosition({ startSizeX / 2, 150 });
-		mainMenu->addChild(welcomeTextCenter);
-
-		auto welcomeText = std::make_shared<TextObject>("Welcome to Chess!", font, 50);
-		sf::Vector2f textSize = welcomeText->getTextSize();
-		welcomeText->setPosition(-textSize / 2.f);
-		welcomeTextCenter->addChild(welcomeText);
-
-		auto startButton = std::make_shared<Object>("Start Button");
-		startButton->setPosition({ startSizeX / 2, startSizeY / 2 });
-		mainMenu->addChild(startButton);
-
-		sf::Vector2f buttonBackgroundSize{ 250, 75 };
-		auto buttonBackground = makeShape<sf::RectangleShape>("Start Button Background", buttonBackgroundSize);
-		buttonBackground->setPosition(-buttonBackgroundSize / 2.f);
-		buttonBackground->getShape().setFillColor(buttonColor);
-		startButton->addChild(buttonBackground);
-
-		auto buttonText = std::make_shared<TextObject>("Start Text", "PLAY", font, 50);
-		textSize = buttonText->getTextSize();
-		buttonText->setPosition({ -textSize.x / 2, -textSize.y});
-		startButton->addChild(buttonText);
-
-		return mainMenu;
-	}
-
 	void startGUI()
 	{
 		if (!font.loadFromFile("../Resources/Raleway-Black.ttf"))
@@ -88,7 +57,14 @@ namespace GUI
 
 		GUI::Autoscaler world{ {startSizeX, startSizeY} };
 
-		world.addChild(createMainMenu());
+		GUIController controller{};
+
+		auto mainMenu = createMainMenu(font, controller);
+		world.addChild(mainMenu);
+
+		auto chessMenu = createChessMenu(font, controller);
+		world.addChild(chessMenu);
+		chessMenu->setVisibility(false);
 
 		while (window.isOpen())
 		{
