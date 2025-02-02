@@ -212,7 +212,7 @@
     <ClInclude Include="include\GUI\Object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\GUI\ShapeObject.h">
+    <ClInclude Include="include\GUI\SFMLObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\GUI\GUIMain.h">

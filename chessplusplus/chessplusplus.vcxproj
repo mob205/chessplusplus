@@ -173,7 +173,7 @@
     <ClInclude Include="include\GUI\GUIMain.h" />
     <ClInclude Include="include\GUI\Menus.h" />
     <ClInclude Include="include\GUI\Object.h" />
-    <ClInclude Include="include\GUI\ShapeObject.h" />
+    <ClInclude Include="include\GUI\SFMLObject.h" />
     <ClInclude Include="include\Move\MoveResult.h" />
     <ClInclude Include="include\Piece\Bishop.h" />
     <ClInclude Include="include\Board\Board.h" />

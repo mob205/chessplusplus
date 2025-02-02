@@ -9,7 +9,7 @@
 #include "GUI/GUIController.h"
 #include "GUI/GUIMain.h"
 #include "GUI/Autoscaler.h"
-#include "GUI/ShapeObject.h"
+#include "GUI/SFMLObject.h"
 #include "GUI/TextObject.h"
 #include "GUI/Menus.h"
 

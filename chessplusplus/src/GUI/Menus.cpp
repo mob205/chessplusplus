@@ -1,7 +1,7 @@
 #include "SFML/Graphics.hpp"
 #include "GUI/Menus.h"
 #include "GUI/GUIController.h"
-#include "GUI/ShapeObject.h"
+#include "GUI/SFMLObject.h"
 #include "GUI/TextObject.h"
 #include "GUI/GUIMain.h"
 #include "Game/Settings.h"
@@ -13,9 +13,9 @@ namespace GUI
 	{
 		auto button = std::make_shared<Object>(buttonName);
 
-		auto buttonRect = makeShape<sf::RectangleShape>(buttonName + " Background", size);
+		auto buttonRect = makeWrapper<sf::RectangleShape>(buttonName + " Background", size);
 		buttonRect->setPosition(-size / 2.f);
-		buttonRect->getShape().setFillColor(buttonColor);
+		buttonRect->getObject().setFillColor(buttonColor);
 		button->addChild(buttonRect);
 
 		auto buttonText = std::make_shared<TextObject>(buttonName + " Text", text, font, 50);
@@ -51,9 +51,9 @@ namespace GUI
 			{
 				sf::Color color = (i + j) % 2 == 0 ? teamWhiteColor : teamBlackColor;
 
-				auto tile = makeShape<sf::RectangleShape>("Chess Square", tileSize);
+				auto tile = makeWrapper<sf::RectangleShape>("Chess Square", tileSize);
 				tile->setPosition({ curOffsetX, offsetY });
-				tile->getShape().setFillColor(color);
+				tile->getObject().setFillColor(color);
 				board->addChild(tile);
 
 				// Fill columns left to right
