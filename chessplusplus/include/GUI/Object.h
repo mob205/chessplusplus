@@ -41,6 +41,9 @@ namespace GUI
 	private:
 		std::string name{ "Object" };
 		bool isVisible{ true };
+		bool isInteractable{ true };
+		bool isVisibleChildren{ true };
+
 		std::function<void()> onInteractEvent;
 
 		void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) const override;
@@ -62,10 +65,19 @@ namespace GUI
 		std::string_view getName() const { return name; }
 
 		/**
-		*	A visible object is drawn to the screen and is interactable
+		*	A visible object is drawn to the screen
 		*/
 		bool getVisibility() const { return isVisible; }
 		void setVisibility(bool visibility) { isVisible = visibility; }
+
+		bool getChildrenVisibility() const { return isVisibleChildren; }
+		void setChildrenVisibility(bool visibility) { isVisibleChildren = visibility; }
+
+		/**
+		*	An interactable object can be clicked on
+		*/
+		bool getInteractable() const { return isInteractable; }
+		void setInteractable(bool interactable) { isInteractable = interactable; }
 
 		void setInteractEvent(std::function<void()> onInteract) { onInteractEvent = onInteract; }
 	};

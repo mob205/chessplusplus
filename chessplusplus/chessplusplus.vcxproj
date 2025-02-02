@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GUI\Chessboard.cpp" />
     <ClCompile Include="src\GUI\GUIController.cpp" />
     <ClCompile Include="src\GUI\Menus.cpp" />
     <ClCompile Include="src\GUI\Object.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="include\ConsoleInput\ConsoleController.h" />
     <ClInclude Include="include\Game\Settings.h" />
     <ClInclude Include="include\GUI\Autoscaler.h" />
+    <ClInclude Include="include\GUI\Chessboard.h" />
     <ClInclude Include="include\GUI\GUIController.h" />
     <ClInclude Include="include\GUI\GUIMain.h" />
     <ClInclude Include="include\GUI\Menus.h" />

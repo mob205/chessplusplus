@@ -25,7 +25,7 @@ void Object::addChild(std::shared_ptr<Object> object)
 
 bool Object::interact(const sf::Vector2f& interactPoint)
 {
-	if (!getVisibility()) { return false; }
+	if (!getInteractable()) { return false; }
 
 	const sf::Vector2f transformedPoint = getInverseTransform().transformPoint(interactPoint);
 
@@ -61,6 +61,8 @@ void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 	// Draw this object
 	draw_impl(target, transformedStates);
+
+	if (!getChildrenVisibility()) { return; }
 
 	// Draw children
 	for (const auto& child : children)

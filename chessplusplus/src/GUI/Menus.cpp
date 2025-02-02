@@ -4,6 +4,7 @@
 #include "GUI/SFMLObject.h"
 #include "GUI/TextObject.h"
 #include "GUI/GUIMain.h"
+#include "GUI/Chessboard.h"
 #include "Game/Settings.h"
 
 namespace GUI
@@ -36,25 +37,42 @@ namespace GUI
 
 	static std::shared_ptr<Object> makeChessboard()
 	{
-		const sf::Vector2f center{ startSizeX / 2, startSizeY / 2 };
+		//const sf::Vector2f center{ startSizeX / 2, startSizeY / 2 };
 		const sf::Vector2f tileSize{ pixelsPerTile, pixelsPerTile };
 
-		auto board = std::make_shared<Object>("Chess Board");
+		auto board = std::make_shared<Chessboard>("Chess Board");
+		board->setChildrenVisibility(false);
 
-		float offsetX{ -boardLength / 2 };
-		float offsetY{ -boardLength / 2 };
+		sf::RenderTexture boardTexture{};
+		boardTexture.create(boardLength, boardLength);
+
+		sf::Vector2f interactOffset{ -boardLength / 2.f, -boardLength / 2.f };
+
+		float offsetX{ 0 };
+		float offsetY{ 0 };
 		for(int i = 0; i < Settings::boardSize; ++i)
 		{
 			float curOffsetX{ offsetX };
 
 			for (int j = 0; j < Settings::boardSize; ++j)
 			{
-				sf::Color color = (i + j) % 2 == 0 ? teamWhiteColor : teamBlackColor;
+				sf::Color color = (i + j) % 2 == 0 ? teamBlackColor : teamWhiteColor;
+				
+				// Name for debug purposes
+				std::string name = std::string{ "Tile Row: " } + std::to_string(i) + std::string{ " Col: " } + std::to_string(j);
 
-				auto tile = makeWrapper<sf::RectangleShape>("Chess Square", tileSize);
+				// Set up tile
+				auto tile = makeWrapper<sf::RectangleShape>(name, sf::Vector2f{tileSize});
+				board->addChild(tile);
 				tile->setPosition({ curOffsetX, offsetY });
 				tile->getObject().setFillColor(color);
-				board->addChild(tile);
+
+				// Draw to render texture once rather than drawing individual tiles every frame
+				boardTexture.draw(*tile);
+				tile->setVisibility(false);
+
+				// Move tile into place for interacting. Render textures don't support negative coordinates, so need to do it after drawing
+				tile->move(interactOffset);
 
 				// Fill columns left to right
 				curOffsetX += pixelsPerTile;
@@ -62,6 +80,8 @@ namespace GUI
 			// Fill rows top to bottom
 			offsetY += pixelsPerTile;
 		}
+		
+		board->setBoardTexture(boardTexture.getTexture());
 		return board;
 	}
 
