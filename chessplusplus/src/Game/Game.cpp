@@ -11,12 +11,6 @@
 #include "Piece/Queen.h"
 #include "Piece/King.h"
 
-//template<typename T>
-//static void addPiece(Board& board, const Point& position, PieceEnums::Team team)
-//{
-//	board[position] = std::make_unique<T>(position, team);
-//}
-
 Game::Game()
 {
 	// Setup pawns
