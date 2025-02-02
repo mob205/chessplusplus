@@ -35,13 +35,11 @@ namespace GUI
 		return ((buttonNumber + 1) * buttonLeftPadding) + (buttonWidth / 2.f) + (buttonNumber * buttonWidth);
 	}
 
-	static std::shared_ptr<Object> makeChessboard()
+	static std::shared_ptr<Chessboard> makeChessboard()
 	{
-		//const sf::Vector2f center{ startSizeX / 2, startSizeY / 2 };
 		const sf::Vector2f tileSize{ pixelsPerTile, pixelsPerTile };
 
 		auto board = std::make_shared<Chessboard>("Chess Board");
-		board->setChildrenVisibility(false);
 
 		sf::RenderTexture boardTexture{};
 		boardTexture.create(boardLength, boardLength);
@@ -139,6 +137,8 @@ namespace GUI
 		auto board = makeChessboard();
 		board->setPosition({ startSizeX / 2, startSizeY / 2 });
 		menu->addChild(board);
+
+		controller.setBoard(board);
 
 		controller.setGameMenu(menu);
 

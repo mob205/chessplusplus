@@ -52,15 +52,23 @@ bool Object::interact(const sf::Vector2f& interactPoint)
 	return false;
 }
 
+void GUI::Object::setActive(bool isActive)
+{
+	setVisibility(isActive);
+	setChildrenVisibility(isActive);
+	setInteractable(isActive);
+}
+
 void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	if (!getVisibility()) { return; }
-
 	// Combine parent and this object's transform
 	sf::RenderStates transformedStates = states.transform * getTransform();
 
 	// Draw this object
-	draw_impl(target, transformedStates);
+	if (getVisibility())
+	{
+		draw_impl(target, transformedStates);
+	}
 
 	if (!getChildrenVisibility()) { return; }
 

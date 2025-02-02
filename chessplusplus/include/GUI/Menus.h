@@ -12,4 +12,3 @@ namespace GUI
 
 	std::shared_ptr<Object> createChessMenu(const sf::Font& font, GUIController& controller);
 }
-

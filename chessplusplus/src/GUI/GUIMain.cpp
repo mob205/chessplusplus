@@ -64,7 +64,7 @@ namespace GUI
 
 		auto chessMenu = createChessMenu(font, controller);
 		world.addChild(chessMenu);
-		chessMenu->setVisibility(false);
+		chessMenu->setActive(false);
 
 		while (window.isOpen())
 		{

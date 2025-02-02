@@ -18,11 +18,8 @@ namespace GUI
 	private:
 		sf::Texture boardTex;
 		sf::Sprite boardSprite{};
-		std::vector<std::vector<std::shared_ptr<Object>>> boardTiles{};
 
 	public:
 		void setBoardTexture(const sf::Texture& tex);
-		void setBoardTiles(std::vector<std::vector<std::shared_ptr<Object>>>&& tiles) { boardTiles = tiles; }
-
 	};
 }

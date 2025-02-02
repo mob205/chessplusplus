@@ -24,7 +24,6 @@ namespace GUI
 		/**
 		*	Adds a child object to this object. Parents will draw and interact-test child objects.
 		*	@param object The child object to add
-		* 
 		*/
 		void addChild(std::shared_ptr<Object> object);
 
@@ -34,6 +33,11 @@ namespace GUI
 		*	@return true if mouse click interacted with the object
 		*/
 		bool interact(const sf::Vector2f& point);
+		
+		/**
+		*	Sets an object's visibility, children visibility, and interactability
+		*/
+		void setActive(bool isActive);
 
 	protected:
 		std::vector<std::shared_ptr<Object>> children{};

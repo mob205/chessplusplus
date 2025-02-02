@@ -7,20 +7,14 @@ namespace GUI
 {
 	void GUIController::onStart()
 	{
-		mainMenu->setVisibility(false);
-		mainMenu->setInteractable(false);
-
-		gameMenu->setVisibility(true);
-		gameMenu->setInteractable(true);
+		mainMenu->setActive(false);
+		gameMenu->setActive(true);
 	}
 
 	void GUIController::onQuit()
 	{
-		gameMenu->setVisibility(false);
-		gameMenu->setInteractable(false);
-
-		mainMenu->setVisibility(true);
-		mainMenu->setInteractable(true);
+		gameMenu->setActive(false);
+		mainMenu->setActive(true);
 
 		// Reset game
 		game = std::make_unique<Game>();
