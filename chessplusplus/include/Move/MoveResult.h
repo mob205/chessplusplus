@@ -8,8 +8,8 @@ struct MoveResult
 		None,			// Successful move
 		InvalidPiece,   // Piece is not owned by player
 		NotInSet,		// The requested move is not how the piece moves
-		Pinned,			// The desired piece is defending the king and is unable to move
-		Check,			// The king is in check and the attempted move did not defend the king
+		Pinned,			// The king is not in check and this move would put the king in check
+		Check,			// The king is in check and this move does not take the king out of check
 		NeedsInput,		// This move requires extra input. Other fail reasons take priority
 	};
 	enum class Type 

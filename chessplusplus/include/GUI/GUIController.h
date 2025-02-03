@@ -22,6 +22,7 @@ namespace GUI
 		void onUndo();
 		void onLoad();
 		void onSave();
+		void onTileSelected(Point pos);
 
 	private:
 		std::shared_ptr<Object> mainMenu;
@@ -30,9 +31,15 @@ namespace GUI
 
 		std::unique_ptr<Game> game{};
 
+		Point currentSelection{};
+		bool hasSelected{};
+
+		void unselect();
+		void selectPieceTile(Point pos);
+
 	public:
 		void setMainMenu(std::shared_ptr<Object> menu) { mainMenu = menu; }
 		void setGameMenu(std::shared_ptr<Object> menu) { gameMenu = menu; }
-		void setBoard(std::shared_ptr<Chessboard> board) { chessboard = board; }
+		void setBoard(std::shared_ptr<Chessboard> board);
 	};
 }

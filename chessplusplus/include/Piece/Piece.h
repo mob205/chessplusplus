@@ -37,6 +37,7 @@ public:
 
 	// Gets all possible moves that can be made by this piece on a given board
 	// If getDefenses, the returned MoveSet contains moves that are defending another tile, but can't necessarily be taken currently
+	// Does not consider special situations that will make this piece unable to move like checks, pins, etc.
 	virtual MoveSet getPossibleMoves(const Board& board, bool getDefenses = false) const = 0;
 
 	// Gets the symbol used to represent this piece on the board

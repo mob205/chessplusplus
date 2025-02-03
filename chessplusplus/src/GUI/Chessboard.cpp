@@ -9,6 +9,8 @@
 
 namespace GUI
 {
+	const sf::Color highlightColor{ 0, 252, 0, 150 };
+
 	Chessboard::Chessboard(const std::string& objectName, const PieceTextures& pieceTextures)
 		: Object{ objectName }, textures{ pieceTextures }
 	{
@@ -41,7 +43,15 @@ namespace GUI
 				// Setup a rect that is clickable
 				auto tileInteractable = makeWrapper<sf::RectangleShape>(name, tileSize);
 				tileInteractable->setPosition(tilePosition + interactOffset);
+
+				// For tile highlighting
+				tileInteractable->getObject().setFillColor(highlightColor);
+
 				tileInteractable->setVisibility(false);
+				tileInteractable->setInteractEvent(
+					[=]() {
+						interactTile({i, j});
+					});
 				addChild(tileInteractable);
 
 				// Setup a sprite for piece sprites
@@ -65,7 +75,7 @@ namespace GUI
 	{
 		// Child hierarchy is Chessboard -> Rect for interaction -> Sprite
 		auto sprite = std::static_pointer_cast<SFMLObject<sf::Sprite>>(children[idx]->getChild(0));
-		sprite->getObject().setTexture(texture);
+		sprite->getObject().setTexture(texture, true);
 
 		sf::Vector2u texSize = texture.getSize();
 		if (texSize == sf::Vector2u{ 0, 0 }) { return; }
@@ -82,6 +92,28 @@ namespace GUI
 		boardTex = tex;
 		boardSprite.setTexture(boardTex); 
 		boardSprite.setOrigin({ static_cast<float>(boardTex.getSize().x) / 2.f, static_cast<float>(boardTex.getSize().y) / 2.f });
+	}
+
+	void Chessboard::highlightTile(Point pos, bool isHighlighted)
+	{
+		children[pos.file + Settings::boardSize * pos.rank]->setVisibility(isHighlighted);
+	}
+
+	void Chessboard::unhighlightAllTiles()
+	{
+		for (auto child : children)
+		{
+			child->setVisibility(false);
+		}
+	}
+
+
+	void Chessboard::interactTile(Point pos)
+	{
+		if (onTileInteractedEvent)
+		{
+			onTileInteractedEvent(pos);
+		}
 	}
 
 	void Chessboard::updateBoard(const Board& gameBoard)

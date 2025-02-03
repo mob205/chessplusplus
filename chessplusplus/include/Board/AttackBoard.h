@@ -10,6 +10,7 @@ class King;
 
 using TeamAttackBoard = std::array<std::array<bool, Settings::boardSize>, Settings::boardSize>;
 
+// A specialized board to keep track of what tiles are under attack by the enemy
 class AttackBoard
 {
 public:
@@ -22,10 +23,15 @@ public:
 	// For debugging
 	void printBoard(std::ostream& out, PieceEnums::Team team) const;
 private:
+
+	// Resets the attack board to an initial state showing no tiles being attacked
 	void resetBoard(PieceEnums::Team team);
+
+	// Sets the attack board to represent all board tiles being attacked by given team
 	void setNonKing(const Board& board);
+
+	// Sets the attack board to represent spaces where a king can attack. Must be done after other pieces have been set
 	void setKing(const Board& board, const Piece* king);
 
-	// Board to keep track of what tiles are under attack by the enemy
 	std::array<TeamAttackBoard, PieceEnums::MaxTeams> attackBoard{};
 };
