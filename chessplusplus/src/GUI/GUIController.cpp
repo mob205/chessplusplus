@@ -25,7 +25,8 @@ namespace GUI
 
 	void GUIController::onUndo()
 	{
-
+		game->undoMove();
+		chessboard->updateBoard(game->getBoard());
 	}
 
 	void GUIController::onLoad()
