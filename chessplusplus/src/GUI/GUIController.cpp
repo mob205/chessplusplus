@@ -1,7 +1,7 @@
 #include "SFML/Graphics.hpp"
 #include <memory>
 #include "GUI/GUIController.h"
-
+#include <format>
 #include <iostream>
 
 namespace GUI
@@ -11,6 +11,7 @@ namespace GUI
 		mainMenu->setActive(false);
 		gameMenu->setActive(true);
 
+		updateTurnCounter();
 		chessboard->updateBoard(game->getBoard());
 	}
 
@@ -25,9 +26,12 @@ namespace GUI
 
 	void GUIController::onUndo()
 	{
-		game->undoMove();
-		chessboard->unhighlightAllTiles();
-		chessboard->updateBoard(game->getBoard());
+		if (game->undoMove())
+		{
+			unselect();
+			updateTurnCounter();
+			chessboard->updateBoard(game->getBoard());
+		}
 	}
 
 	void GUIController::onLoad()
@@ -90,6 +94,7 @@ namespace GUI
 		{
 			game->processTurn(currentSelection, pos);
 			chessboard->updateBoard(board);
+			updateTurnCounter();
 
 			unselect();
 			return;
@@ -113,6 +118,15 @@ namespace GUI
 	{
 		chessboard = board;
 		chessboard->setOnTileInteracted([=](Point pos) { onTileSelected(pos); });
+	}
+
+	void GUIController::updateTurnCounter()
+	{
+		std::string_view team{ game->getCurrentTeam() == PieceEnums::White ? "White" : "Black" };
+		turnCounter->setText(std::format("Turn {} | {}'s Turn", game->getCurrentTurn() + 1, team));
+
+		// Center turn counter based on text size
+		turnCounter->setPosition({ -turnCounter->getTextSize().x / 2.f, 0 });
 	}
 }
 

@@ -4,6 +4,7 @@
 
 #include "GUI/Object.h"
 #include "GUI/Chessboard.h"
+#include "GUI/TextObject.h"
 #include "Game/Game.h"
 
 namespace GUI
@@ -28,6 +29,7 @@ namespace GUI
 		std::shared_ptr<Object> mainMenu;
 		std::shared_ptr<Object> gameMenu;
 		std::shared_ptr<Chessboard> chessboard;
+		std::shared_ptr<TextObject> turnCounter;
 
 		std::unique_ptr<Game> game{};
 
@@ -36,10 +38,12 @@ namespace GUI
 
 		void unselect();
 		void selectPieceTile(Point pos);
+		void updateTurnCounter();
 
 	public:
 		void setMainMenu(std::shared_ptr<Object> menu) { mainMenu = menu; }
 		void setGameMenu(std::shared_ptr<Object> menu) { gameMenu = menu; }
+		void setTurnCounter(std::shared_ptr<TextObject> counter) { turnCounter = counter; }
 		void setBoard(std::shared_ptr<Chessboard> board);
 	};
 }

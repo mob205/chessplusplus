@@ -60,7 +60,7 @@ namespace GUI
 
 	std::shared_ptr<Object> createChessMenu(const sf::Font& font, GUIController& controller, const PieceTextures& textures)
 	{
-		constexpr float buttonsTopPadding{ (startSizeX / 64.f) + (buttonHeight / 2.f) };
+		constexpr float buttonsTopPadding{ (startSizeY / 32.f) + (buttonHeight / 2.f) };
 
 		const sf::Vector2f buttonSize = { buttonWidth, buttonHeight };
 
@@ -90,8 +90,16 @@ namespace GUI
 		board->setPosition({ startSizeX / 2, startSizeY / 2 });
 		menu->addChild(board);
 
+		auto turnCounterCenter = std::make_shared<Object>();
+		turnCounterCenter->setPosition({ startSizeX / 2, 2 * buttonsTopPadding });
+		menu->addChild(turnCounterCenter);
+
+		auto turnCounter = std::make_shared<TextObject>("Turn Counter", "", font, 30);
+		turnCounterCenter->addChild(turnCounter);
+
 		controller.setBoard(board);
 		controller.setGameMenu(menu);
+		controller.setTurnCounter(turnCounter);
 
 		return menu;
 
