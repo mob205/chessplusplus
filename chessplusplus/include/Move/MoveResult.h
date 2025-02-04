@@ -33,19 +33,19 @@ struct MoveResult
 	MoveFailReason reasonFailed{};
 	OpponentStatus oppStatus{};
 	MoveResult::Type moveType{};
-	PieceEnums::Type movedPieceType{};
+	PieceEnums::Type movedPieceType{ PieceEnums::None };
+	PieceEnums::Type capturedPieceType{ PieceEnums::None };
 
 	Point start{};
 	Point end{};
 
 	struct StandardResult
 	{
-		PieceEnums::Type capturedPiece{};
 	};
 
 	struct EnPassantResult
 	{
-		PieceEnums::Type capturedPiece{};
+		// En passant is the only move to not capture on the ending tile
 		Point capturePoint{};
 	};
 	
@@ -55,7 +55,6 @@ struct MoveResult
 
 	struct PromotionResult
 	{
-		PieceEnums::Type capturedPiece{};
 		PieceEnums::Type promotionType{};
 	};
 

@@ -12,9 +12,10 @@ MoveResult EnPassantMove::executeMove(Board& board, char extraInput)
 	// Capture piece
 	// Captured should be nullptr after the base Move since it's impossible to en passant and diagonal capture at the same time
 	captured = std::move(board[captureSpot]);
+	res.capturedPieceType = captured->getType();
 
 	res.moveType = MoveResult::Type::EnPassant;
-	res.enpassant = MoveResult::EnPassantResult{ (captured) ? captured->getType() : PieceEnums::None };
+	res.enpassant = MoveResult::EnPassantResult{};
 	return res;
 }
 

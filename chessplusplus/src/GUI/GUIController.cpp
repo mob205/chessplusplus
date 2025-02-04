@@ -11,6 +11,7 @@ namespace GUI
 		mainMenu->setActive(false);
 		gameMenu->setActive(true);
 
+		isGameOver = false;
 
 		log->clearMessages();
 		log->logMessage("Welcome to Chess!");
@@ -31,9 +32,16 @@ namespace GUI
 	{
 		if (game->undoMove())
 		{
+			log->logMessage("Move undone.");
+
+			isGameOver = false;
 			unselect();
 			updateTurnCounter();
 			chessboard->updateBoard(game->getBoard());
+		}
+		else
+		{
+			log->logMessage("Nothing left to undo.");
 		}
 	}
 
@@ -74,6 +82,8 @@ namespace GUI
 
 	void GUIController::onTileSelected(Point pos)
 	{
+		if (isGameOver) { return; }
+
 		const Board& board = game->getBoard();
 		Team curTeam = game->getCurrentTeam();
 
@@ -98,9 +108,11 @@ namespace GUI
 			MoveResult res = game->processTurn(currentSelection, pos);
 			if(res)
 			{
-				log->logMove(res);
-				chessboard->updateBoard(board);
-				updateTurnCounter();
+				handleMoveSuccess(res);
+			}
+			else if (res.reasonFailed == MoveResult::MoveFailReason::NeedsInput)
+			{
+				// Promotion stuff here
 			}
 
 			unselect();
@@ -121,6 +133,38 @@ namespace GUI
 			return;
 		}
 	}
+	
+	void GUIController::handleMoveSuccess(const MoveResult& move)
+	{
+		log->logMove(move);
+		chessboard->updateBoard(game->getBoard());
+
+		switch (move.oppStatus)
+		{
+		case MoveResult::OpponentStatus::Check:
+			log->logMessage("Check!");
+			break;
+
+		case MoveResult::OpponentStatus::Checkmate:
+		{
+			std::string_view winningTeam = (game->getCurrentTeam() ? "Black" : "White");
+			log->logMessage(std::format("CHECKMATE! {} WINS!!", winningTeam));
+			isGameOver = true;
+		}
+		break;
+
+		case MoveResult::OpponentStatus::Stalemate:
+			log->logMessage("Stalemate.");
+			isGameOver = true;
+			break;
+		}
+
+		if (!isGameOver)
+		{
+			updateTurnCounter();
+		}
+	}
+
 	void GUIController::setBoard(std::shared_ptr<Chessboard> board)
 	{
 		chessboard = board;
@@ -131,7 +175,8 @@ namespace GUI
 	{
 		std::string_view team{ game->getCurrentTeam() == PieceEnums::White ? "White" : "Black" };
 
-		log->logMessage(std::format("{}'s Turn ===========", team));
+		log->logMessage("");
+		log->logMessage(std::format("{}'s Turn", team));
 
 		// A turn is only completed when both players have moved
 		int currentTurn = (game->getCurrentTurn() / 2) + 1;

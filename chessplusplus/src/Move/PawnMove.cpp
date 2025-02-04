@@ -19,7 +19,7 @@ MoveResult PawnMove::executeMove(Board& board, char extraInput)
 		PieceEnums::Type promoType{ promotePawn(board, extraInput) };
 
 		res.moveType = MoveResult::Type::Promotion;
-		res.promotion = MoveResult::PromotionResult{ (captured) ? captured->getType() : PieceEnums::None, promoType };
+		res.promotion = MoveResult::PromotionResult{ promoType };
 		return res;
 	}
 	else if (board[end]->getPosition().rank == promoRank && !extraInput)
@@ -28,7 +28,7 @@ MoveResult PawnMove::executeMove(Board& board, char extraInput)
 	}
 	
 	res.moveType = MoveResult::Type::Standard;
-	res.standard = MoveResult::StandardResult{ (captured) ? captured->getType() : PieceEnums::None };
+	res.standard = MoveResult::StandardResult{};
 	return res;
 }
 

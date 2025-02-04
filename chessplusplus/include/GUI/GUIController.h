@@ -37,10 +37,12 @@ namespace GUI
 
 		Point currentSelection{};
 		bool hasSelected{};
+		bool isGameOver{};
 
 		void unselect();
 		void selectPieceTile(Point pos);
 		void updateTurnCounter();
+		void handleMoveSuccess(const MoveResult& move);
 
 	public:
 		void setMainMenu(std::shared_ptr<Object> menu) { mainMenu = menu; }

@@ -7,7 +7,7 @@ MoveResult StandardMove::executeMove(Board& board, char extraInput)
 	MoveResult res = Move::executeMove(board);
 
 	res.moveType = MoveResult::Type::Standard;
-	res.standard = MoveResult::StandardResult{ (captured) ? captured->getType() : PieceEnums::None };
+	res.standard = MoveResult::StandardResult{};
 	return res;
 }
 

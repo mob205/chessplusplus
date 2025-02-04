@@ -12,7 +12,6 @@ namespace GUI
 		: Object{ name }, size{ logSize }, 
 		textObj{ std::make_shared<TextObject>("Log Text", "", font, 25) }
 	{
-		textObj->setText("12345678902234567890323456789423456789\n");
 		addChild(textObj);
 	}
 
@@ -28,8 +27,33 @@ namespace GUI
 
 	void TurnLog::logMove(const MoveResult& move)
 	{
+
 		std::string_view pieceName = PieceEnums::pieceNames[move.movedPieceType];
-		logMessage(std::format("{} to {}{}.", pieceName, move.start.file + 'a', move.start.rank + 1));
+		logMessage(std::format("{} to {}{}.", pieceName, std::string(1, move.end.file + 'a'), move.end.rank + 1));
+
+		if (move.capturedPieceType != PieceEnums::None)
+		{
+			std::string_view captureTypeName = PieceEnums::pieceNames[move.capturedPieceType];
+			logMessage(std::format("Captured enemy {}.", captureTypeName));
+		}
+
+		switch (move.moveType)
+		{
+		case MoveResult::Type::Castle:
+			logMessage("Castled!");
+			break;
+
+		case MoveResult::Type::Promotion:
+		{
+			std::string_view promotedTypeName = PieceEnums::pieceNames[move.promotion.promotionType];
+			logMessage(std::format("Pawn promoted to {}.", promotedTypeName));
+		}
+			break;
+
+		case MoveResult::Type::EnPassant:
+			logMessage(std::format("EN PASSANT!!!"));
+			break;
+		}
 	}
 
 	void TurnLog::updateLogText()
