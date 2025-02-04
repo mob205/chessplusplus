@@ -26,6 +26,7 @@ namespace GUI
 	void GUIController::onUndo()
 	{
 		game->undoMove();
+		chessboard->unhighlightAllTiles();
 		chessboard->updateBoard(game->getBoard());
 	}
 
