@@ -25,6 +25,7 @@ namespace GUI
 		void onLoad();
 		void onSave();
 		void onTileSelected(Point pos);
+		void onSelectPromotion(char promoInput);
 
 	private:
 		std::shared_ptr<Object> mainMenu;
@@ -32,12 +33,17 @@ namespace GUI
 		std::shared_ptr<Chessboard> chessboard;
 		std::shared_ptr<TextObject> turnCounter;
 		std::shared_ptr<TurnLog> log;
+		std::shared_ptr<Object> promoMenu;
 
 		std::unique_ptr<Game> game{};
 
 		Point currentSelection{};
 		bool hasSelected{};
 		bool isGameOver{};
+
+		bool isPromoting;
+		Point promoStart{};
+		Point promoEnd{};
 
 		void unselect();
 		void selectPieceTile(Point pos);
@@ -50,5 +56,6 @@ namespace GUI
 		void setTurnCounter(std::shared_ptr<TextObject> counter) { turnCounter = counter; }
 		void setTurnLog(std::shared_ptr<TurnLog> turnLog) { log = turnLog; }
 		void setBoard(std::shared_ptr<Chessboard> board);
+		void setPromotionMenu(std::shared_ptr<Object> menu) { promoMenu = menu; }
 	};
 }

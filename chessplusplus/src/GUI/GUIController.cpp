@@ -17,6 +17,7 @@ namespace GUI
 		log->logMessage("Welcome to Chess!");
 		updateTurnCounter();
 		chessboard->updateBoard(game->getBoard());
+		promoMenu->setActive(false);
 	}
 
 	void GUIController::onQuit()
@@ -35,6 +36,8 @@ namespace GUI
 			log->logMessage("Move undone.");
 
 			isGameOver = false;
+			isPromoting = false;
+			promoMenu->setActive(false);
 			unselect();
 			updateTurnCounter();
 			chessboard->updateBoard(game->getBoard());
@@ -82,7 +85,7 @@ namespace GUI
 
 	void GUIController::onTileSelected(Point pos)
 	{
-		if (isGameOver) { return; }
+		if (isGameOver || isPromoting) { return; }
 
 		const Board& board = game->getBoard();
 		Team curTeam = game->getCurrentTeam();
@@ -112,9 +115,11 @@ namespace GUI
 			}
 			else if (res.reasonFailed == MoveResult::MoveFailReason::NeedsInput)
 			{
-				// Promotion stuff here
+				promoMenu->setActive(true);
+				isPromoting = true;
+				promoStart = currentSelection;
+				promoEnd = pos;
 			}
-
 			unselect();
 			return;
 		}
@@ -185,6 +190,20 @@ namespace GUI
 
 		// Center turn counter based on text size
 		turnCounter->setPosition({ -turnCounter->getTextSize().x / 2.f, 0 });
+	}
+
+	void GUIController::onSelectPromotion(char promoInput)
+	{
+		promoMenu->setActive(false);
+		isPromoting = false;
+
+		MoveResult res = game->processTurn(promoStart, promoEnd, promoInput);
+		if (!res)
+		{
+			std::cerr << "Promotion failed. This shouldn't ever happen.\n";
+			return;
+		}
+		handleMoveSuccess(res);
 	}
 }
 

@@ -28,12 +28,18 @@ namespace GUI
 		return button;
 	}
 
-	// Helper function to get the desired X position for a chess menu button
-	static inline consteval float getButtonX(int buttonNumber)
+	// Helper function to calculate the X positions to layout buttons to fit evenly in a horizontal space
+	template<int N>
+	static inline consteval std::array<float, N> getButtonLayout(float buttonWidth, float totalWidth)
 	{
-		constexpr float buttonLeftPadding{ startSizeX / 64.f };
+		float leftPadding = (totalWidth - (N * buttonWidth)) / (N + 1);
 
-		return ((buttonNumber + 1) * buttonLeftPadding) + (buttonWidth / 2.f) + (buttonNumber * buttonWidth);
+		std::array<float, N> res{};
+		for (int i = 0; i < N; ++i)
+		{
+			res[i] = ((i + 1) * leftPadding) + (buttonWidth / 2.f) + (i * buttonWidth);
+		}
+		return res;
 	}
 
 	std::shared_ptr<Object> createMainMenu(const sf::Font& font, GUIController& controller)
@@ -59,6 +65,82 @@ namespace GUI
 		return mainMenu;
 	}
 
+	static std::shared_ptr<Object> makePromotionButton(const sf::Texture& texture, sf::Vector2f promoButtonSize)
+	{
+
+		auto button = std::make_shared<Object>("Promotion Button");
+
+		auto buttonBackground = makeWrapper<sf::RectangleShape>("Promo Button Background", promoButtonSize);
+		buttonBackground->getObject().setFillColor({ 100, 100, 100 });
+		button->addChild(buttonBackground);
+
+		sf::Vector2u textureSize = texture.getSize();
+		sf::Vector2f scale{ promoButtonSize.x / textureSize.x, promoButtonSize.y / textureSize.y };
+
+		auto buttonSprite = makeWrapper<sf::Sprite>("Button Sprite");
+		buttonSprite->getObject().setTexture(texture, true);
+		buttonSprite->setScale(scale);
+		button->addChild(buttonSprite);
+
+		// Center button elements horizontally
+		buttonBackground->setPosition({ -promoButtonSize.x / 2.f, 0 });
+		buttonSprite->setPosition({-promoButtonSize.x / 2.f, 0 });
+
+		return button;
+	}
+
+	static std::shared_ptr<Object> makePromoMenu(const sf::Font& font, const PieceTextures& textures, GUIController& controller)
+	{
+		auto menu = std::make_shared<Object>("Promotion Menu");
+
+		constexpr float buttonTopPadding{ 55 };
+		constexpr float buttonLeftPadding{ 100 };
+		constexpr float backgroundX{ 500 };
+		constexpr float promoButtonSizeX{ 65 };
+
+		const sf::Vector2f backgroundSize{ backgroundX, 150 };
+		const sf::Vector2f promoButtonSize{ promoButtonSizeX, 65 };
+
+		// Create menu background panel
+		auto background = makeWrapper<sf::RectangleShape>("Promotion Background", backgroundSize);
+		background->setInteractable(false);
+		background->getObject().setFillColor({ 150, 150, 100 });
+		menu->addChild(background);
+
+		// Add text
+		auto text = std::make_shared<TextObject>("Promotion Text", "Select a piece to promote to:", font, 30);
+		sf::Vector2f textSize = text->getTextSize();
+		
+		// Center text
+		text->setPosition({ (500 - textSize.x) / 2, 0 });
+		menu->addChild(text);
+
+		auto layoutX = getButtonLayout<4>(promoButtonSizeX, backgroundX);
+
+		// Create and layout buttons
+		auto knightButton = makePromotionButton(textures[PieceEnums::White][PieceEnums::Knight], promoButtonSize);
+		knightButton->setInteractEvent([&]() { controller.onSelectPromotion('N'); });
+		knightButton->setPosition({ layoutX[0], buttonTopPadding});
+		menu->addChild(knightButton);
+
+		auto rookButton = makePromotionButton(textures[PieceEnums::White][PieceEnums::Rook], promoButtonSize);
+		rookButton->setInteractEvent([&]() { controller.onSelectPromotion('R'); });
+		rookButton->setPosition({ layoutX[1], buttonTopPadding });
+		menu->addChild(rookButton);
+
+		auto bishopButton = makePromotionButton(textures[PieceEnums::White][PieceEnums::Bishop], promoButtonSize);
+		bishopButton->setInteractEvent([&]() { controller.onSelectPromotion('B'); });
+		bishopButton->setPosition({ layoutX[2], buttonTopPadding});
+		menu->addChild(bishopButton);
+
+		auto queenButton = makePromotionButton(textures[PieceEnums::White][PieceEnums::Queen], promoButtonSize);
+		queenButton->setInteractEvent([&]() { controller.onSelectPromotion('Q'); });
+		queenButton->setPosition({ layoutX[3], buttonTopPadding});
+		menu->addChild(queenButton);
+
+		return menu;
+	}
+
 	std::shared_ptr<Object> createChessMenu(const sf::Font& font, GUIController& controller, const PieceTextures& textures)
 	{
 		constexpr float buttonsTopPadding{ (startSizeY / 32.f) + (buttonHeight / 2.f) };
@@ -70,23 +152,26 @@ namespace GUI
 
 		auto menu = std::make_shared<Object>("Chess Menu");
 
+
+		auto layoutX = getButtonLayout<4>(buttonWidth, startSizeX);
+
 		auto quitButton = makeButton("Quit Button", font, buttonSize, "Quit");
-		quitButton->setPosition({ getButtonX(0) , buttonsTopPadding});
+		quitButton->setPosition({ layoutX[0], buttonsTopPadding});
 		quitButton->setInteractEvent([&]() { controller.onQuit(); });
 		menu->addChild(quitButton);
 
 		auto undoButton = makeButton("Undo Button", font, buttonSize, "Undo");
-		undoButton->setPosition({ getButtonX(1), buttonsTopPadding});
+		undoButton->setPosition({ layoutX[1], buttonsTopPadding});
 		undoButton->setInteractEvent([&]() { controller.onUndo(); });
 		menu->addChild(undoButton);
 
 		auto loadButton = makeButton("Load Button", font, buttonSize, "Load");
-		loadButton->setPosition({ getButtonX(2), buttonsTopPadding});
+		loadButton->setPosition({ layoutX[2], buttonsTopPadding});
 		loadButton->setInteractEvent([&]() { controller.onLoad(); });
 		menu->addChild(loadButton);
 
 		auto saveButton = makeButton("Save Button", font, buttonSize, "Save");
-		saveButton->setPosition({ getButtonX(3), buttonsTopPadding});
+		saveButton->setPosition({ layoutX[3], buttonsTopPadding});
 		saveButton->setInteractEvent([&]() { controller.onSave(); });
 		menu->addChild(saveButton);
 
@@ -105,10 +190,15 @@ namespace GUI
 		turnLog->setPosition(centerX + 150, 185);
 		menu->addChild(turnLog);
 
+		auto promotionMenu = makePromoMenu(font, textures, controller);
+		promotionMenu->setPosition(centerX / 2, startSizeY - 175);
+		menu->addChild(promotionMenu);
+
 		controller.setBoard(board);
 		controller.setGameMenu(menu);
 		controller.setTurnCounter(turnCounter);
 		controller.setTurnLog(turnLog);
+		controller.setPromotionMenu(promotionMenu);
 
 		return menu;
 
