@@ -27,8 +27,8 @@ protected:
 				set.insert({ dest, std::make_unique<StandardMove>(position, dest) });
 				dest += direction;
 			}
-			// Last spot in the line is an enemy piece - can capture that piece, but can't move past it
-			// Situational attack: Defending the allied allied piece
+			// Last spot in the line is a piece - can capture enemies piece, but can't move past it
+			// Can also defend allies
 			if (dest.isInBounds() && (isEnemyPiece(board, dest, team) || getDefenses))
 			{
 				set.insert({ dest, std::make_unique<StandardMove>(position, dest) });

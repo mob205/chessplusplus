@@ -50,12 +50,19 @@ namespace GUI
 
 	void GUIController::onLoad()
 	{
+		game->getSerializer().loadGame("test");
 
+		isGameOver = false;
+		isPromoting = false;
+		promoMenu->setActive(false);
+		unselect();
+		updateTurnCounter();
+		chessboard->updateBoard(game->getBoard());
 	}
 
 	void GUIController::onSave()
 	{
-
+		game->getSerializer().saveGame("test");
 	}
 
 	void GUIController::unselect()

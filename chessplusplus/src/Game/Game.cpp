@@ -181,13 +181,14 @@ bool Game::hasPossibleNonKingMove(PieceEnums::Team team)
 			// Simulate a move to ensure doesn't leave king in check
 			for (auto& move : set)
 			{
-				move.second->executeMove(board);
+				auto res = move.second->executeMove(board);
 				tempAttackBoard.update(board, opp, kings);
 				move.second->undoMove(board);
 
 				// Valid move found!
 				if (!isInCheck(team, tempAttackBoard))
 				{
+					std::cout << "Valid move found! " << res.start << " to " << res.end << '\n';
 					return true;
 				}
 			}
