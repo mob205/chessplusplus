@@ -15,6 +15,7 @@ MoveResult Move::executeMove(Board& board, char extraInput)
 	board[end]->setMoved(true);
 
 	MoveResult res{};
+	res.movedPieceType = board[end]->getType();
 	res.start = start;
 	res.end = end;
 	return res;

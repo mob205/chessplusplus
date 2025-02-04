@@ -10,7 +10,6 @@ MoveResult DoublePawnMove::executeMove(Board& board, char extraInput)
 	static_cast<Pawn*>(board[end].get())->setDoubleMove();
 
 	res.moveType = MoveResult::Type::DoublePawn;
-	res.movedPieceType = board[end]->getType();
 	res.doublePawn = MoveResult::DoublePawnResult{};
 	return res;
 }

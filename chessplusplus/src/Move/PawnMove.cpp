@@ -28,7 +28,6 @@ MoveResult PawnMove::executeMove(Board& board, char extraInput)
 	}
 	
 	res.moveType = MoveResult::Type::Standard;
-	res.movedPieceType = board[end]->getType();
 	res.standard = MoveResult::StandardResult{ (captured) ? captured->getType() : PieceEnums::None };
 	return res;
 }
