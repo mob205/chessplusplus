@@ -11,6 +11,9 @@ namespace GUI
 		mainMenu->setActive(false);
 		gameMenu->setActive(true);
 
+
+		log->clearMessages();
+		log->logMessage("Welcome to Chess!");
 		updateTurnCounter();
 		chessboard->updateBoard(game->getBoard());
 	}
@@ -92,9 +95,13 @@ namespace GUI
 		// Selected an empty or enemy tile - attempt to move there
 		if (!board[pos] || board[pos]->getTeam() != curTeam)
 		{
-			game->processTurn(currentSelection, pos);
-			chessboard->updateBoard(board);
-			updateTurnCounter();
+			MoveResult res = game->processTurn(currentSelection, pos);
+			if(res)
+			{
+				log->logMove(res);
+				chessboard->updateBoard(board);
+				updateTurnCounter();
+			}
 
 			unselect();
 			return;
@@ -123,7 +130,13 @@ namespace GUI
 	void GUIController::updateTurnCounter()
 	{
 		std::string_view team{ game->getCurrentTeam() == PieceEnums::White ? "White" : "Black" };
-		turnCounter->setText(std::format("Turn {} | {}'s Turn", game->getCurrentTurn() + 1, team));
+
+		log->logMessage(std::format("{}'s Turn ===========", team));
+
+		// A turn is only completed when both players have moved
+		int currentTurn = (game->getCurrentTurn() / 2) + 1;
+
+		turnCounter->setText(std::format("Turn {} | {}'s Turn", currentTurn, team));
 
 		// Center turn counter based on text size
 		turnCounter->setPosition({ -turnCounter->getTextSize().x / 2.f, 0 });

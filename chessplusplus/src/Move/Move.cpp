@@ -14,7 +14,10 @@ MoveResult Move::executeMove(Board& board, char extraInput)
 	originalMoved = board[end]->getMoved();
 	board[end]->setMoved(true);
 
-	return MoveResult{};
+	MoveResult res{};
+	res.start = start;
+	res.end = end;
+	return res;
 }
 
 void Move::undoMove(Board& board)

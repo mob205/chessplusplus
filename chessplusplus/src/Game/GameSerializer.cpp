@@ -38,7 +38,7 @@ bool GameSerializer::saveGame(const std::string& savename) const
 	for (const auto& record : game.moveHistory)
 	{
 		fp << record.move->getStart() << record.move->getEnd();
-		if (record.result.type == MoveResult::Type::Promotion)
+		if (record.result.moveType == MoveResult::Type::Promotion)
 		{
 			char c{ getPieceAsChar(record.result.promotion.promotionType) };
 			fp << c;

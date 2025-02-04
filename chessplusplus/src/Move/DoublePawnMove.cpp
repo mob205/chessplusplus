@@ -4,14 +4,14 @@
 
 MoveResult DoublePawnMove::executeMove(Board& board, char extraInput)
 {
-	Move::executeMove(board);
+	MoveResult res = Move::executeMove(board);
 
 	// Guaranteed to be a pawn, since only pawns should use DoublePawnMove
 	static_cast<Pawn*>(board[end].get())->setDoubleMove();
 
-	MoveResult res{};
-	res.type = MoveResult::Type::DoublePawn;
-	res.doublePawn = MoveResult::DoublePawnResult{ start, end };
+	res.moveType = MoveResult::Type::DoublePawn;
+	res.movedPieceType = board[end]->getType();
+	res.doublePawn = MoveResult::DoublePawnResult{};
 	return res;
 }
 

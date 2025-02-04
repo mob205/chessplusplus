@@ -1,5 +1,6 @@
 #pragma once
 #include "Piece/PieceEnums.h"
+#include "Game/Point.h"
 
 struct MoveResult
 {
@@ -31,41 +32,35 @@ struct MoveResult
 
 	MoveFailReason reasonFailed{};
 	OpponentStatus oppStatus{};
-	Type type{};
+	MoveResult::Type moveType{};
+	PieceEnums::Type movedPieceType{};
+
+	Point start{};
+	Point end{};
 
 	struct StandardResult
 	{
-		Point start{};
-		Point end{};
 		PieceEnums::Type capturedPiece{};
 	};
 
 	struct EnPassantResult
 	{
-		Point start{};
-		Point end{};
 		PieceEnums::Type capturedPiece{};
 		Point capturePoint{};
 	};
 	
 	struct DoublePawnResult
 	{
-		Point start{};
-		Point end{};
 	};
 
 	struct PromotionResult
 	{
-		Point start{};
-		Point end{};
 		PieceEnums::Type capturedPiece{};
 		PieceEnums::Type promotionType{};
 	};
 
 	struct CastleResult
 	{
-		Point kingStart{};
-		Point kingEnd{};
 		Point rookStart{};
 		Point rookEnd{};
 	};

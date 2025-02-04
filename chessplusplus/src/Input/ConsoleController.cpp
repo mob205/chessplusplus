@@ -107,7 +107,7 @@ namespace IO
 			}
 
 			// Valid move
-			switch (res.type)
+			switch (res.moveType)
 			{
 			case MoveResult::Type::Standard:
 				if (res.standard.capturedPiece)

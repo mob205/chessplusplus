@@ -4,11 +4,11 @@
 
 MoveResult StandardMove::executeMove(Board& board, char extraInput)
 {
-	Move::executeMove(board);
+	MoveResult res = Move::executeMove(board);
 
-	MoveResult res{};
-	res.type = MoveResult::Type::Standard;
-	res.standard = MoveResult::StandardResult{ start, end, (captured) ? captured->getType() : PieceEnums::None };
+	res.moveType = MoveResult::Type::Standard;
+	res.movedPieceType = board[end]->getType();
+	res.standard = MoveResult::StandardResult{ (captured) ? captured->getType() : PieceEnums::None };
 	return res;
 }
 

@@ -5,6 +5,7 @@
 #include "GUI/TextObject.h"
 #include "GUI/GUIMain.h"
 #include "GUI/Chessboard.h"
+#include "GUI/TurnLog.h"
 #include "Game/Settings.h"
 
 namespace GUI
@@ -64,6 +65,9 @@ namespace GUI
 
 		const sf::Vector2f buttonSize = { buttonWidth, buttonHeight };
 
+		constexpr float centerX = startSizeX / 2.f;
+		constexpr float centerY = startSizeY / 2.f;
+
 		auto menu = std::make_shared<Object>("Chess Menu");
 
 		auto quitButton = makeButton("Quit Button", font, buttonSize, "Quit");
@@ -87,19 +91,24 @@ namespace GUI
 		menu->addChild(saveButton);
 
 		auto board = std::make_shared<Chessboard>("Chess Board", textures);
-		board->setPosition({ startSizeX / 2, startSizeY / 2 });
+		board->setPosition({ centerX - 150, centerY });
 		menu->addChild(board);
 
 		auto turnCounterCenter = std::make_shared<Object>();
-		turnCounterCenter->setPosition({ startSizeX / 2, 2 * buttonsTopPadding });
+		turnCounterCenter->setPosition({ centerX - 150, 2 * buttonsTopPadding });
 		menu->addChild(turnCounterCenter);
 
 		auto turnCounter = std::make_shared<TextObject>("Turn Counter", "", font, 30);
 		turnCounterCenter->addChild(turnCounter);
 
+		auto turnLog = std::make_shared<TurnLog>(18, font);
+		turnLog->setPosition(centerX + 150, 185);
+		menu->addChild(turnLog);
+
 		controller.setBoard(board);
 		controller.setGameMenu(menu);
 		controller.setTurnCounter(turnCounter);
+		controller.setTurnLog(turnLog);
 
 		return menu;
 

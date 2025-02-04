@@ -141,6 +141,7 @@
     <ClCompile Include="src\GUI\Object.cpp" />
     <ClCompile Include="src\GUI\Autoscaler.cpp" />
     <ClCompile Include="src\GUI\TextObject.cpp" />
+    <ClCompile Include="src\GUI\TurnLog.cpp" />
     <ClCompile Include="src\Input\ConsoleController.cpp" />
     <ClCompile Include="src\Board\AttackBoard.cpp" />
     <ClCompile Include="src\GUI\GUIMain.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="include\GUI\Menus.h" />
     <ClInclude Include="include\GUI\Object.h" />
     <ClInclude Include="include\GUI\SFMLObject.h" />
+    <ClInclude Include="include\GUI\TurnLog.h" />
     <ClInclude Include="include\Move\MoveResult.h" />
     <ClInclude Include="include\Piece\Bishop.h" />
     <ClInclude Include="include\Board\Board.h" />
