@@ -155,6 +155,7 @@ namespace GUI
 
 		auto layoutX = getButtonLayout<4>(buttonWidth, startSizeX);
 
+		// Create top buttons
 		auto quitButton = makeButton("Quit Button", font, buttonSize, "Quit");
 		quitButton->setPosition({ layoutX[0], buttonsTopPadding});
 		quitButton->setInteractEvent([&]() { controller.onQuit(); });
@@ -175,10 +176,12 @@ namespace GUI
 		saveButton->setInteractEvent([&]() { controller.onSave(); });
 		menu->addChild(saveButton);
 
+		// Create chess board
 		auto board = std::make_shared<Chessboard>("Chess Board", textures);
 		board->setPosition({ centerX - 150, centerY });
 		menu->addChild(board);
 
+		// Create GUI controller components
 		auto turnCounterCenter = std::make_shared<Object>();
 		turnCounterCenter->setPosition({ centerX - 150, 2 * buttonsTopPadding });
 		menu->addChild(turnCounterCenter);
@@ -194,11 +197,25 @@ namespace GUI
 		promotionMenu->setPosition(centerX / 2, startSizeY - 175);
 		menu->addChild(promotionMenu);
 
+		auto saveTextBox = std::make_shared<Object>("Save Text Box");
+		saveTextBox->setPosition({600, 125});
+		menu->addChild(saveTextBox);
+
+		auto saveBoxBackground = makeWrapper<sf::RectangleShape>("Save Box Background", sf::Vector2f{ 400, 35 });
+		saveBoxBackground->getObject().setFillColor({ 100, 100, 100 });
+		saveTextBox->addChild(saveBoxBackground);
+
+		auto saveText = std::make_shared<TextObject>("Save Text", "", font, 30);
+		saveText->setPosition({ 10, -2 });
+		saveTextBox->addChild(saveText);
+
+		// Set dependencies
 		controller.setBoard(board);
 		controller.setGameMenu(menu);
 		controller.setTurnCounter(turnCounter);
 		controller.setTurnLog(turnLog);
 		controller.setPromotionMenu(promotionMenu);
+		controller.setSaveBox(saveText);
 
 		return menu;
 

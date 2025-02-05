@@ -11,13 +11,10 @@ namespace GUI
 		mainMenu->setActive(false);
 		gameMenu->setActive(true);
 
-		isGameOver = false;
-
 		log->clearMessages();
 		log->logMessage("Welcome to Chess!");
-		updateTurnCounter();
-		chessboard->updateBoard(game->getBoard());
-		promoMenu->setActive(false);
+
+		resetTempState();
 	}
 
 	void GUIController::onQuit()
@@ -35,12 +32,7 @@ namespace GUI
 		{
 			log->logMessage("Move undone.");
 
-			isGameOver = false;
-			isPromoting = false;
-			promoMenu->setActive(false);
-			unselect();
-			updateTurnCounter();
-			chessboard->updateBoard(game->getBoard());
+			resetTempState();
 		}
 		else
 		{
@@ -50,19 +42,30 @@ namespace GUI
 
 	void GUIController::onLoad()
 	{
-		game->getSerializer().loadGame("test");
-
-		isGameOver = false;
-		isPromoting = false;
-		promoMenu->setActive(false);
-		unselect();
-		updateTurnCounter();
-		chessboard->updateBoard(game->getBoard());
+		if (saveTextBox->getText().getSize() == 0) { return; }
+		auto newGame = std::make_unique<Game>();
+		GameSerializer::LoadGameResult loadResult = newGame->getSerializer().loadGame(saveTextBox->getText());
+		if (loadResult == GameSerializer::LoadSuccessful)
+		{
+			game = std::move(newGame);
+			log->logMessage("Game succesfully loaded.");
+			resetTempState();
+		}
+		else if (loadResult == GameSerializer::SaveInvalid)
+		{
+			log->logMessage("Save is invalid.");
+			log->logMessage("Game could not be loaded.");
+		}
+		else if (loadResult == GameSerializer::SaveNotFound)
+		{
+			log->logMessage("Save file not found.");
+		}
 	}
 
 	void GUIController::onSave()
 	{
-		game->getSerializer().saveGame("test");
+		if (saveTextBox->getText().getSize() == 0) { return; }
+		game->getSerializer().saveGame(saveTextBox->getText());
 	}
 
 	void GUIController::unselect()
@@ -177,10 +180,26 @@ namespace GUI
 		}
 	}
 
+	void GUIController::resetTempState()
+	{
+		isGameOver = false;
+		isPromoting = false;
+		promoMenu->setActive(false);
+
+		unselect();
+		updateTurnCounter();
+		chessboard->updateBoard(game->getBoard());
+	}
+
 	void GUIController::setBoard(std::shared_ptr<Chessboard> board)
 	{
 		chessboard = board;
 		chessboard->setOnTileInteracted([=](Point pos) { onTileSelected(pos); });
+	}
+
+	void GUIController::setSaveBox(std::shared_ptr<TextObject> saveBox)
+	{
+		saveTextBox = saveBox;
 	}
 
 	void GUIController::updateTurnCounter()
@@ -211,6 +230,21 @@ namespace GUI
 			return;
 		}
 		handleMoveSuccess(res);
+	}
+
+	void GUIController::onTextEntered(sf::Uint32 input)
+	{
+		std::string saveText = saveTextBox->getText();
+		if (input == '\b' && saveText.size() > 0)
+		{
+			saveText.erase(saveText.end() - 1);
+			saveTextBox->setText(saveText);
+		}
+		else if (input != '\b' && saveText.size() < 20)
+		{
+			saveText += input;
+			saveTextBox->setText(saveText);
+		}
 	}
 }
 

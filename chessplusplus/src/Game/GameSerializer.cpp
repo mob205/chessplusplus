@@ -57,10 +57,6 @@ GameSerializer::LoadGameResult GameSerializer::loadGame(const std::string& saven
 	Point start{};
 	Point end{};
 
-	auto extraInput{ [this, &fp]() {
-		return this->readPromoType(fp);
-	}};
-
 	while (fp >> start >> end)
 	{
 		if (!game.processTurn(start, end) && !game.processTurn(start, end, readPromoType(fp)))

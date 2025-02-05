@@ -188,7 +188,6 @@ bool Game::hasPossibleNonKingMove(PieceEnums::Team team)
 				// Valid move found!
 				if (!isInCheck(team, tempAttackBoard))
 				{
-					std::cout << "Valid move found! " << res.start << " to " << res.end << '\n';
 					return true;
 				}
 			}

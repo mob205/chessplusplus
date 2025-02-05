@@ -93,6 +93,10 @@ namespace GUI
 					sf::Vector2f clickPosition{ static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y) };
 					world.interact(clickPosition);
 				}
+				if (event.type == sf::Event::TextEntered)
+				{
+					controller.onTextEntered(event.text.unicode);
+				}
 			}
 
 			window.draw(world);

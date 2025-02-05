@@ -22,7 +22,7 @@ namespace GUI
 			: TextObject{ "Text Object", textString, font, fontSize }
 		{}
 
-		const std::string& getText() const
+		const sf::String& getText() const
 		{
 			return text.getString();
 		}
