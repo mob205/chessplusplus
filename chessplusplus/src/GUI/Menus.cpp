@@ -55,10 +55,15 @@ namespace GUI
 		welcomeText->setPosition(-textSize / 2.f);
 		welcomeTextCenter->addChild(welcomeText);
 
-		auto startButton = makeButton("Start Button", font, { 250, 75 }, "PLAY");
-		startButton->setPosition({ startSizeX / 2, startSizeY / 2 });
-		startButton->setInteractEvent([&]() { controller.onStart(); });
-		mainMenu->addChild(startButton);
+		auto startWhite = makeButton("Start as White", font, { 350, 75 }, "White vs AI");
+		startWhite->setPosition({ startSizeX / 2, startSizeY / 3 });
+		startWhite->setInteractEvent([&]() { controller.startGame(PieceEnums::White); });
+		mainMenu->addChild(startWhite);
+
+		auto startBlack = makeButton("Start as White", font, { 350, 75 }, "Black vs AI");
+		startBlack->setPosition({ startSizeX / 2, 2 * startSizeY / 3 });
+		startBlack->setInteractEvent([&]() { controller.startGame(PieceEnums::Black); });
+		mainMenu->addChild(startBlack);
 
 		controller.setMainMenu(mainMenu);
 

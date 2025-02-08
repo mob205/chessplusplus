@@ -19,7 +19,7 @@ namespace GUI
 		{}
 
 		// Button callbacks
-		void onStart();
+		void startGame(PieceEnums::Team playerTeam);
 		void onQuit();
 		void onUndo();
 		void onLoad();
@@ -39,6 +39,8 @@ namespace GUI
 
 		std::unique_ptr<Game> game{};
 
+		PieceEnums::Team localPlayerTeam{};
+
 		Point currentSelection{};
 		bool hasSelected{};
 		bool isGameOver{};
@@ -47,7 +49,7 @@ namespace GUI
 		Point promoStart{};
 		Point promoEnd{};
 
-		bool isSaveboxEnabled;
+		bool isSaveboxEnabled{};
 
 		void unselect();
 		void selectPieceTile(Point pos);

@@ -85,7 +85,12 @@ namespace GUI
 
 		// Scale and center sprite
 		sprite->setScale(scaleFactor * scale);
-		sprite->setPosition(sf::Vector2f{ pixelsPerTile, pixelsPerTile } * (1 - scaleFactor) * .5f);
+		sprite->setRotation(getTeamRotation());
+
+		// Center the sprite to its assigned tile
+		// Since the rotation does not happen in the center of the sprite, extra math needs to be done black team, which is rotated 180
+		float positionScale = (2 * static_cast<int>(currentTeamOrientation) - 1) * (scaleFactor - 1) + static_cast<int>(currentTeamOrientation) * 2;
+		sprite->setPosition(sf::Vector2f{ pixelsPerTile, pixelsPerTile } * .5f * positionScale);
 	}
 	void Chessboard::setBoardTexture(const sf::Texture& tex)
 	{
@@ -107,7 +112,6 @@ namespace GUI
 		}
 	}
 
-
 	void Chessboard::interactTile(Point pos)
 	{
 		if (onTileInteractedEvent)
@@ -118,6 +122,8 @@ namespace GUI
 
 	void Chessboard::updateBoard(const Board& gameBoard)
 	{
+		setRotation(getTeamRotation());
+
 		for (int i = 0; i < Settings::boardSize; ++i)
 		{
 			for (int j = 0; j < Settings::boardSize; ++j)
@@ -140,4 +146,8 @@ namespace GUI
 		}
 	}
 
+	float Chessboard::getTeamRotation() const
+	{
+		return static_cast<int>(currentTeamOrientation) * 180.f;
+	}
 }

@@ -19,12 +19,16 @@ namespace GUI
 		void highlightTile(Point pos, bool isHighlighted);
 		void unhighlightAllTiles();
 
+		void updateBoard(const Board& board);
+
 	protected:
 		virtual void draw_impl(sf::RenderTarget& target, sf::RenderStates states) const override;
 	private:
 		sf::Texture boardTex{};
 		sf::Sprite boardSprite{};
 		const PieceTextures& textures{};
+
+		PieceEnums::Team currentTeamOrientation;
 
 		std::function<void(Point)> onTileInteractedEvent;
 
@@ -38,9 +42,14 @@ namespace GUI
 		void setBoardTexture(const sf::Texture& tex);
 
 		void interactTile(Point pos);
+		
+		float getTeamRotation() const;
 
 	public:
-		void updateBoard(const Board& board);
+
+		// Displays the board from the team side's perspective
+		void setOrientation(PieceEnums::Team team) { currentTeamOrientation = team; }
+
 		void setOnTileInteracted(std::function<void(Point)> event) { onTileInteractedEvent = event; }
 	};
 }

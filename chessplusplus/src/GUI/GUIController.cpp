@@ -6,10 +6,13 @@
 
 namespace GUI
 {
-	void GUIController::onStart()
+	void GUIController::startGame(PieceEnums::Team team)
 	{
 		mainMenu->setActive(false);
 		gameMenu->setActive(true);
+
+		localPlayerTeam = team;
+		chessboard->setOrientation(localPlayerTeam);
 
 		log->clearMessages();
 		log->logMessage("Welcome to Chess!");
@@ -95,7 +98,7 @@ namespace GUI
 
 	void GUIController::onTileSelected(Point pos)
 	{
-		if (isGameOver || isPromoting) { return; }
+		if (isGameOver || isPromoting || game->getCurrentTeam() != localPlayerTeam) { return; }
 
 		const Board& board = game->getBoard();
 		Team curTeam = game->getCurrentTeam();
