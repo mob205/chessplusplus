@@ -7,15 +7,15 @@
 MoveResult EnPassantMove::executeMove(Board& board, char extraInput)
 {
 	// Move the pawn
-	Move::executeMove(board);
+	MoveResult res = Move::executeMove(board);
 
 	// Capture piece
 	// Captured should be nullptr after the base Move since it's impossible to en passant and diagonal capture at the same time
 	captured = std::move(board[captureSpot]);
+	res.capturedPieceType = captured->getType();
 
-	MoveResult res{};
-	res.type = MoveResult::Type::EnPassant;
-	res.enpassant = MoveResult::EnPassantResult{ start, end, (captured) ? captured->getType() : PieceEnums::None };
+	res.moveType = MoveResult::Type::EnPassant;
+	res.enpassant = MoveResult::EnPassantResult{};
 	return res;
 }
 

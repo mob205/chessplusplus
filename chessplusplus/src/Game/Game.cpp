@@ -142,6 +142,26 @@ bool Game::undoMove()
 	return false;
 }
 
+bool Game::isValidMove(Point start, Point end)
+{
+	// Simulate the turn
+	auto result = processTurn(start, end);
+
+	if (result.reasonFailed == MoveResult::MoveFailReason::None)
+	{
+		// Move went through successfully, so need to undo its effects
+		undoMove();
+		return true;
+	}
+
+	// Promotions don't go through, but are still valid
+	if (result.reasonFailed == MoveResult::MoveFailReason::NeedsInput)
+	{
+		return true;
+	}
+	return false;
+}
+
 
 // Returns true if the specified player has a valid piece move on the current board
 bool Game::hasPossibleNonKingMove(PieceEnums::Team team)
@@ -161,7 +181,7 @@ bool Game::hasPossibleNonKingMove(PieceEnums::Team team)
 			// Simulate a move to ensure doesn't leave king in check
 			for (auto& move : set)
 			{
-				move.second->executeMove(board);
+				auto res = move.second->executeMove(board);
 				tempAttackBoard.update(board, opp, kings);
 				move.second->undoMove(board);
 

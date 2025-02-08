@@ -11,16 +11,15 @@
 
 MoveResult PawnMove::executeMove(Board& board, char extraInput)
 {
-	Move::executeMove(board);
+	MoveResult res = Move::executeMove(board);
 	int promoRank{ board[end]->getTeam() ? 0 : Settings::boardSize - 1 };
 
-	MoveResult res{};
 	if (board[end]->getPosition().rank == promoRank && extraInput)
 	{
 		PieceEnums::Type promoType{ promotePawn(board, extraInput) };
 
-		res.type = MoveResult::Type::Promotion;
-		res.promotion = MoveResult::PromotionResult{ start, end, (captured) ? captured->getType() : PieceEnums::None, promoType };
+		res.moveType = MoveResult::Type::Promotion;
+		res.promotion = MoveResult::PromotionResult{ promoType };
 		return res;
 	}
 	else if (board[end]->getPosition().rank == promoRank && !extraInput)
@@ -28,8 +27,8 @@ MoveResult PawnMove::executeMove(Board& board, char extraInput)
 		res.reasonFailed = MoveResult::MoveFailReason::NeedsInput;
 	}
 	
-	res.type = MoveResult::Type::Standard;
-	res.standard = MoveResult::StandardResult{ start, end, (captured) ? captured->getType() : PieceEnums::None };
+	res.moveType = MoveResult::Type::Standard;
+	res.standard = MoveResult::StandardResult{};
 	return res;
 }
 

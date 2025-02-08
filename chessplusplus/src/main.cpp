@@ -2,7 +2,7 @@
 
 #include "Game/Game.h"
 #include "ConsoleInput/Input.h"
-#include "ConsoleInput/ConsolePlayer.h"
+#include "ConsoleInput/ConsoleController.h"
 #include "GUI/GUIMain.h"
 #include "Board/Board.h"
 #include "Game/Settings.h"

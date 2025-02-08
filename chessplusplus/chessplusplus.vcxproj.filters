@@ -105,51 +105,36 @@
     <ClCompile Include="src\Game\Point.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Input\ConsolePlayer.cpp">
+    <ClCompile Include="src\Input\ConsoleController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\GUIMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Button.cpp">
+    <ClCompile Include="src\GUI\Autoscaler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\TestButton.cpp">
+    <ClCompile Include="src\GUI\Object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\Menu.cpp">
+    <ClCompile Include="src\GUI\TextObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\MenuManager.cpp">
+    <ClCompile Include="src\GUI\Menus.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\SwitchMenuButton.cpp">
+    <ClCompile Include="src\GUI\GUIController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\TileButton.cpp">
+    <ClCompile Include="src\GUI\Chessboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\GameMenu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\PromoButton.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\UndoButton.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\SaveButton.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\LoadButton.cpp">
+    <ClCompile Include="src\GUI\TurnLog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game\Point.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Game\Settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Game\Game.h">
@@ -224,43 +209,37 @@
     <ClInclude Include="include\Piece\PieceEnums.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ConsoleInput\ConsolePlayer.h">
+    <ClInclude Include="include\ConsoleInput\ConsoleController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUI\Autoscaler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUI\Object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUI\SFMLObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\GUI\GUIMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\GUI\Button.h">
+    <ClInclude Include="include\GUI\TextObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\GUI\TestButton.h">
+    <ClInclude Include="include\Game\Settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\GUI\Menu.h">
+    <ClInclude Include="include\GUI\Menus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\GUI\MenuManager.h">
+    <ClInclude Include="include\GUI\GUIController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\GUI\SwitchMenuButton.h">
+    <ClInclude Include="include\GUI\Chessboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\GUI\GameMenu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GUI\TileButton.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GUI\PromoButton.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GUI\UndoButton.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GUI\SaveButton.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GUI\LoadButton.h">
+    <ClInclude Include="include\GUI\TurnLog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

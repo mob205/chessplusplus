@@ -1,5 +1,6 @@
 #pragma once
 #include "Piece/PieceEnums.h"
+#include "Game/Point.h"
 
 struct MoveResult
 {
@@ -8,8 +9,8 @@ struct MoveResult
 		None,			// Successful move
 		InvalidPiece,   // Piece is not owned by player
 		NotInSet,		// The requested move is not how the piece moves
-		Pinned,			// The desired piece is defending the king and is unable to move
-		Check,			// The king is in check and the attempted move did not defend the king
+		Pinned,			// The king is not in check and this move would put the king in check
+		Check,			// The king is in check and this move does not take the king out of check
 		NeedsInput,		// This move requires extra input. Other fail reasons take priority
 	};
 	enum class Type 
@@ -31,41 +32,34 @@ struct MoveResult
 
 	MoveFailReason reasonFailed{};
 	OpponentStatus oppStatus{};
-	Type type{};
+	MoveResult::Type moveType{};
+	PieceEnums::Type movedPieceType{ PieceEnums::None };
+	PieceEnums::Type capturedPieceType{ PieceEnums::None };
+
+	Point start{};
+	Point end{};
 
 	struct StandardResult
 	{
-		Point start{};
-		Point end{};
-		PieceEnums::Type capturedPiece{};
 	};
 
 	struct EnPassantResult
 	{
-		Point start{};
-		Point end{};
-		PieceEnums::Type capturedPiece{};
+		// En passant is the only move to not capture on the ending tile
 		Point capturePoint{};
 	};
 	
 	struct DoublePawnResult
 	{
-		Point start{};
-		Point end{};
 	};
 
 	struct PromotionResult
 	{
-		Point start{};
-		Point end{};
-		PieceEnums::Type capturedPiece{};
 		PieceEnums::Type promotionType{};
 	};
 
 	struct CastleResult
 	{
-		Point kingStart{};
-		Point kingEnd{};
 		Point rookStart{};
 		Point rookEnd{};
 	};

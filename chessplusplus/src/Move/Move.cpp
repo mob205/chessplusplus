@@ -4,9 +4,11 @@
 
 MoveResult Move::executeMove(Board& board, char extraInput)
 {
+	MoveResult res{};
 	if (board[end])
 	{
 		captured = std::move(board[end]);
+		res.capturedPieceType = captured->getType();
 	}
 	board[end] = std::move(board[start]);
 	board[end]->setPosition(end);
@@ -14,7 +16,10 @@ MoveResult Move::executeMove(Board& board, char extraInput)
 	originalMoved = board[end]->getMoved();
 	board[end]->setMoved(true);
 
-	return MoveResult{};
+	res.movedPieceType = board[end]->getType();
+	res.start = start;
+	res.end = end;
+	return res;
 }
 
 void Move::undoMove(Board& board)

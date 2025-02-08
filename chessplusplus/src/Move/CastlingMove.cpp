@@ -5,18 +5,15 @@
 
 MoveResult CastlingMove::executeMove(Board& board, char extraInput)
 {
-	board[end] = std::move(board[start]);
+	MoveResult res = Move::executeMove(board);
 	board[rookEnd] = std::move(board[rookStart]);
-
-	board[end]->setMoved(true);
 	board[rookEnd]->setMoved(true);
 
 	board[end]->setPosition(end);
 	board[rookEnd]->setPosition(rookEnd);
 
-	MoveResult res{};
-	res.type = MoveResult::Type::Castle;
-	res.castle = MoveResult::CastleResult{ start, end, rookStart, rookEnd };
+	res.moveType = MoveResult::Type::Castle;
+	res.castle = MoveResult::CastleResult{ rookStart, rookEnd };
 	return res;
 }
 

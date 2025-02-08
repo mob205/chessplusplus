@@ -19,7 +19,7 @@ void AttackBoard::update(const Board& board, PieceEnums::Team attacker, std::arr
 	// Set where regular pieces are attacking, which will limit the kings' movements
 	setNonKing(board);
 
-	// Set the opposing team king can attack first, since it will limit the current team's king's movement 
+	// Set where the opposing team king can attack first, since it will limit the current team's king's movement 
 	setKing(board, kings[getOppositeTeam(attacker)]);
 
 	// Where the current king is attacking shouldn't matter for current turn
@@ -31,13 +31,11 @@ bool AttackBoard::isAttacking(const Point& point, PieceEnums::Team team) const
 	return attackBoard[team][point.rank][point.file];
 }
 
-// Resets the attack board to an initial state showing no tiles being attacked
 void AttackBoard::resetBoard(PieceEnums::Team team)
 {
 	std::fill(attackBoard[team].begin(), attackBoard[team].end(), std::array<bool, Settings::boardSize>{});
 }
 
-// Sets the attack board to represent all board tiles being attacked by given team
 void AttackBoard::setNonKing(const Board& board)
 {
 	for (int rank = 0; rank < Settings::boardSize; ++rank)
@@ -63,7 +61,6 @@ void AttackBoard::setNonKing(const Board& board)
 	}
 }
 
-// Sets the attack board to represent spaces where a king can attack. Must be done after other pieces have been set
 void AttackBoard::setKing(const Board& board, const Piece* king)
 {
 	MoveSet set{ king->getPossibleMoves(board, true) };

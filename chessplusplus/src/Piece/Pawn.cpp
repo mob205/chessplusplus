@@ -42,7 +42,7 @@ MoveSet Pawn::getPossibleMoves(const Board& board, bool getDefenses) const
 		}
 
 		// En passant
-		if (side.isInBounds() && isEnemyPiece(board, side, team) && isType(board, side, PieceEnums::Pawn))
+		if (side.isInBounds() && (isEnemyPiece(board, side, team) || getDefenses) && isType(board, side, PieceEnums::Pawn))
 		{
 			Pawn* sidePawn{ static_cast<Pawn*>(board[side].get())};
 			if (sidePawn->isPassantable())

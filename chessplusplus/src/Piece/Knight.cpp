@@ -8,7 +8,7 @@ MoveSet Knight::getPossibleMoves(const Board& board, bool getDefenses) const
     for (const auto& dir : directions)
     {
         Point dest{ dir + position };
-        if (dest.isInBounds() && !isAlliedPiece(board, dest, team))
+        if (dest.isInBounds() && (!isAlliedPiece(board, dest, team) || getDefenses))
         {
             set.insert({ dest, std::make_unique<StandardMove>(position, dest) });
         }

@@ -1,4 +1,4 @@
-#include "ConsoleInput/ConsolePlayer.h"
+#include "ConsoleInput/ConsoleController.h"
 #include "Game/Game.h"
 #include "Board/Board.h"
 #include "ConsoleInput/Input.h"
@@ -107,12 +107,12 @@ namespace IO
 			}
 
 			// Valid move
-			switch (res.type)
+			switch (res.moveType)
 			{
 			case MoveResult::Type::Standard:
-				if (res.standard.capturedPiece)
+				if (res.capturedPieceType)
 				{
-					std::cout << "Captured an enemy " << PieceEnums::pieceNames[res.standard.capturedPiece] << '\n';
+					std::cout << "Captured an enemy " << PieceEnums::pieceNames[res.capturedPieceType] << '\n';
 				}
 				break;
 			case MoveResult::Type::Castle:
@@ -122,9 +122,9 @@ namespace IO
 				std::cout << "EN PASSANT!!!!";
 				break;
 			case MoveResult::Type::Promotion:
-				if (res.promotion.capturedPiece)
+				if (res.capturedPieceType)
 				{
-					std::cout << "Captured an enemy " << PieceEnums::pieceNames[res.promotion.capturedPiece] << '\n';
+					std::cout << "Captured an enemy " << PieceEnums::pieceNames[res.capturedPieceType] << '\n';
 				}
 				std::cout << "Promoted pawn to " << PieceEnums::pieceNames[res.promotion.promotionType] << '\n';
 				break;

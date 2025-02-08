@@ -35,6 +35,8 @@ public:
 	// Undos the most recent move
 	bool undoMove();
 
+	bool isValidMove(Point start, Point end);
+
 private:
 	// Returns true if this team has a possible move from any non-king piece or pawn
 	// Returns false otherwise
