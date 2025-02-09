@@ -36,6 +36,7 @@ public:
 	bool undoMove();
 
 	bool isValidMove(Point start, Point end);
+	bool isValidMove(std::pair<const Point, std::unique_ptr<Move>>& moveSetElem);
 
 private:
 	// Returns true if this team has a possible move from any non-king piece or pawn

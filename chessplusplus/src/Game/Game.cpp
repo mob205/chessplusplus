@@ -162,6 +162,12 @@ bool Game::isValidMove(Point start, Point end)
 	return false;
 }
 
+bool Game::isValidMove(std::pair<const Point, std::unique_ptr<Move>>& moveSetElem)
+{
+	return isValidMove(moveSetElem.second->getEnd(), moveSetElem.first);
+}
+
+
 bool Game::hasPossibleMove(PieceEnums::Team team)
 {
 	return hasPossibleKingMove(team) || hasPossibleNonKingMove(team);
@@ -169,16 +175,10 @@ bool Game::hasPossibleMove(PieceEnums::Team team)
 
 bool Game::hasPossibleKingMove(PieceEnums::Team team)
 {
-	PieceEnums::Team opp{ getOppositeTeam(team) };
-	AttackBoard tempAttackBoard{};
 	MoveSet possibleMoves = kings[team]->getPossibleMoves(board);
 	for (auto& move : possibleMoves)
 	{
-		auto res = move.second->executeMove(board);
-		tempAttackBoard.update(board, opp, kings);
-		move.second->undoMove(board);
-
-		if (!isInCheck(team, tempAttackBoard))
+		if (isValidMove(move)) 
 		{
 			return true;
 		}
@@ -189,9 +189,6 @@ bool Game::hasPossibleKingMove(PieceEnums::Team team)
 // Returns true if the specified player has a valid piece move on the current board
 bool Game::hasPossibleNonKingMove(PieceEnums::Team team)
 {
-	PieceEnums::Team opp{ getOppositeTeam(team)};
-	AttackBoard tempAttackBoard{};
-
 	for (int rank = 0; rank < Settings::boardSize; ++rank)
 	{
 		for (int file = 0; file < Settings::boardSize; ++file)
@@ -201,15 +198,10 @@ bool Game::hasPossibleNonKingMove(PieceEnums::Team team)
 			
 			MoveSet set{ board[pos]->getPossibleMoves(board) };
 
-			// Simulate a move to ensure doesn't leave king in check
+			// Simulate a move to ensure it is valid
 			for (auto& move : set)
 			{
-				auto res = move.second->executeMove(board);
-				tempAttackBoard.update(board, opp, kings);
-				move.second->undoMove(board);
-
-				// Valid move found!
-				if (!isInCheck(team, tempAttackBoard))
+				if (isValidMove(move))
 				{
 					return true;
 				}
