@@ -10,7 +10,7 @@
 #include "Game/Game.h"
 #include "Engine/AIPlayer.h"
 
-constexpr bool debugShowThinking{ true };
+constexpr bool debugShowThinking{ false };
 std::ofstream out;
 
 namespace Engine

@@ -18,7 +18,7 @@ namespace GUI
 	static PieceTextures pieceTextures(PieceEnums::MaxTeams, std::vector<sf::Texture>(PieceEnums::MaxTypes));
 	static sf::Font font;
 
-	static bool loadPieceTextures()
+	static bool loadPieceTextures(const std::string& resourcePath)
 	{
 		bool res{ true };
 		sf::Texture blankTexture{};
@@ -26,34 +26,36 @@ namespace GUI
 		pieceTextures[PieceEnums::White][PieceEnums::None] = blankTexture;
 		pieceTextures[PieceEnums::Black][PieceEnums::None] = blankTexture;
 
-		res &= pieceTextures[PieceEnums::White][PieceEnums::Pawn].loadFromFile("../Resources/w_pawn.png");
-		res &= pieceTextures[PieceEnums::White][PieceEnums::Knight].loadFromFile("../Resources/w_knight.png");
-		res &= pieceTextures[PieceEnums::White][PieceEnums::Rook].loadFromFile("../Resources/w_rook.png");
-		res &= pieceTextures[PieceEnums::White][PieceEnums::Queen].loadFromFile("../Resources/w_queen.png");
-		res &= pieceTextures[PieceEnums::White][PieceEnums::King].loadFromFile("../Resources/w_king.png");
-		res &= pieceTextures[PieceEnums::White][PieceEnums::Bishop].loadFromFile("../Resources/w_bishop.png");
+		res &= pieceTextures[PieceEnums::White][PieceEnums::Pawn].loadFromFile(resourcePath + "w_pawn.png");
+		res &= pieceTextures[PieceEnums::White][PieceEnums::Knight].loadFromFile(resourcePath + "w_knight.png");
+		res &= pieceTextures[PieceEnums::White][PieceEnums::Rook].loadFromFile(resourcePath + "w_rook.png");
+		res &= pieceTextures[PieceEnums::White][PieceEnums::Queen].loadFromFile(resourcePath + "w_queen.png");
+		res &= pieceTextures[PieceEnums::White][PieceEnums::King].loadFromFile(resourcePath + "w_king.png");
+		res &= pieceTextures[PieceEnums::White][PieceEnums::Bishop].loadFromFile(resourcePath + "w_bishop.png");
 
-		res &= pieceTextures[PieceEnums::Black][PieceEnums::Pawn].loadFromFile("../Resources/b_pawn.png");
-		res &= pieceTextures[PieceEnums::Black][PieceEnums::Knight].loadFromFile("../Resources/b_knight.png");
-		res &= pieceTextures[PieceEnums::Black][PieceEnums::Rook].loadFromFile("../Resources/b_rook.png");
-		res &= pieceTextures[PieceEnums::Black][PieceEnums::Queen].loadFromFile("../Resources/b_queen.png");
-		res &= pieceTextures[PieceEnums::Black][PieceEnums::King].loadFromFile("../Resources/b_king.png");
-		res &= pieceTextures[PieceEnums::Black][PieceEnums::Bishop].loadFromFile("../Resources/b_bishop.png");
+		res &= pieceTextures[PieceEnums::Black][PieceEnums::Pawn].loadFromFile(resourcePath + "b_pawn.png");
+		res &= pieceTextures[PieceEnums::Black][PieceEnums::Knight].loadFromFile(resourcePath + "b_knight.png");
+		res &= pieceTextures[PieceEnums::Black][PieceEnums::Rook].loadFromFile(resourcePath + "b_rook.png");
+		res &= pieceTextures[PieceEnums::Black][PieceEnums::Queen].loadFromFile(resourcePath + "b_queen.png");
+		res &= pieceTextures[PieceEnums::Black][PieceEnums::King].loadFromFile(resourcePath + "b_king.png");
+		res &= pieceTextures[PieceEnums::Black][PieceEnums::Bishop].loadFromFile(resourcePath + "b_bishop.png");
 
 		return res;
 	}
 
 	void startGUI()
 	{
-		if (!font.loadFromFile("../Resources/Raleway-Black.ttf"))
+		if (!font.loadFromFile("../Resources/Raleway-Black.ttf") && !font.loadFromFile("./Resources/Raleway-Black.ttf"))
 		{
 			std::cerr << "Could not load font file.\n";
+			system("pause");
 			return;
 		}
 
-		if (!loadPieceTextures())
+		if (!loadPieceTextures("./Resources/") && !loadPieceTextures("../Resources/"))
 		{
 			std::cerr << "Could not load piece sprites.\n";
+			system("pause");
 			return;
 		}
 
