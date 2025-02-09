@@ -47,7 +47,7 @@ Game::Game()
 }
 
 
-MoveResult Game::processTurn(const Point& start, const Point& end, char extraInput)
+MoveResult Game::processTurn(const Point& start, const Point& end, char extraInput, bool processEndConditions)
 {
 	PieceEnums::Team curTeam{ getCurrentTeam() };
 	MoveResult failResult{};
@@ -90,27 +90,29 @@ MoveResult Game::processTurn(const Point& start, const Point& end, char extraInp
 		return moveResult;
 	}
 
-	moveResult.oppStatus = checkEndConditions();
-
 	// Go to next turn
 	moveHistory.emplace_back(std::move(moveItr->second), moveResult);
 	++currentTurn;
-	
+
+	if (processEndConditions)
+	{
+		moveResult.oppStatus = checkEndConditions();
+	}
+
 	return moveResult;
 }
 
 MoveResult::OpponentStatus Game::checkEndConditions()
 {
 	PieceEnums::Team cur{ getCurrentTeam() };
-	PieceEnums::Team opp{ getOppositeTeam(cur) };
-	attackBoard.update(board, opp, kings);
+	attackBoard.update(board, cur, kings);
 
 	// Check end conditions
-	if (!hasPossibleMove(opp))
+	if (!hasPossibleMove(cur))
 	{
-		return isInCheck(opp) ? MoveResult::OpponentStatus::Checkmate : MoveResult::OpponentStatus::Stalemate;
+		return isInCheck(cur) ? MoveResult::OpponentStatus::Checkmate : MoveResult::OpponentStatus::Stalemate;
 	}
-	else if (isInCheck(opp))
+	else if (isInCheck(cur))
 	{
 		return MoveResult::OpponentStatus::Check;
 	}
@@ -145,7 +147,7 @@ bool Game::undoMove()
 bool Game::isValidMove(Point start, Point end)
 {
 	// Simulate the turn
-	auto result = processTurn(start, end);
+	auto result = processTurn(start, end, '\0', false);
 
 	if (result.reasonFailed == MoveResult::MoveFailReason::None)
 	{
@@ -164,7 +166,7 @@ bool Game::isValidMove(Point start, Point end)
 
 bool Game::isValidMove(std::pair<const Point, std::unique_ptr<Move>>& moveSetElem)
 {
-	return isValidMove(moveSetElem.second->getEnd(), moveSetElem.first);
+	return isValidMove(moveSetElem.second->getStart(), moveSetElem.first);
 }
 
 
