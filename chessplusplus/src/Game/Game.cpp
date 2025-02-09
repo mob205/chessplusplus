@@ -144,7 +144,7 @@ bool Game::undoMove()
 	return false;
 }
 
-bool Game::isValidMove(Point start, Point end)
+bool Game::isValidMove(Point start, Point end, MoveResult* outMoveResult)
 {
 	// Simulate the turn
 	auto result = processTurn(start, end, '\0', false);
@@ -153,12 +153,14 @@ bool Game::isValidMove(Point start, Point end)
 	{
 		// Move went through successfully, so need to undo its effects
 		undoMove();
+		if (outMoveResult) { *outMoveResult = result; }
 		return true;
 	}
 
 	// Promotions don't go through, but are still valid
 	if (result.reasonFailed == MoveResult::MoveFailReason::NeedsInput)
 	{
+		if (outMoveResult) { *outMoveResult = result; }
 		return true;
 	}
 	return false;

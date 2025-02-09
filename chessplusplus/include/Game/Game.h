@@ -35,7 +35,7 @@ public:
 	// Undos the most recent move
 	bool undoMove();
 
-	bool isValidMove(Point start, Point end);
+	bool isValidMove(Point start, Point end, MoveResult* outMoveResult = nullptr);
 	bool isValidMove(std::pair<const Point, std::unique_ptr<Move>>& moveSetElem);
 
 private:

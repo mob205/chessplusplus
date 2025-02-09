@@ -10,12 +10,31 @@
 #include "Engine/AIPlayer.h"
 
 
+namespace Engine
+{
+	static int evaluate(const Board& board, PieceEnums::Team team);
+	static int searchMoves(Game* game, PieceEnums::Team team, int alpha, int beta, int depth, MovePts& outBestMove);
 
+	static void addValidatedMoves(const Board& board, const Point& pos, Game* game, std::vector<std::pair<MovePts, int>>& moves);
+
+	// Returns list of the endpoints of all validated moves, along with a heuristic score of the move for sorting
+	static std::vector<std::pair<MovePts, int>> getValidMoves(Game* game, PieceEnums::Team team);
+
+	static int isDoubledPawn(const Board& board, const Point& pos, PieceEnums::Team team);
+	static int isIsolatedPawn(const Board& board, const Point& pos, PieceEnums::Team team);
+	static int isStaggeredPawn(const Board& board, const Point& pos, PieceEnums::Team team);
+}
 
 
 namespace Engine
 {
-	static constexpr std::array<int, PieceEnums::MaxTypes> pieceValues{ 0, 1, 3, 3, 5, 9, 0 };
+
+	/*
+	*	Board evaluation
+	*/
+
+#pragma region evaluation
+	constexpr std::array<int, PieceEnums::MaxTypes> pieceValues{ 0, 1, 3, 3, 5, 9, 0 };
 
 	constexpr int possessionFactor{ 100 };
 	constexpr int mobilityFactor{ 5 };
@@ -27,7 +46,7 @@ namespace Engine
 	constexpr int badPawnStructurePenalty{ 15 };
 	constexpr int staggeredPawnBonus{ 10 };
 
-	static constexpr int knightDevelopmentBonus[8][8] = {
+	static constexpr int centerBonusBoard[8][8] = {
 		{ -5, -4, -3, -3, -3, -3, -4, -5 },
 		{ -4, -2,  0,  0,  0,  0, -2, -4 },
 		{ -3,  0,  2,  3,  3,  2,  0, -3 },
@@ -92,10 +111,10 @@ namespace Engine
 					}
 				}
 
-				// Knight development bonus
-				if (pieceType == PieceEnums::Knight)
+				// Development bonus
+				if (pieceType == PieceEnums::Knight || pieceType == PieceEnums::Bishop || pieceType == PieceEnums::Pawn)
 				{
-					curScore += knightDevelopmentBonus[rank][file];
+					curScore += centerBonusBoard[rank][file];
 				}
 
 				if (pieceType == PieceEnums::Rook)
@@ -156,7 +175,13 @@ namespace Engine
 			|| topleft.isInBounds() && board[topleft] && board[topleft]->getType() == PieceEnums::Pawn
 			|| topright.isInBounds() && board[topright] && board[topright]->getType() == PieceEnums::Pawn;
 	}
+#pragma endregion
 
+
+	/*
+	*	Move searching
+	*/
+#pragma region searching
 	MovePts getRandomMove(Game* game, PieceEnums::Team team)
 	{
 		auto moves = getValidMoves(game, team);
@@ -168,27 +193,33 @@ namespace Engine
 			return { {0, 0}, {0, 0} };
 		}
 		int idx = std::rand() % (moves.size());
-		return moves[idx];
+		return moves[idx].first;
 	}
 
 	MovePts generateMove(Game* game, PieceEnums::Team team)
 	{
-		srand(static_cast<unsigned int>(std::chrono::high_resolution_clock::now().time_since_epoch().count()));
-
 		MovePts bestMove{};
-		alphaBeta(game, team, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), 3, bestMove);
+		searchMoves(game, team, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), 3, bestMove);
 		return bestMove;
 	}
 	
-	static int alphaBeta(Game* game, PieceEnums::Team team, int alpha, int beta, int depth, MovePts& outBestMove)
+	static int searchMoves(Game* game, PieceEnums::Team team, int alpha, int beta, int depth, MovePts& outBestMove)
 	{
 		if (depth == 0) { return evaluate(game->getBoard(), team); }
 		int bestValue = std::numeric_limits<int>::min();
 		
 		auto moves = getValidMoves(game, team);
+
+		std::sort(moves.begin(), moves.end(),
+			[](std::pair<MovePts, int> a, std::pair<MovePts, int> b)
+			{
+				return a.second < b.second;
+			}
+		);
+
 		for (const auto& move : moves)
 		{
-			MoveResult res = game->processTurn(move.first, move.second, 'Q');
+			MoveResult res = game->processTurn(move.first.first, move.first.second, 'Q');
 
 			int score{};
 			if (res.oppStatus == MoveResult::OpponentStatus::Checkmate)
@@ -198,12 +229,12 @@ namespace Engine
 			else
 			{
 				MovePts tempBestMove{};
-				score = -alphaBeta(game, getOppositeTeam(team), -beta, -alpha, depth - 1, tempBestMove);
+				score = -searchMoves(game, getOppositeTeam(team), -beta, -alpha, depth - 1, tempBestMove);
 			}
 			game->undoMove();
 			if (score > bestValue)
 			{
-				outBestMove = move;
+				outBestMove = move.first;
 				bestValue = score;
 				if (score > alpha)
 				{
@@ -218,23 +249,85 @@ namespace Engine
 		return bestValue;
 	}
 
-	static void addValidatedMoves(const Board& board, const Point& pos, Game* game, std::vector<std::pair<Point, Point>>& moves)
+#pragma endregion
+
+	/*
+	*	Valid move generation/ranking
+	*/
+
+#pragma region move generation
+
+	constexpr int capturePieceValueFactor{ 20 };
+	constexpr int checkmateBonus{ 9999999 };
+
+	constexpr int castleBonus{ 250 };
+	constexpr int doublePawnBonus{ 50 };
+	constexpr int enpassantBonus{ 1000 };
+	constexpr int promotionBonus{ 500 };
+
+	constexpr int centerBonusFactor{ 10 };
+
+	static int analyzeMove(const MoveResult& move)
+	{
+		int score{};
+		if (move.oppStatus == MoveResult::OpponentStatus::Checkmate)
+		{
+			score += checkmateBonus;
+		}
+		if (move.oppStatus == MoveResult::OpponentStatus::Stalemate)
+		{
+			score -= checkmateBonus;
+		}
+
+		score += capturePieceValueFactor * pieceValues[move.capturedPieceType];
+
+		switch (move.moveType)
+		{
+		case MoveResult::Type::Castle:
+			score += castleBonus;
+			break;
+
+		case MoveResult::Type::DoublePawn:
+			score += doublePawnBonus;
+			break;
+
+		case MoveResult::Type::EnPassant:
+			score += enpassantBonus;
+			break;
+
+		case MoveResult::Type::Promotion:
+			score += promotionBonus;
+			break;
+		}
+
+		score += centerBonusFactor * centerBonusBoard[move.end.rank][move.end.file];
+
+		if (move.movedPieceType == PieceEnums::Rook)
+		{
+			score -= checkmateBonus;
+		}
+
+		return score;
+	}
+
+	static void addValidatedMoves(const Board& board, const Point& pos, Game* game, std::vector<std::pair<MovePts, int>>& moves)
 	{
 		MoveSet unvalidatedMoves = board[pos]->getPossibleMoves(board);
+		MoveResult res{};
 		for (const auto& move : unvalidatedMoves)
 		{
 			Point start = move.second->getStart();
 			Point end = move.first;
-			if (game->isValidMove(start, end))
+			if (game->isValidMove(start, end, &res))
 			{
-				moves.push_back({ start, end });
+				moves.push_back({{start, end}, analyzeMove(res)});
 			}
 		}
 	}
 
-	static std::vector<std::pair<Point, Point>> getValidMoves(Game* game, PieceEnums::Team team)
+	static std::vector<std::pair<MovePts, int>> getValidMoves(Game* game, PieceEnums::Team team)
 	{
-		std::vector<std::pair<Point, Point>> moves{};
+		std::vector<std::pair<MovePts, int>> moves{};
 
 		const Board& board = game->getBoard();
 
@@ -252,8 +345,7 @@ namespace Engine
 		return moves;
 	}
 
-
-	
+#pragma endregion
 }
 
 
