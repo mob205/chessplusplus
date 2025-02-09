@@ -99,6 +99,8 @@ namespace GUI
 				}
 			}
 
+			controller.tick();
+
 			window.draw(world);
 			window.display();
 		}

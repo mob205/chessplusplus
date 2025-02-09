@@ -3,6 +3,7 @@
 #include "GUI/GUIController.h"
 #include <format>
 #include <iostream>
+#include <thread>
 
 namespace GUI
 {
@@ -12,21 +13,27 @@ namespace GUI
 		gameMenu->setActive(true);
 
 		localPlayerTeam = team;
+
+		// Cache this, as engine thinking will modify game state
+		activePlayerTeam = game->getCurrentTeam();
+
 		chessboard->setOrientation(localPlayerTeam);
 
 		log->clearMessages();
 		log->logMessage("Welcome to Chess!");
 
-		if (game->getCurrentTeam() != localPlayerTeam)
-		{
-			handleAIMove();
-		}
-
 		resetTempState();
+
+		if (activePlayerTeam != localPlayerTeam)
+		{
+			startEngineThink();
+		}
 	}
 
 	void GUIController::onQuit()
 	{
+		if (isEngineThinking) { return; }
+
 		gameMenu->setActive(false);
 		mainMenu->setActive(true);
 
@@ -36,6 +43,7 @@ namespace GUI
 
 	void GUIController::onUndo()
 	{
+		if (isEngineThinking) { return; }
 		if (game->undoMove())
 		{
 			log->logMessage("Move undone.");
@@ -50,6 +58,8 @@ namespace GUI
 
 	void GUIController::onLoad()
 	{
+		if (isEngineThinking) { return; }
+
 		if (saveTextBox->getText().getSize() == 0) { return; }
 		auto newGame = std::make_unique<Game>();
 		GameSerializer::LoadGameResult loadResult = newGame->getSerializer().loadGame(saveTextBox->getText());
@@ -72,6 +82,8 @@ namespace GUI
 
 	void GUIController::onSave()
 	{
+		if (isEngineThinking) { return; }
+
 		if (saveTextBox->getText().getSize() == 0) { return; }
 		game->getSerializer().saveGame(saveTextBox->getText());
 	}
@@ -103,10 +115,9 @@ namespace GUI
 
 	void GUIController::onTileSelected(Point pos)
 	{
-		if (isGameOver || isPromoting || game->getCurrentTeam() != localPlayerTeam) { return; }
+		if (isGameOver || isPromoting || activePlayerTeam != localPlayerTeam) { return; }
 
 		const Board& board = game->getBoard();
-		Team curTeam = game->getCurrentTeam();
 
 		if (!hasSelected)
 		{
@@ -114,7 +125,7 @@ namespace GUI
 			if (!board[pos]) { return; }
 
 			// Piece is not owned by current player
-			if (board[pos]->getTeam() != curTeam) { return; }
+			if (board[pos]->getTeam() != activePlayerTeam) { return; }
 
 			// Selected piece
 			selectPieceTile(pos);
@@ -124,7 +135,7 @@ namespace GUI
 		// A piece is currently selected
 
 		// Selected an empty or enemy tile - attempt to move there
-		if (!board[pos] || board[pos]->getTeam() != curTeam)
+		if (!board[pos] || board[pos]->getTeam() != activePlayerTeam)
 		{
 			MoveResult res = game->processTurn(currentSelection, pos);
 			if(res)
@@ -143,7 +154,7 @@ namespace GUI
 		}
 
 		// Selected different owned piece - change selection
-		if (board[pos]->getTeam() == curTeam)
+		if (board[pos]->getTeam() == activePlayerTeam)
 		{
 			selectPieceTile(pos);
 			return;
@@ -157,20 +168,20 @@ namespace GUI
 		}
 	}
 	
-	void GUIController::handleAIMove()
+	void GUIController::startEngineThink()
 	{
-		if (game->getCurrentTeam() != localPlayerTeam)
+		if (activePlayerTeam != localPlayerTeam)
 		{
-			auto move = Engine::generateMove(game.get(), game->getCurrentTeam());
+			log->logMessage(std::format("{} is thinking...", activePlayerTeam ? "Black" : "White"));
 
-			if (MoveResult res = game->processTurn(move.first, move.second, 'Q'))
-			{
-				handleMoveSuccess(res);
-			}
-			else
-			{
-				std::cerr << "AI attempted an invalid move!\n";
-			}
+			engineThread = std::async(std::launch::async,
+				[=]
+				{
+					return Engine::generateMove(this->game.get(), this->activePlayerTeam);
+				}
+			);
+			isEngineThinking = true;
+
 		}
 	}
 
@@ -187,7 +198,7 @@ namespace GUI
 
 		case MoveResult::OpponentStatus::Checkmate:
 		{
-			std::string_view winningTeam = (game->getCurrentTeam() ? "White" : "Black");
+			std::string_view winningTeam = (activePlayerTeam ? "White" : "Black");
 			log->logMessage(std::format("CHECKMATE! {} WINS!!", winningTeam));
 			isGameOver = true;
 		}
@@ -203,7 +214,7 @@ namespace GUI
 		{
 			updateTurnCounter();
 
-			handleAIMove();
+			startEngineThink();
 		}
 	}
 
@@ -223,7 +234,7 @@ namespace GUI
 		chessboard = board;
 		chessboard->setOnTileInteracted([=](Point pos) { onTileSelected(pos); });
 	}
-
+	
 	void GUIController::setSaveBox(std::shared_ptr<TextObject> saveBox)
 	{
 		saveTextBox = saveBox;
@@ -231,7 +242,8 @@ namespace GUI
 
 	void GUIController::updateTurnCounter()
 	{
-		std::string_view team{ game->getCurrentTeam() == PieceEnums::White ? "White" : "Black" };
+		activePlayerTeam = game->getCurrentTeam();
+		std::string_view team{ activePlayerTeam == PieceEnums::White ? "White" : "Black" };
 
 		log->logMessage("");
 		log->logMessage(std::format("{}'s Turn", team));
@@ -272,6 +284,30 @@ namespace GUI
 			saveText += input;
 			saveTextBox->setText(saveText);
 		}
+	}
+
+	void GUIController::tick()
+	{
+		using namespace std::chrono_literals;
+
+		if (!isEngineThinking) { return; }
+
+		auto status = engineThread.wait_for(0ms);
+
+		if (status == std::future_status::ready)
+		{
+			isEngineThinking = false;
+			auto move = engineThread.get();
+			if (MoveResult res = game->processTurn(move.first, move.second, 'Q'))
+			{
+				handleMoveSuccess(res);
+			}
+			else
+			{
+				std::cerr << "AI attempted an invalid move!\n";
+			}
+		}
+		
 	}
 }
 
