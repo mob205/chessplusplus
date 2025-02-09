@@ -1,16 +1,17 @@
 #include <vector>
-#include <array>
 #include <random>
 #include <chrono>
 #include <iostream>
+#include <fstream>
+
 #include "Board/Board.h"
 #include "Board/BoardHelpers.h"
 #include "Game/Settings.h"
 #include "Game/Game.h"
 #include "Engine/AIPlayer.h"
 
-
-constexpr bool debugShowThinking{ false };
+constexpr bool debugShowThinking{ true };
+std::ofstream out;
 
 namespace Engine
 {
@@ -31,15 +32,15 @@ static void printDepthPrefix(int depth)
 {
 	for (int i = 0; i < 3 - depth; ++i)
 	{
-		std::cout << '|';
+		out << '|';
 	}
-	std::cout << '-';
+	out << '-';
 }
 
 static void printThinkingMessage(int depth, const std::string& str)
 {
 	printDepthPrefix(depth);
-	std::cout << str;
+	out << str;
 }
 
 namespace Engine
@@ -52,15 +53,15 @@ namespace Engine
 #pragma region evaluation
 	constexpr std::array<int, PieceEnums::MaxTypes> pieceValues{ 0, 1, 3, 3, 5, 9, 0 };
 
-	constexpr int possessionFactor{ 1 };
+	constexpr int possessionFactor{ 25 };
 	constexpr int mobilityFactor{ 1 };
 	constexpr int threatFactor{ 5 };
-	constexpr int pawnDevFactor{ 1 };
+	constexpr int pawnDevFactor{ 5 };
 
 	constexpr int rookMovePenalty{ 100 };
 
 	constexpr int badPawnStructurePenalty{ 10 };
-	constexpr int staggeredPawnBonus{ 2 };
+	constexpr int staggeredPawnBonus{ 5 };
 
 	static constexpr int centerBonusBoard[8][8] = {
 		{ -5, -4, -3, -3, -3, -3, -4, -5 },
@@ -214,10 +215,19 @@ namespace Engine
 
 	MovePts generateMove(Game* game, PieceEnums::Team team)
 	{
-		if constexpr (debugShowThinking) { std::cout << "Starting think\n"; }
+		if constexpr (debugShowThinking)
+		{
+			out.open("thinklog.txt", std::ofstream::trunc);
+		}
 
 		MovePts bestMove{};
 		searchMoves(game, team, -99999, 99999, 3, bestMove);
+
+		if constexpr (debugShowThinking)
+		{
+			out.close();
+		}
+
 		return bestMove;
 	}
 	
