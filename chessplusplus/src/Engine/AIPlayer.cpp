@@ -127,7 +127,7 @@ namespace Engine
 				score = maxi(game, getOppositeTeam(team), depth - 1, move);
 			}
 
-			if (score > min)
+			if (score < min)
 			{
 				min = score;
 				outBestMove = move;
