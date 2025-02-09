@@ -169,12 +169,13 @@ bool Game::hasPossibleMove(PieceEnums::Team team)
 
 bool Game::hasPossibleKingMove(PieceEnums::Team team)
 {
+	PieceEnums::Team opp{ getOppositeTeam(team) };
 	AttackBoard tempAttackBoard{};
 	MoveSet possibleMoves = kings[team]->getPossibleMoves(board);
 	for (auto& move : possibleMoves)
 	{
 		auto res = move.second->executeMove(board);
-		tempAttackBoard.update(board, team, kings);
+		tempAttackBoard.update(board, opp, kings);
 		move.second->undoMove(board);
 
 		if (!isInCheck(team, tempAttackBoard))
