@@ -10,6 +10,8 @@
 #include "Engine/AIPlayer.h"
 
 
+constexpr bool debugShowThinking{ false };
+
 namespace Engine
 {
 	static int evaluate(const Board& board, PieceEnums::Team team);
@@ -25,6 +27,20 @@ namespace Engine
 	static int isStaggeredPawn(const Board& board, const Point& pos, PieceEnums::Team team);
 }
 
+static void printDepthPrefix(int depth)
+{
+	for (int i = 0; i < 3 - depth; ++i)
+	{
+		std::cout << '|';
+	}
+	std::cout << '-';
+}
+
+static void printThinkingMessage(int depth, const std::string& str)
+{
+	printDepthPrefix(depth);
+	std::cout << str;
+}
 
 namespace Engine
 {
@@ -36,15 +52,15 @@ namespace Engine
 #pragma region evaluation
 	constexpr std::array<int, PieceEnums::MaxTypes> pieceValues{ 0, 1, 3, 3, 5, 9, 0 };
 
-	constexpr int possessionFactor{ 100 };
-	constexpr int mobilityFactor{ 5 };
-	constexpr int threatFactor{ 25 };
-	constexpr int pawnDevFactor{ 10 };
+	constexpr int possessionFactor{ 1 };
+	constexpr int mobilityFactor{ 1 };
+	constexpr int threatFactor{ 5 };
+	constexpr int pawnDevFactor{ 1 };
 
 	constexpr int rookMovePenalty{ 100 };
 
-	constexpr int badPawnStructurePenalty{ 15 };
-	constexpr int staggeredPawnBonus{ 10 };
+	constexpr int badPawnStructurePenalty{ 10 };
+	constexpr int staggeredPawnBonus{ 2 };
 
 	static constexpr int centerBonusBoard[8][8] = {
 		{ -5, -4, -3, -3, -3, -3, -4, -5 },
@@ -83,7 +99,7 @@ namespace Engine
 				// Threat bonus
 				for (const auto& move : moves)
 				{
-					if (isEnemyPiece(board, move.first, team))
+					if (isEnemyPiece(board, move.first, pieceTeam))
 					{
 						curScore += threatFactor * pieceValues[board[move.first]->getType()];
 					}
@@ -101,11 +117,11 @@ namespace Engine
 						curScore += pawnDevFactor * (6 - rank);
 					}
 
-					if (isDoubledPawn(board, pos, team) || isIsolatedPawn(board, pos, team))
+					if (isDoubledPawn(board, pos, pieceTeam) || isIsolatedPawn(board, pos, pieceTeam))
 					{
 						curScore -= badPawnStructurePenalty;
 					}
-					if (isStaggeredPawn(board, pos, team))
+					if (isStaggeredPawn(board, pos, pieceTeam))
 					{
 						curScore += staggeredPawnBonus;
 					}
@@ -141,10 +157,10 @@ namespace Engine
 
 	static int isDoubledPawn(const Board& board, const Point& pos, PieceEnums::Team team)
 	{
-		Point left{ pos.rank - 1, pos.file };
-		Point right{ pos.rank + 1, pos.file };
-		return (left.isInBounds() && board[left] && board[left]->getType() == PieceEnums::Pawn)
-			|| (right.isInBounds() && board[right] && board[right]->getType() == PieceEnums::Pawn);
+		Point left{ pos.rank, pos.file - 1 };
+		Point right{ pos.rank, pos.file + 1 };
+		return (left.isInBounds() && board[left] && board[left]->getTeam() == team && board[left]->getType() == PieceEnums::Pawn && static_cast<Pawn*>(board[left].get())->getMoved())
+			|| (right.isInBounds() && board[right] && board[right]->getTeam() == team && board[right]->getType() == PieceEnums::Pawn && static_cast<Pawn*>(board[right].get())->getMoved());
 	}
 
 	static int isIsolatedPawn(const Board& board, const Point& pos, PieceEnums::Team team)
@@ -154,7 +170,7 @@ namespace Engine
 			for (int dFile = -1; dFile <= 1; ++dFile)
 			{
 				Point curPos{ pos.rank + dRank, pos.file + dFile };
-				if (curPos.isInBounds() && board[curPos])
+				if (curPos.isInBounds() && isAlliedPiece(board, curPos, team))
 				{
 					return false;
 				}
@@ -198,14 +214,32 @@ namespace Engine
 
 	MovePts generateMove(Game* game, PieceEnums::Team team)
 	{
+		if constexpr (debugShowThinking) { std::cout << "Starting think\n"; }
+
 		MovePts bestMove{};
-		searchMoves(game, team, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), 3, bestMove);
+		searchMoves(game, team, -99999, 99999, 3, bestMove);
 		return bestMove;
 	}
 	
 	static int searchMoves(Game* game, PieceEnums::Team team, int alpha, int beta, int depth, MovePts& outBestMove)
 	{
-		if (depth == 0) { return evaluate(game->getBoard(), team); }
+		if constexpr (debugShowThinking) { printThinkingMessage(depth, std::format("Depth: {} | Alpha: {} | Beta: {} \n", depth, alpha, beta)); }
+
+		if (depth == 0)
+		{
+			if constexpr (debugShowThinking)
+			{
+				int eval = evaluate(game->getBoard(), team);
+				printThinkingMessage(depth, std::format("Returning {} evaluation for {}\n", eval, (team == PieceEnums::White ? "White" : "Black")));
+				printDepthPrefix(depth);
+				return eval;
+			}
+			else
+			{
+				return evaluate(game->getBoard(), team);
+			}
+		}
+
 		int bestValue = std::numeric_limits<int>::min();
 		
 		auto moves = getValidMoves(game, team);
@@ -213,12 +247,14 @@ namespace Engine
 		std::sort(moves.begin(), moves.end(),
 			[](std::pair<MovePts, int> a, std::pair<MovePts, int> b)
 			{
-				return a.second < b.second;
+				return b.second < a.second;
 			}
 		);
 
 		for (const auto& move : moves)
 		{
+			if constexpr (debugShowThinking) { printThinkingMessage(depth, std::format("Considering {} to {}.\n", move.first.first, move.first.second)); }
+
 			MoveResult res = game->processTurn(move.first.first, move.first.second, 'Q');
 
 			int score{};
@@ -230,6 +266,8 @@ namespace Engine
 			{
 				MovePts tempBestMove{};
 				score = -searchMoves(game, getOppositeTeam(team), -beta, -alpha, depth - 1, tempBestMove);
+
+				if constexpr (debugShowThinking) { printThinkingMessage(depth, std::format("Branch {} to {} yielded {}.\n", move.first.first, move.first.second, score)); }
 			}
 			game->undoMove();
 			if (score > bestValue)
@@ -239,13 +277,18 @@ namespace Engine
 				if (score > alpha)
 				{
 					alpha = score;
+					if (alpha >= beta)
+					{
+						if constexpr (debugShowThinking) { printThinkingMessage(depth, std::format("Cut off triggered. Choosing {} to {} at {}.\n", outBestMove.first, outBestMove.second, bestValue)); }
+
+						return bestValue;
+					}
 				}
 			}
-			if (score >= beta)
-			{
-				return bestValue;
-			}
+			
 		}
+		if constexpr (debugShowThinking) { printThinkingMessage(depth, std::format("Exhausted all moves. Choosing {} to {} at {}.\n", outBestMove.first, outBestMove.second, bestValue)); }
+
 		return bestValue;
 	}
 
@@ -257,11 +300,11 @@ namespace Engine
 
 #pragma region move generation
 
-	constexpr int capturePieceValueFactor{ 20 };
+	constexpr int capturePieceValueFactor{ 45 };
 	constexpr int checkmateBonus{ 9999999 };
 
 	constexpr int castleBonus{ 250 };
-	constexpr int doublePawnBonus{ 50 };
+	constexpr int doublePawnBonus{ 10 };
 	constexpr int enpassantBonus{ 1000 };
 	constexpr int promotionBonus{ 500 };
 

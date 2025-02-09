@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <format>
 
 #include "Game/Settings.h"
 
@@ -18,7 +19,6 @@ struct Point
 	Point& operator+=(const Point& other);
 
 	friend Point operator*(const Point& point, int scalar);
-	friend Point operator*(const Point& point, int scalar);
 	
 };
 
@@ -29,6 +29,19 @@ struct PointHash
 	{
 		int sum = point.rank + point.file;
 		return static_cast<size_t>(((sum) * (sum + 1)) / (2 + point.file));
+	}
+};
+
+template<>
+struct std::formatter<Point>
+{
+	constexpr auto parse(std::format_parse_context& ctx)
+	{
+		return ctx.begin();
+	}
+	auto format(const Point& value, std::format_context& ctx) const
+	{
+		return std::format_to(ctx.out(), "{}{}", static_cast<char>(value.file + 'a'), value.rank + 1);
 	}
 };
 

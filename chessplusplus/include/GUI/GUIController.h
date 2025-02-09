@@ -7,6 +7,7 @@
 #include "GUI/TextObject.h"
 #include "GUI/TurnLog.h"
 #include "Game/Game.h"
+#include <future>
 
 #include "Engine/AIPlayer.h"
 
@@ -30,6 +31,8 @@ namespace GUI
 		void onSelectPromotion(char promoInput);
 		void onTextEntered(sf::Uint32 input);
 
+		void tick();
+
 	private:
 		std::shared_ptr<Object> mainMenu;
 		std::shared_ptr<Object> gameMenu;
@@ -41,7 +44,11 @@ namespace GUI
 
 		std::unique_ptr<Game> game{};
 
+		// The team the local player is playing as
 		PieceEnums::Team localPlayerTeam{};
+
+		// The team who is to take the next turn
+		PieceEnums::Team activePlayerTeam{};
 
 		Point currentSelection{};
 		bool hasSelected{};
@@ -53,12 +60,15 @@ namespace GUI
 
 		bool isSaveboxEnabled{};
 
+		std::future<Engine::MovePts> engineThread{};
+		bool isEngineThinking{};
+
 		void unselect();
 		void selectPieceTile(Point pos);
 		void updateTurnCounter();
 		void handleMoveSuccess(const MoveResult& move);
 		void resetTempState();
-		void handleAIMove();
+		void startEngineThink();
 
 	public:
 		void setMainMenu(std::shared_ptr<Object> menu) { mainMenu = menu; }
