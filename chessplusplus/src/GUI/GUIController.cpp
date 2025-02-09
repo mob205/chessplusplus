@@ -163,7 +163,7 @@ namespace GUI
 		{
 			auto move = Engine::generateMove(game.get(), game->getCurrentTeam());
 
-			if (MoveResult res = game->processTurn(move.first, move.second))
+			if (MoveResult res = game->processTurn(move.first, move.second, 'Q'))
 			{
 				handleMoveSuccess(res);
 			}
