@@ -5,19 +5,12 @@
 
 class Game;
 
-class AIPlayer
+static void addValidatedMoves(const Board& board, const Point& pos, Game* game, std::vector<std::pair<Point, Point>>& moves);
+static std::vector<std::pair<Point, Point>> getValidMoves(Game* game, PieceEnums::Team team);
+
+namespace Engine
 {
-public:
-	AIPlayer(Game& game, PieceEnums::Team team)
-		: game{ game }, team{ team }
-	{}
+	std::pair<Point, Point> generateMove(Game* game, PieceEnums::Team team);
+}
 
-	std::pair<Point, Point> generateMove();
-
-private:
-
-	Game& game;
-	PieceEnums::Team team;
-
-	std::vector<std::pair<Point, Point>> getValidMoves();
-};
+static void NewFunction(const Board& board, const Point& pos, Game* game, std::vector<std::pair<Point, Point>>& moves);

@@ -17,6 +17,11 @@ namespace GUI
 		log->clearMessages();
 		log->logMessage("Welcome to Chess!");
 
+		if (game->getCurrentTeam() != localPlayerTeam)
+		{
+			handleAIMove();
+		}
+
 		resetTempState();
 	}
 
@@ -152,6 +157,23 @@ namespace GUI
 		}
 	}
 	
+	void GUIController::handleAIMove()
+	{
+		if (game->getCurrentTeam() != localPlayerTeam)
+		{
+			auto move = Engine::generateMove(game.get(), game->getCurrentTeam());
+
+			if (MoveResult res = game->processTurn(move.first, move.second))
+			{
+				handleMoveSuccess(res);
+			}
+			else
+			{
+				std::cerr << "AI attempted an invalid move!\n";
+			}
+		}
+	}
+
 	void GUIController::handleMoveSuccess(const MoveResult& move)
 	{
 		log->logMove(move);
@@ -180,6 +202,8 @@ namespace GUI
 		if (!isGameOver)
 		{
 			updateTurnCounter();
+
+			handleAIMove();
 		}
 	}
 

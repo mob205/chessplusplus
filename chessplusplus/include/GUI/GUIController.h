@@ -8,6 +8,8 @@
 #include "GUI/TurnLog.h"
 #include "Game/Game.h"
 
+#include "Engine/AIPlayer.h"
+
 namespace GUI
 {
 	// Connects game logic with GUI
@@ -56,6 +58,7 @@ namespace GUI
 		void updateTurnCounter();
 		void handleMoveSuccess(const MoveResult& move);
 		void resetTempState();
+		void handleAIMove();
 
 	public:
 		void setMainMenu(std::shared_ptr<Object> menu) { mainMenu = menu; }

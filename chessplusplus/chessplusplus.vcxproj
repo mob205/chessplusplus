@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Engine\AIPlayer.cpp" />
     <ClCompile Include="src\GUI\Chessboard.cpp" />
     <ClCompile Include="src\GUI\GUIController.cpp" />
     <ClCompile Include="src\GUI\Menus.cpp" />
