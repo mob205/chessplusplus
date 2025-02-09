@@ -41,6 +41,10 @@ private:
 	// Returns true if this team has a possible move from any non-king piece or pawn
 	// Returns false otherwise
 	bool hasPossibleNonKingMove(PieceEnums::Team team);
+	bool hasPossibleKingMove(PieceEnums::Team team);
+
+	// Returns true if the team has a possible move
+	bool hasPossibleMove(PieceEnums::Team team);
 
 	// Returns true if this team's king is in check and false otherwise
 	bool isInCheck(PieceEnums::Team team, const AttackBoard& attackBoard) const;

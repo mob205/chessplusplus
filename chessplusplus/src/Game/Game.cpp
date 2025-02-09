@@ -106,7 +106,7 @@ MoveResult::OpponentStatus Game::checkEndConditions()
 	attackBoard.update(board, opp, kings);
 
 	// Check end conditions
-	if (kings[opp]->getPossibleMoves(board).size() == 0 && !hasPossibleNonKingMove(opp))
+	if (!hasPossibleMove(opp))
 	{
 		return isInCheck(opp) ? MoveResult::OpponentStatus::Checkmate : MoveResult::OpponentStatus::Stalemate;
 	}
@@ -162,6 +162,28 @@ bool Game::isValidMove(Point start, Point end)
 	return false;
 }
 
+bool Game::hasPossibleMove(PieceEnums::Team team)
+{
+	return hasPossibleKingMove(team) || hasPossibleNonKingMove(team);
+}
+
+bool Game::hasPossibleKingMove(PieceEnums::Team team)
+{
+	AttackBoard tempAttackBoard{};
+	MoveSet possibleMoves = kings[team]->getPossibleMoves(board);
+	for (auto& move : possibleMoves)
+	{
+		auto res = move.second->executeMove(board);
+		tempAttackBoard.update(board, team, kings);
+		move.second->undoMove(board);
+
+		if (!isInCheck(team, tempAttackBoard))
+		{
+			return true;
+		}
+	}
+	return false;
+}
 
 // Returns true if the specified player has a valid piece move on the current board
 bool Game::hasPossibleNonKingMove(PieceEnums::Team team)
