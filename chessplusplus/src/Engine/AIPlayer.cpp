@@ -55,13 +55,11 @@ namespace Engine
 
 	constexpr int possessionFactor{ 25 };
 	constexpr int mobilityFactor{ 1 };
-	constexpr int threatFactor{ 5 };
+	constexpr int threatFactor{ 3 };
 	constexpr int pawnDevFactor{ 5 };
 
-	constexpr int rookMovePenalty{ 100 };
-
-	constexpr int badPawnStructurePenalty{ 10 };
-	constexpr int staggeredPawnBonus{ 5 };
+	constexpr int badPawnStructurePenalty{ 5 };
+	constexpr int staggeredPawnBonus{ 7 };
 
 	static constexpr int centerBonusBoard[8][8] = {
 		{ -5, -4, -3, -3, -3, -3, -4, -5 },
@@ -132,14 +130,6 @@ namespace Engine
 				if (pieceType == PieceEnums::Knight || pieceType == PieceEnums::Bishop || pieceType == PieceEnums::Pawn)
 				{
 					curScore += centerBonusBoard[rank][file];
-				}
-
-				if (pieceType == PieceEnums::Rook)
-				{
-					if (piece->getMoved())
-					{
-						curScore -= rookMovePenalty;
-					}
 				}
 
 				if (pieceTeam == team)

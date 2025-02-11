@@ -36,7 +36,7 @@ namespace GUI
 				// Setup a square to draw the board texture
 				sf::RectangleShape boardSquare{ tileSize };
 				boardSquare.setPosition(tilePosition);
-				sf::Color color = (i + j) % 2 == 0 ? teamBlackColor : teamWhiteColor;
+				sf::Color color = (i + j) % 2 == 1 ? teamBlackColor : teamWhiteColor;
 				boardSquare.setFillColor(color);
 				boardTexture.draw(boardSquare);
 

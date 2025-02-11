@@ -198,7 +198,7 @@ namespace GUI
 
 		case MoveResult::OpponentStatus::Checkmate:
 		{
-			std::string_view winningTeam = (activePlayerTeam ? "White" : "Black");
+			std::string_view winningTeam = (activePlayerTeam == PieceEnums::White ? "White" : "Black");
 			log->logMessage(std::format("CHECKMATE! {} WINS!!", winningTeam));
 			isGameOver = true;
 		}
