@@ -57,13 +57,18 @@ namespace GUI
 
 		auto startWhite = makeButton("Start as White", font, { 350, 75 }, "White vs AI");
 		startWhite->setPosition({ startSizeX / 2, startSizeY / 3 });
-		startWhite->setInteractEvent([&]() { controller.startGame(PieceEnums::White); });
+		startWhite->setInteractEvent([&]() { controller.startEngineGame(PieceEnums::White); });
 		mainMenu->addChild(startWhite);
 
-		auto startBlack = makeButton("Start as White", font, { 350, 75 }, "Black vs AI");
-		startBlack->setPosition({ startSizeX / 2, 2 * startSizeY / 3 });
-		startBlack->setInteractEvent([&]() { controller.startGame(PieceEnums::Black); });
+		auto startBlack = makeButton("Start as Black", font, { 350, 75 }, "Black vs AI");
+		startBlack->setPosition({ startSizeX / 2,  startSizeY / 3 + 150 });
+		startBlack->setInteractEvent([&]() { controller.startEngineGame(PieceEnums::Black); });
 		mainMenu->addChild(startBlack);
+
+		auto startLocal = makeButton("Start Local", font, { 350, 75 }, "Local PvP");
+		startLocal->setPosition({ startSizeX / 2, startSizeY / 3 + 300 });
+		startLocal->setInteractEvent([&]() { controller.startLocalGame();  });
+		mainMenu->addChild(startLocal);
 
 		controller.setMainMenu(mainMenu);
 

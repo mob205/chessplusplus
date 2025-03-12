@@ -1,15 +1,16 @@
 #pragma once
 
 #include <memory>
+#include <array>
 
 #include "GUI/Object.h"
 #include "GUI/Chessboard.h"
 #include "GUI/TextObject.h"
 #include "GUI/TurnLog.h"
 #include "Game/Game.h"
-#include <future>
 
-#include "Engine/AIPlayer.h"
+#include "Engine/Engine.h"
+#include "Player/ChessPlayer.h"
 
 namespace GUI
 {
@@ -22,7 +23,8 @@ namespace GUI
 		{}
 
 		// Button callbacks
-		void startGame(PieceEnums::Team playerTeam);
+		void startLocalGame();
+		void startEngineGame(PieceEnums::Team localPlayerTeam);
 		void onQuit();
 		void onUndo();
 		void onLoad();
@@ -44,8 +46,7 @@ namespace GUI
 
 		std::unique_ptr<Game> game{};
 
-		// The team the local player is playing as
-		PieceEnums::Team localPlayerTeam{};
+		std::array<std::unique_ptr<ChessPlayer>, 2> players{};
 
 		// The team who is to take the next turn
 		PieceEnums::Team activePlayerTeam{};
@@ -58,17 +59,13 @@ namespace GUI
 		Point promoStart{};
 		Point promoEnd{};
 
-		bool isSaveboxEnabled{};
-
-		std::future<Engine::MovePts> engineThread{};
-		bool isEngineThinking{};
+		void startGame();
 
 		void unselect();
 		void selectPieceTile(Point pos);
-		void updateTurnCounter();
+		void updateTurnCount();
 		void handleMoveSuccess(const MoveResult& move);
 		void resetTempState();
-		void startEngineThink();
 
 	public:
 		void setMainMenu(std::shared_ptr<Object> menu) { mainMenu = menu; }

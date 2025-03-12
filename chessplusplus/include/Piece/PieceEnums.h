@@ -5,6 +5,7 @@
 namespace PieceEnums
 {
 	constexpr std::string_view pieceNames[]{ "None", "Pawn", "Knight", "Bishop", "Rook", "Queen", "King" };
+	constexpr char pieceSymbols[]{ '\0', 'P', 'N', 'B', 'R', 'Q', 'K' };
 
 	enum Team
 	{

@@ -1,38 +1,62 @@
-#include "SFML/Graphics.hpp"
 #include <memory>
-#include "GUI/GUIController.h"
 #include <format>
 #include <iostream>
-#include <thread>
+
+#include "SFML/Graphics.hpp"
+
+#include "GUI/GUIController.h"
+#include "Board/BoardHelpers.h"
+#include "Player/ChessPlayer.h"
+#include "Player/EnginePlayer.h"
 
 namespace GUI
 {
-	void GUIController::startGame(PieceEnums::Team team)
+	void GUIController::startLocalGame()
+	{
+		players[PieceEnums::White] = std::make_unique<ChessPlayer>(PieceEnums::White);
+		players[PieceEnums::Black] = std::make_unique<ChessPlayer>(PieceEnums::Black);
+
+		startGame();
+	}
+
+	void GUIController::startEngineGame(PieceEnums::Team localPlayerTeam)
+	{
+		players[localPlayerTeam] = std::make_unique<ChessPlayer>(localPlayerTeam);
+
+		PieceEnums::Team opp = getOppositeTeam(localPlayerTeam);
+		players[opp] = std::move(std::make_unique<EnginePlayer>(opp));
+
+		startGame();
+	}
+
+	void GUIController::startGame()
 	{
 		mainMenu->setActive(false);
 		gameMenu->setActive(true);
 
-		localPlayerTeam = team;
-
 		// Cache this, as engine thinking will modify game state
 		activePlayerTeam = game->getCurrentTeam();
 
-		chessboard->setOrientation(localPlayerTeam);
+		if (players[activePlayerTeam]->usesGUI())
+		{
+			chessboard->setOrientation(activePlayerTeam);
+		}
+		else
+		{
+			chessboard->setOrientation(getOppositeTeam(activePlayerTeam));
+		}
 
 		log->clearMessages();
 		log->logMessage("Welcome to Chess!");
 
 		resetTempState();
 
-		if (activePlayerTeam != localPlayerTeam)
-		{
-			startEngineThink();
-		}
+		players[activePlayerTeam]->startTurn(game.get());
 	}
 
 	void GUIController::onQuit()
 	{
-		if (isEngineThinking) { return; }
+		if (!players[activePlayerTeam]->usesGUI()) { return; }
 
 		gameMenu->setActive(false);
 		mainMenu->setActive(true);
@@ -43,7 +67,9 @@ namespace GUI
 
 	void GUIController::onUndo()
 	{
-		if (isEngineThinking) { return; }
+		// Don't undo if waiting for active player
+		if (!players[activePlayerTeam]->usesGUI()) { return; }
+
 		if (game->undoMove())
 		{
 			log->logMessage("Move undone.");
@@ -58,7 +84,8 @@ namespace GUI
 
 	void GUIController::onLoad()
 	{
-		if (isEngineThinking) { return; }
+		// Don't undo if waiting for active player
+		if (!players[activePlayerTeam]->usesGUI()) { return; }
 
 		if (saveTextBox->getText().getSize() == 0) { return; }
 		auto newGame = std::make_unique<Game>();
@@ -82,7 +109,7 @@ namespace GUI
 
 	void GUIController::onSave()
 	{
-		if (isEngineThinking) { return; }
+		if (!players[activePlayerTeam]->usesGUI()) { return; }
 
 		if (saveTextBox->getText().getSize() == 0) { return; }
 		game->getSerializer().saveGame(saveTextBox->getText());
@@ -115,7 +142,7 @@ namespace GUI
 
 	void GUIController::onTileSelected(Point pos)
 	{
-		if (isGameOver || isPromoting || activePlayerTeam != localPlayerTeam) { return; }
+		if (isGameOver || isPromoting || !players[activePlayerTeam]->usesGUI()) { return; }
 
 		const Board& board = game->getBoard();
 
@@ -167,28 +194,15 @@ namespace GUI
 			return;
 		}
 	}
-	
-	void GUIController::startEngineThink()
-	{
-		if (activePlayerTeam != localPlayerTeam)
-		{
-			log->logMessage(std::format("{} is thinking...", activePlayerTeam ? "Black" : "White"));
 
-			engineThread = std::async(std::launch::async,
-				[=]
-				{
-					return Engine::generateMove(this->game.get(), this->activePlayerTeam);
-				}
-			);
-			isEngineThinking = true;
-
-		}
-	}
 
 	void GUIController::handleMoveSuccess(const MoveResult& move)
 	{
+		if (players[activePlayerTeam]->usesGUI())
+		{
+			players[activePlayerTeam]->onLocalMoveSelected({ move.start, move.end, move.promotion.promotionType });
+		}
 		log->logMove(move);
-		chessboard->updateBoard(game->getBoard());
 
 		switch (move.oppStatus)
 		{
@@ -212,10 +226,10 @@ namespace GUI
 
 		if (!isGameOver)
 		{
-			updateTurnCounter();
-
-			startEngineThink();
+			updateTurnCount();
+			players[activePlayerTeam]->startTurn(game.get());
 		}
+		chessboard->updateBoard(game->getBoard());
 	}
 
 	void GUIController::resetTempState()
@@ -225,7 +239,7 @@ namespace GUI
 		promoMenu->setActive(false);
 
 		unselect();
-		updateTurnCounter();
+		updateTurnCount();
 		chessboard->updateBoard(game->getBoard());
 	}
 
@@ -240,18 +254,23 @@ namespace GUI
 		saveTextBox = saveBox;
 	}
 
-	void GUIController::updateTurnCounter()
+	void GUIController::updateTurnCount()
 	{
 		activePlayerTeam = game->getCurrentTeam();
-		std::string_view team{ activePlayerTeam == PieceEnums::White ? "White" : "Black" };
+		std::string_view teamString{ activePlayerTeam == PieceEnums::White ? "White" : "Black" };
 
 		log->logMessage("");
-		log->logMessage(std::format("{}'s Turn", team));
+		log->logMessage(std::format("{}'s Turn", teamString));
+
+		if (players[activePlayerTeam]->usesGUI())
+		{
+			chessboard->setOrientation(activePlayerTeam);
+		}
 
 		// A turn is only completed when both players have moved
 		int currentTurn = (game->getCurrentTurn() / 2) + 1;
 
-		turnCounter->setText(std::format("Turn {} | {}'s Turn", currentTurn, team));
+		turnCounter->setText(std::format("Turn {} | {}'s Turn", currentTurn, teamString));
 
 		// Center turn counter based on text size
 		turnCounter->setPosition({ -turnCounter->getTextSize().x / 2.f, 0 });
@@ -288,26 +307,20 @@ namespace GUI
 
 	void GUIController::tick()
 	{
-		using namespace std::chrono_literals;
-
-		if (!isEngineThinking) { return; }
-
-		auto status = engineThread.wait_for(0ms);
-
-		if (status == std::future_status::ready)
+		if (!players[activePlayerTeam]) { return; }
+		MoveInput move;
+		
+		if (players[activePlayerTeam]->getMove(move))
 		{
-			isEngineThinking = false;
-			auto move = engineThread.get();
-			if (MoveResult res = game->processTurn(move.first, move.second, 'Q'))
+			if (MoveResult res = game->processTurn(move.start, move.end, move.extraInput))
 			{
 				handleMoveSuccess(res);
 			}
 			else
 			{
-				std::cerr << "AI attempted an invalid move!\n";
+				std::cerr << "Player asynchronously returned invalid move!";
 			}
 		}
-		
 	}
 }
 
