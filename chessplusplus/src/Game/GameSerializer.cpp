@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <functional>
+#include <sstream>
 
 #include "Game/GameSerializer.h"
 #include "Game/Game.h"
@@ -35,13 +36,19 @@ bool GameSerializer::saveGame(const std::string& savename) const
 	{
 		return false;
 	}
+	return saveGame(fp);
+}
+
+
+bool GameSerializer::saveGame(std::ostream& out) const
+{
 	for (const auto& record : game.moveHistory)
 	{
-		fp << record.move->getStart() << record.move->getEnd();
+		out << record.move->getStart() << record.move->getEnd();
 		if (record.result.moveType == MoveResult::Type::Promotion)
 		{
 			char c{ getPieceAsChar(record.result.promotion.promotionType) };
-			fp << c;
+			out << c;
 		}
 	}
 	return true;
@@ -54,12 +61,18 @@ GameSerializer::LoadGameResult GameSerializer::loadGame(const std::string& saven
 	{
 		return SaveNotFound;
 	}
+	
+	return loadGame(fp);
+}
+
+GameSerializer::LoadGameResult GameSerializer::loadGame(std::istream& in) const
+{
 	Point start{};
 	Point end{};
 
-	while (fp >> start >> end)
+	while (in >> start >> end)
 	{
-		if (!game.processTurn(start, end) && !game.processTurn(start, end, readPromoType(fp)))
+		if (!game.processTurn(start, end) && !game.processTurn(start, end, readPromoType(in)))
 		{
 			return SaveInvalid;
 		}
@@ -67,10 +80,19 @@ GameSerializer::LoadGameResult GameSerializer::loadGame(const std::string& saven
 	return LoadSuccessful;
 }
 
-char GameSerializer::readPromoType(std::ifstream& fp) const
+char GameSerializer::readPromoType(std::istream& fp) const
 {
 	char input{};
 	fp >> input;
 	return input;
 }
+
+void GameSerializer::copyGame(const Game& source) const
+{
+	std::stringstream buf{};
+
+	source.getSerializer().saveGame(buf);
+	loadGame(buf);
+}
+
 

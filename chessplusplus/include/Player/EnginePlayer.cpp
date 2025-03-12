@@ -1,13 +1,16 @@
 #include "EnginePlayer.h"
 #include "Engine/Engine.h"
-#include "Game/Game.h"
+#include <future>
+#include <thread>
 
-void EnginePlayer::startTurn(Game* game)
+void EnginePlayer::startTurn(const Game& game)
 {
+
 	engineThread = std::async(std::launch::async,
-		[=]
+		[this, &game]
 		{
-			return Engine::generateMove(game, team);
+			MoveInput move = Engine::generateMove(game, team);
+			return move;
 		}
 	);
 }

@@ -16,12 +16,12 @@ std::ofstream out;
 namespace Engine
 {
 	static int evaluate(const Board& board, PieceEnums::Team team);
-	static int searchMoves(Game* game, PieceEnums::Team team, int alpha, int beta, int depth, MoveInput& outBestMove);
+	static int searchMoves(Game& game, PieceEnums::Team team, int alpha, int beta, int depth, MoveInput& outBestMove);
 
-	static void addValidatedMoves(const Board& board, const Point& pos, Game* game, std::vector<std::pair<MoveInput, int>>& moves);
+	static void addValidatedMoves(const Board& board, const Point& pos, Game& game, std::vector<std::pair<MoveInput, int>>& moves);
 
 	// Returns list of the endpoints of all validated moves, along with a heuristic score of the move for sorting
-	static std::vector<std::pair<MoveInput, int>> getValidMoves(Game* game, PieceEnums::Team team);
+	static std::vector<std::pair<MoveInput, int>> getValidMoves(Game& game, PieceEnums::Team team);
 
 	static int isDoubledPawn(const Board& board, const Point& pos, PieceEnums::Team team);
 	static int isIsolatedPawn(const Board& board, const Point& pos, PieceEnums::Team team);
@@ -189,7 +189,7 @@ namespace Engine
 	*	Move searching
 	*/
 #pragma region searching
-	MoveInput getRandomMove(Game* game, PieceEnums::Team team)
+	MoveInput getRandomMove(Game& game, PieceEnums::Team team)
 	{
 		auto moves = getValidMoves(game, team);
 
@@ -203,15 +203,18 @@ namespace Engine
 		return moves[idx].first;
 	}
 
-	MoveInput generateMove(Game* game, PieceEnums::Team team)
+	MoveInput generateMove(const Game& game, PieceEnums::Team team)
 	{
 		if constexpr (debugShowThinking)
 		{
 			out.open("thinklog.txt", std::ofstream::trunc);
 		}
 
+		Game gameCopy{};
+		gameCopy.getSerializer().copyGame(game);
+
 		MoveInput bestMove{};
-		searchMoves(game, team, -99999, 99999, 3, bestMove);
+		searchMoves(gameCopy, team, -99999, 99999, 3, bestMove);
 
 		if constexpr (debugShowThinking)
 		{
@@ -221,7 +224,7 @@ namespace Engine
 		return bestMove;
 	}
 	
-	static int searchMoves(Game* game, PieceEnums::Team team, int alpha, int beta, int depth, MoveInput& outBestMove)
+	static int searchMoves(Game& game, PieceEnums::Team team, int alpha, int beta, int depth, MoveInput& outBestMove)
 	{
 		if constexpr (debugShowThinking) { printThinkingMessage(depth, std::format("Depth: {} | Alpha: {} | Beta: {} \n", depth, alpha, beta)); }
 
@@ -229,14 +232,14 @@ namespace Engine
 		{
 			if constexpr (debugShowThinking)
 			{
-				int eval = evaluate(game->getBoard(), team);
+				int eval = evaluate(game.getBoard(), team);
 				printThinkingMessage(depth, std::format("Returning {} evaluation for {}\n", eval, (team == PieceEnums::White ? "White" : "Black")));
 				printDepthPrefix(depth);
 				return eval;
 			}
 			else
 			{
-				return evaluate(game->getBoard(), team);
+				return evaluate(game.getBoard(), team);
 			}
 		}
 
@@ -255,7 +258,7 @@ namespace Engine
 		{
 			if constexpr (debugShowThinking) { printThinkingMessage(depth, std::format("Considering {} to {}.\n", move.first.start, move.first.end)); }
 
-			MoveResult res = game->processTurn(move.first.start, move.first.end, 'Q');
+			MoveResult res = game.processTurn(move.first.start, move.first.end, 'Q');
 
 			int score{};
 			if (res.oppStatus == MoveResult::OpponentStatus::Checkmate)
@@ -269,7 +272,7 @@ namespace Engine
 
 				if constexpr (debugShowThinking) { printThinkingMessage(depth, std::format("Branch {} to {} yielded {}.\n", move.first.start, move.first.end, score)); }
 			}
-			game->undoMove();
+			game.undoMove();
 			if (score > bestValue)
 			{
 				outBestMove = move.first;
@@ -353,7 +356,7 @@ namespace Engine
 		return score;
 	}
 
-	static void addValidatedMoves(const Board& board, const Point& pos, Game* game, std::vector<std::pair<MoveInput, int>>& moves)
+	static void addValidatedMoves(const Board& board, const Point& pos, Game& game, std::vector<std::pair<MoveInput, int>>& moves)
 	{
 		MoveSet unvalidatedMoves = board[pos]->getPossibleMoves(board);
 		MoveResult res{};
@@ -361,18 +364,18 @@ namespace Engine
 		{
 			Point start = move.second->getStart();
 			Point end = move.first;
-			if (game->isValidMove(start, end, &res))
+			if (game.isValidMove(start, end, &res))
 			{
 				moves.push_back({{start, end}, analyzeMove(res)});
 			}
 		}
 	}
 
-	static std::vector<std::pair<MoveInput, int>> getValidMoves(Game* game, PieceEnums::Team team)
+	static std::vector<std::pair<MoveInput, int>> getValidMoves(Game& game, PieceEnums::Team team)
 	{
 		std::vector<std::pair<MoveInput, int>> moves{};
 
-		const Board& board = game->getBoard();
+		const Board& board = game.getBoard();
 
 		for (int rank = 0; rank < Settings::boardSize; ++rank)
 		{

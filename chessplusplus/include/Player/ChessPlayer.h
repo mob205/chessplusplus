@@ -16,7 +16,7 @@ public:
 
 	// Alerts the chess player of start of turn
 	// Start move generation here
-	virtual void startTurn(Game* game) {};
+	virtual void startTurn(const Game& game) {};
 
 	// Returns true if the player has a move ready
 	// This move is stored in outMove

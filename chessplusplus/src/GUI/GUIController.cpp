@@ -51,7 +51,7 @@ namespace GUI
 
 		resetTempState();
 
-		players[activePlayerTeam]->startTurn(game.get());
+		players[activePlayerTeam]->startTurn(*game);
 	}
 
 	void GUIController::onQuit()
@@ -227,7 +227,7 @@ namespace GUI
 		if (!isGameOver)
 		{
 			updateTurnCount();
-			players[activePlayerTeam]->startTurn(game.get());
+			players[activePlayerTeam]->startTurn(*game);
 		}
 		chessboard->updateBoard(game->getBoard());
 	}

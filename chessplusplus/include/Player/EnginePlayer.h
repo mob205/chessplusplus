@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ChessPlayer.h"
+#include "Game/Game.h"
 #include <future>
 
 class EnginePlayer : public ChessPlayer
@@ -10,7 +11,7 @@ public:
 		: ChessPlayer{ team }
 	{}
 
-	virtual void startTurn(Game* game) override;
+	virtual void startTurn(const Game& game) override;
 
 	virtual bool getMove(MoveInput& outMove) override;
 
@@ -18,4 +19,6 @@ public:
 
 private:
 	std::future<MoveInput> engineThread{};
+
+	std::unique_ptr<Game> storedGame{};
 };

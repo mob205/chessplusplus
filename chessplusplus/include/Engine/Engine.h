@@ -9,7 +9,7 @@ class Game;
 
 namespace Engine
 {
-	MoveInput generateMove(Game* game, PieceEnums::Team team);
+	MoveInput generateMove(const Game& game, PieceEnums::Team team);
 	
 }
 

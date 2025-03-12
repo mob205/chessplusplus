@@ -27,7 +27,7 @@ public:
 	PieceEnums::Team getCurrentTeam() const { return static_cast<PieceEnums::Team>((currentTurn) % PieceEnums::MaxTeams); }
 
 	// Returns this game's serializer
-	GameSerializer& getSerializer() { return serializer; }
+	const GameSerializer& getSerializer() const { return serializer; }
 
 	// Processes a turn given valid start and end inputs
 	MoveResult processTurn(const Point& start, const Point& end, char extraInput = '\0', bool processEndConditions = true);
